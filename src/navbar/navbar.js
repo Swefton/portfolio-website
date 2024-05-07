@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import './navbar.css';
+import '../styles/navbar.css';
 
 // NavigationItem component
 function NavigationItem({ index, activeItem, handleItemClick, children }) {
     return (
         <li className="nav-item">
             <a
-                href='#'
+                href='/#'
                 className={activeItem === index ? 'active' : ''}
                 onClick={() => handleItemClick(index)}
             >

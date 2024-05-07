@@ -1,5 +1,5 @@
 import React from 'react';
-import './CodeBlock.css';
+import '../styles/CodeBlock.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Choose a theme
 

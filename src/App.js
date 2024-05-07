@@ -1,20 +1,16 @@
 import Navbar from "./navbar/navbar";
-import CodeBlock from "./page/CodeBlock";
+import Titlebar from "./navbar/titlebar";
+import AboutMe from "./page/AboutMe";
 
 
 function App() {
 
-  const code = `
-  function helloWorld() {
-    console.log('Hello, world!');
-  }
-  helloWorld();
-`;
-
   return (
     <div className="App">
+      <Titlebar />
       <Navbar />
-      <CodeBlock code={code} />
+      <br />
+      <AboutMe />
 
     </div>
   );
