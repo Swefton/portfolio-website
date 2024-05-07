@@ -1,0 +1,32 @@
+/* Remove default margin and padding for all elements */
+* .code-block{
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    border: 0;
+    
+  }
+
+  .code-block pre {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  span {
+    color: white;
+  }
+  
+  .line-number {
+    margin-left: 20px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .code-line {
+    display: flex;
+    align-items: center;
+
+  }
+  
+  .react-syntax-highlighter-line-number {
+    margin-left: 0px;
+  }
+  
