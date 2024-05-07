@@ -1,14 +1,9 @@
-import './App.css';
-import Card from './test';
+import Navbar from "./navbar/navbar";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <div className='App-logo'>
-        <Card />
-        </div>
-      </header>
+      <Navbar />
     </div>
   );
 }

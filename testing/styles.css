@@ -1,0 +1,59 @@
+body {
+    background-color: #1e1e1e; /* Example background color similar to VSCode */
+    font-family: 'Consolas', 'Menlo', 'Courier New', monospace; /* Example font similar to VSCode */
+    color: #d4d4d4; /* Example text color similar to VSCode */
+    margin: 0;
+    padding: 0;
+}
+
+header, main, footer {
+    padding: 20px;
+}
+
+.code-editor {
+    background-color: #2d2d2d;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+code {
+    font-family: inherit;
+}
+
+nav ul {
+    position: -webkit-sticky;
+    position: sticky;
+    list-style-type: none;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+}
+
+nav li {
+    float: left;
+    width: 120px;
+    height: 40px;
+    /*border: 1px solid #e7e7e7;*/
+  }
+  
+nav li a {
+    display: flex;
+    
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+
+nav li a:hover:not(.active) {
+    background-color: #111;
+}
+
+nav .active {
+    background-color: #04AA6D;
+}
