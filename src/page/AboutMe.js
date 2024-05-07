@@ -1,13 +1,8 @@
 import React from 'react';
 import '../styles/AboutMe.css';
 import CodeBlock from './CodeBlock';
+import code from './AboutMeCode';
 
-const code = `
-function helloWorld() {
-  console.log('Hello, world!');
-}
-helloWorld();
-`;
 
 function AboutMe() {
     return (

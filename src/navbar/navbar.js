@@ -1,37 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/navbar.css';
 
 // NavigationItem component
-function NavigationItem({ index, activeItem, handleItemClick, children }) {
+function NavigationItem({ index, activeItem, handleItemClick, children, name, image }) {
     return (
-        <li className="nav-item">
-            <a
-                href='/#'
-                className={activeItem === index ? 'active' : ''}
-                onClick={() => handleItemClick(index)}
-            >
-                {children}
-            </a>
-        </li>
+        <div className={activeItem === index ? 'active' : 'not active'}>
+            <li className="nav-item">
+                <a
+                    href='/#'
+                    onClick={() => handleItemClick(index)}
+                >
+                    {image && <img src={'/'+image} alt={name} />}
+                    {children}
+                </a>
+            </li>
+        </div>
     );
 }
 
 // Navbar component
 function Navbar() {
-    // State to track the active item, initialized to 0 for the first li
     const [activeItem, setActiveItem] = useState(0);
+    const [scrolled, setScrolled] = useState(false);
 
-    // Function to handle click on navigation items
     const handleItemClick = (index) => {
-        setActiveItem(index); // Update the active item state
+        setActiveItem(index);
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
-        <nav>
+        <nav className={scrolled ? 'scrolled' : ''}>
             <ul>
-                <NavigationItem index={0} activeItem={activeItem} handleItemClick={handleItemClick}>1</NavigationItem>
-                <NavigationItem index={1} activeItem={activeItem} handleItemClick={handleItemClick}>2</NavigationItem>
-                <NavigationItem index={2} activeItem={activeItem} handleItemClick={handleItemClick}>3</NavigationItem>
+                <NavigationItem
+                    index={0}
+                    activeItem={activeItem}
+                    handleItemClick={handleItemClick}
+                    name="AboutMe.py"
+                    image="pycon.svg"
+                >
+                    AboutMe.py
+                </NavigationItem>
+
+                <NavigationItem
+                    index={0}
+                    activeItem={activeItem}
+                    handleItemClick={handleItemClick}
+                    name="AboutMe.py"
+                    image="pycon.svg"
+                >
+                    AboutMe.py
+                </NavigationItem>
+
             </ul>
         </nav>
     );

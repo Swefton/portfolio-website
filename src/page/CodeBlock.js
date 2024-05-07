@@ -1,11 +1,10 @@
 import React from 'react';
 import '../styles/CodeBlock.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Choose a theme
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 function CodeBlock({ code }) {
-  // Split the code into lines
   const lines = code.split('\n');
 
   return (
@@ -14,10 +13,9 @@ function CodeBlock({ code }) {
           {lines.map((line, index) => (
             <div key={index} className="code-line">
               <span className="line-number">{index + 1}</span>
-              <SyntaxHighlighter language="javascript" style={atomDark}>
+              <SyntaxHighlighter language="python" style={atomDark}>
                 {line}
               </SyntaxHighlighter>
-              
             </div>
           ))}
         </div>
