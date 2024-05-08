@@ -1,46 +1,44 @@
-const code = `# Define personal information
-name = "Amrit Madhav Srivastava"
-email = "srivas75@msu.edu"
-phone = "+1 (517) 980-3378"
+const code = `
+# Hi! I'm Amrit. I'm currently pursuing a Computer Science degree at Michigan State University. Alongside that,
+# I'm minoring in Data Science with a concentration in Artificial Intelligence. 
+# I'm passionate about Software Development and Web Automation / Scraping.
 
-# Define education
-university = "Michigan State University"
-gpa = 3.8
-degree = "Bachelor of Science in Computer Science"
-minor = "Minor in Data Science"
-start_date = "Aug 2022"
-end_date = "May 2026"
+# These are some of my favorite technologies:
+import selenium
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels
+import sklearn
 
-# Define skills
-skills = [
-    "Python",
-    "Web Automation",
-    "Web testing",
-    "Data Analysis/Modelling",
-    "MongoDB",
-    "Auth0",
-    "Flask",
-    "Amazon Certified Alexa Developer"
-]
+# I like competing at Hackathons and have won a few.
+hackathons = {
+    'Uncommon Hacks @ UChicago': 'Won Best Use of Auth0.',
+    'SpartaHack 8 @ MSU': 'Won Best Use of Twilio'
+    'Spartahack 9 @ MSU': '',
+    'EcoIntelliSense @ Purdue': '',
+    'SerenAI @ UofM': '',
+    'Bouncer @ UW Madison': ''
+}
+# My complete portfolio https://devpost.com/Swefton
 
-# Display personal information
-print("Name:", name)
-print("Email:", email)
-print("Phone:", phone)
-print()
+# These are some projects I've worked on:
+projects = {
+    'Web Scraper': 'Scraped data from a website and stored it in a database.',
+    'Web Automation': 'Analyzed data from a CSV file using Pandas and Matplotlib.',
+    'Automation/AI' : '',
+    'Machine Learning': ''
+}
+# My GitHub with all my projects https://github.com/Swefton
 
-# Display education
-print("University:", university)
-print("GPA:", gpa)
-print("Degree:", degree)
-print("Minor:", minor)
-print("Duration:", start_date, "-", end_date)
-print()
 
-# Display skills
-print("Skills:")
-for skill in skills:
-    print("-", skill)
+# Feel free to learn more about me through my resume open on the top bar.
+# Thanks for visiting!
+
+
+print(hackathons)
+print(projects)
+
 
 `;
 

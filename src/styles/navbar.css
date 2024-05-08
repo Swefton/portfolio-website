@@ -3,43 +3,46 @@ nav ul {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background-color: #333;
+  background-color: #252526;
   align-items: center;
   justify-content: center;
 }
 
 nav li {
   float: left;
-  width: 120px;
+  width: 140px;
   height: 40px;
   margin: 0;
   padding: 0;
+  background-color: #2D2D2D;
+  border-right: solid 1px #272728;
 }
 
 
 
 .nav-item {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   padding: 0;
 }
 
 .nav-item a {
-  font-size: 0.95rem;
+  font-size: 0.89rem;
   color: #919191;
   padding: 0;
   text-decoration: none;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .nav-item img {
-  margin-right: 8px;
+  margin-left: 10px;
+  margin-right: 6px;
   height: 0.85rem;
   width: 0.85rem;
 }
 
 nav .active li{
   background-color: #1E1E1E;
-  
+
 }

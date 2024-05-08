@@ -12,10 +12,8 @@ function NavigationItem({ index, activeItem, handleItemClick,children, name, ima
     return (
         <div onClick={handleClick} style={{ cursor: 'pointer' }} className={activeItem === index ? 'active' : ''}>
             <li className="nav-item">
-                <a href='/#'>
-                    {image && <img src={'/'+image} alt={name} />}
-                    {children}
-                </a>
+                {image && <img src={'/'+image} alt={name} />}
+                <a href='/#'> {children} </a>
             </li>
         </div>
     );

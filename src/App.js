@@ -4,6 +4,7 @@ import './styles/App.css';
 import Navbar from "./navbar/navbar";
 import Titlebar from "./navbar/titlebar";
 import AboutMe from "./page/AboutMe";
+import Resume from "./page/resume";
 
 function App() {
   const [activeItem, setActiveItem] = useState(0);
@@ -26,8 +27,8 @@ function App() {
         <Titlebar />
         <Navbar activeItem={activeItem} setActiveItem={setActiveItem}/>
       </div>
-      <br />
       {activeItem === 0 && <AboutMe />}
+      {activeItem === 1 && <Resume />}
     </div>
   );
 }

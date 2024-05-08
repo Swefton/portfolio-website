@@ -27,7 +27,7 @@
   .code-line {
     display: flex;
     align-items: center;
-
+    height: 23px;
   }
   
   .react-syntax-highlighter-line-number {
