@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/navbar.css';
 
 // NavigationItem component
-function NavigationItem({children, name, image }) {
+function NavigationItem({ index, activeItem, handleItemClick,children, name, image }) {
+
+    const handleClick = () => {
+        window.location.href = '/#';
+        handleItemClick(index)
+    };
+
     return (
-        <div>
+        <div onClick={handleClick} style={{ cursor: 'pointer' }} className={activeItem === index ? 'active' : ''}>
             <li className="nav-item">
                 <a href='/#'>
                     {image && <img src={'/'+image} alt={name} />}
@@ -18,11 +24,19 @@ function NavigationItem({children, name, image }) {
 // Navbar component
 function Navbar() {
 
+    const [activeItem, setActiveItem] = useState(0);
+
+    const handleItemClick = (index) => {
+        setActiveItem(index);
+    };
 
     return (
         <nav >
             <ul>
                 <NavigationItem
+                    index = {0}
+                    activeItem = {activeItem}
+                    handleItemClick = {handleItemClick}
                     name="AboutMe.py"
                     image="pycon.svg"
                 >
@@ -30,10 +44,13 @@ function Navbar() {
                 </NavigationItem>
 
                 <NavigationItem
+                    index = {1}
+                    activeItem = {activeItem}
+                    handleItemClick = {handleItemClick}
                     name="AboutMe.py"
                     image="pycon.svg"
                 >
-                    AboutMe.py
+                    Extra.py
                 </NavigationItem>
 
             </ul>
