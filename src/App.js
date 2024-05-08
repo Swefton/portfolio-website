@@ -5,6 +5,7 @@ import Navbar from "./navbar/navbar";
 import Titlebar from "./navbar/titlebar";
 import AboutMe from "./page/AboutMe";
 import Resume from "./page/resume";
+import Bottombar from "./bottombar/Bottombar";
 
 function App() {
   const [activeItem, setActiveItem] = useState(0);
@@ -29,6 +30,10 @@ function App() {
       </div>
       {activeItem === 0 && <AboutMe />}
       {activeItem === 1 && <Resume />}
+      
+      <br></br>
+      <br></br>
+      <Bottombar />
     </div>
   );
 }

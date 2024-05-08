@@ -8,29 +8,18 @@
   .code-block pre {
     padding: 0 !important;
     margin: 0 !important;
-    margin-left: 20px !important;
   }
   
   span {
     color: white;
+    padding-right: 0px;
   }
-  
-  .line-number {
-    margin-left: 20px;
-    font-family: 'Courier New', Courier, monospace;
-    user-select: none;
-    width: 20px;
-    text-align: right;
-    font-size: 13px;
-  }
-  
+ 
   .code-line {
     display: flex;
     align-items: center;
     height: 23px;
   }
   
-  .react-syntax-highlighter-line-number {
-    margin-left: 0px;
-  }
+
   
