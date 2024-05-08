@@ -11,7 +11,7 @@ nav ul {
 nav li {
   float: left;
   width: 140px;
-  height: 40px;
+  height: 30px;
   margin: 0;
   padding: 0;
   background-color: #2D2D2D;
@@ -28,7 +28,7 @@ nav li {
 }
 
 .nav-item a {
-  font-size: 0.89rem;
+  font-size: 0.80rem;
   color: #919191;
   padding: 0;
   text-decoration: none;
@@ -38,8 +38,8 @@ nav li {
 .nav-item img {
   margin-left: 10px;
   margin-right: 6px;
-  height: 0.85rem;
-  width: 0.85rem;
+  height: 0.90rem;
+  width: 0.90rem;
 }
 
 nav .active li{

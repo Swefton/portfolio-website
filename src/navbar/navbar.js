@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../styles/navbar.css';
 
 // NavigationItem component
@@ -34,7 +34,7 @@ function Navbar({ activeItem, setActiveItem }) {
                     activeItem = {activeItem}
                     handleItemClick = {handleItemClick}
                     name="AboutMe.py"
-                    image="pycon.svg"
+                    image="pycon.png"
                 >
                     AboutMe.py
                 </NavigationItem>
@@ -43,10 +43,10 @@ function Navbar({ activeItem, setActiveItem }) {
                     index = {1}
                     activeItem = {activeItem}
                     handleItemClick = {handleItemClick}
-                    name="AboutMe.py"
-                    image="pycon.svg"
+                    name="Resume.pdf"
+                    image="pdf.png"
                 >
-                    Extra.py
+                    Resume.pdf
                 </NavigationItem>
 
             </ul>
