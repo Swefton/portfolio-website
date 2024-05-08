@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import './styles/App.css'; // Import the CSS file
+import React, { useState, useEffect, useRef } from 'react';
+import './styles/App.css';
 
 import Navbar from "./navbar/navbar";
 import Titlebar from "./navbar/titlebar";
 import AboutMe from "./page/AboutMe";
 
 function App() {
+  const [activeItem, setActiveItem] = useState(0);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -23,10 +24,10 @@ function App() {
     <div className={`App ${scrolled ? 'scrolled' : ''}`}>
       <div className="App-header">
         <Titlebar />
-        <Navbar />
+        <Navbar activeItem={activeItem} setActiveItem={setActiveItem}/>
       </div>
       <br />
-      <AboutMe />
+      {activeItem === 0 && <AboutMe />}
     </div>
   );
 }

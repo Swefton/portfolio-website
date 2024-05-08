@@ -22,9 +22,7 @@ function NavigationItem({ index, activeItem, handleItemClick,children, name, ima
 }
 
 // Navbar component
-function Navbar() {
-
-    const [activeItem, setActiveItem] = useState(0);
+function Navbar({ activeItem, setActiveItem }) {
 
     const handleItemClick = (index) => {
         setActiveItem(index);
