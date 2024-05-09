@@ -9,11 +9,10 @@
   .App.scrolled .App-header {
     box-shadow: 0 2px 3px rgb(0, 0, 0);
   }
-  
-  ::selection {
-    background: #2A4F76;
-  }
-
+ 
+::selection {
+  background: #2A4F76;
+}
 
   /* width */
 ::-webkit-scrollbar {

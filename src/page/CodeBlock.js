@@ -22,7 +22,7 @@ function CodeBlock({ code }) {
         setAnimationState(currentIndex);
         localStorage.setItem(`code-block-${code}`, currentIndex);
       }
-    }, 15); // Adjust the typing speed here (milliseconds)
+    }, 10); // Adjust the typing speed here (milliseconds)
 
     return () => clearInterval(typingInterval);
   }, [code, animationState]);
@@ -44,7 +44,7 @@ function CodeBlock({ code }) {
 
   return (
     <div className="code-block">
-      <SyntaxHighlighter language="python" style={atomDark} showLineNumbers>
+      <SyntaxHighlighter language="python" style={atomDark} showLineNumbers wrapLines>
         {displayedCode}
       </SyntaxHighlighter>
     </div>

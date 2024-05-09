@@ -28,9 +28,10 @@ function App() {
         <Titlebar />
         <Navbar activeItem={activeItem} setActiveItem={setActiveItem}/>
       </div>
-      {activeItem === 0 && <AboutMe />}
-      {activeItem === 1 && <Resume />}
-      
+      <div className='Page-View'>
+        {activeItem === 0 && <AboutMe />}
+        {activeItem === 1 && <Resume />}
+      </div>
       <br></br>
       <br></br>
       <Bottombar />
