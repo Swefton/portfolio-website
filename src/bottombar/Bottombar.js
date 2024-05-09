@@ -4,6 +4,7 @@ import BellIcon from './icons/BellIcon';
 import GithubIcon from './icons/GithubIcon';
 import LinkedinIcon from './icons/LinkedinIcon';
 import SourceControlIcon from './icons/SourceControlIcon';
+import DevpostIcon from './icons/DevpostIcon';
 
 import '../styles/Bottombar.css';
 
@@ -28,6 +29,14 @@ const Bottombar = () => {
         </div>
       </div>
       <div className='container'>
+
+        <a href="https://devpost.com/Swefton" target="_blank" rel="noopener">
+          <div className='section'>
+            <DevpostIcon className='icon' />
+            <p>Devpost</p>
+          </div>
+        </a>
+
         <a href="https://www.linkedin.com/in/amrit-srivastava-725890191/" target="_blank" rel="noopener">
           <div className='section'>
             <LinkedinIcon className='icon' />

@@ -1,7 +1,9 @@
 const code = `
-# Hi! I'm Amrit. I'm currently pursuing a Computer Science degree at Michigan State University. Alongside that,
-# I'm minoring in Data Science with a concentration in Artificial Intelligence. 
-# I'm passionate about Software Development and Web Automation / Scraping.
+"""
+Hi! I'm Amrit. I'm currently pursuing a Computer Science degree at Michigan State University. Alongside that,
+I'm minoring in Data Science with a concentration in Artificial Intelligence. 
+I'm passionate about Software Development, Process Automation, and Web Scraping.
+"""
 
 # These are some of my favorite technologies:
 import selenium
@@ -20,7 +22,7 @@ hackathons = {
     'SerenAI @ UofM': '',
     'Bouncer @ UW Madison': ''
 }
-# My complete portfolio https://devpost.com/Swefton
+# My complete Devpost is linked in the bottom bar
 
 # These are some projects I've worked on:
 projects = {
@@ -29,7 +31,7 @@ projects = {
     'Automation/AI' : '',
     'Machine Learning': ''
 }
-# My GitHub with all my projects https://github.com/Swefton
+# My complete GitHub is linked in the bottom bar
 
 
 # Feel free to learn more about me through my resume open on the top bar.
