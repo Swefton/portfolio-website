@@ -30,20 +30,20 @@ const Bottombar = () => {
       </div>
       <div className='container'>
 
-        <a href="https://devpost.com/Swefton" target="_blank" rel="noopener">
+        <a href="https://devpost.com/Swefton" target="_blank" rel="noreferrer noopener">
           <div className='section'>
             <DevpostIcon className='icon' />
             <p>Devpost</p>
           </div>
         </a>
 
-        <a href="https://www.linkedin.com/in/amrit-srivastava-725890191/" target="_blank" rel="noopener">
+        <a href="https://www.linkedin.com/in/amrit-srivastava-725890191/" target="_blank" rel="noreferrer noopener">
           <div className='section'>
             <LinkedinIcon className='icon' />
             <p>Linkedin</p>
           </div>
         </a>
-        <a href="https://github.com/Swefton" target="_blank" rel="noopener">
+        <a href="https://github.com/Swefton" target="_blank" rel="noreferrer noopener">
           <div className='section'>
             <GithubIcon className='icon' />
             <p>Github</p>
