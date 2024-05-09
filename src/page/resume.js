@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import '../styles/Resume.css';
 
 function Resume() {
@@ -7,6 +7,7 @@ function Resume() {
             <iframe
                 class="pdf" 
                 src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210101201653/PDF.pdf#toolbar=0&#FitH"
+                title='resume'
                 >
             </iframe>
         </div>
