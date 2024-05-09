@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import '../styles/Resume.css';
 
 function Resume() {
   return (
-        <div>
-            <iframe
-                class="pdf" 
-                src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210101201653/PDF.pdf#toolbar=0&#FitH"
-                >
-            </iframe>
-        </div>
-    );
+    <div className='pdf'>
+        <object data="/Amrit Srivastava Resume.pdf#toolbar=0" type="application/pdf" width="100%" height="100%">
+            <p>Alternative text - include a link <a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a></p>
+        </object>
+    </div>
+  );
 }
 
 export default Resume;
