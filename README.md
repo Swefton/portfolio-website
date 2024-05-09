@@ -1,18 +1,19 @@
-# portfolio-website
-Attempting to learn react and create a portfolio website.
-## Todo List
-- [ ] Learn how to use UI libraries
-- [ ] Figma Design
-- [ ] Implementation
-- [ ] GitHub Pages
+# Portfolio Website
 
-<br>
-Inspiration Currently:<br>
-<ul>
-<li><a href="https://camillemormal.com/about">https://camillemormal.com/about</a>
-<li><a href="https://www.mike-fernandez.dev/">https://www.mike-fernandez.dev/</a>
-<li><a href="https://www.awwwards.com/websites/portfolio/">https://www.awwwards.com/websites/portfolio/</a>
-</ul>
+This project aims to create a portfolio website using React.
 
-Final Design Ideas:<br>
-VSCode style text editor (with right side navbard/split?) and different files as sections about myself
+## Feature List
+- [ ] Fix scroll bar (currently overlaps title bar and bottom bar)
+- [ ] Live code view (similar to Camille Mormal's about page)
+- [ ] Mobile friendly UI
+- [ ] User opens their own tab
+- [ ] Blinker cursor
+
+Inspiration Currently:
+- [Camille Mormal's Portfolio](https://camillemormal.com/about)
+- [Mike Fernandez's Portfolio](https://www.mike-fernandez.dev/)
+- [Awwwards Portfolio Websites](https://www.awwwards.com/websites/portfolio/)
+
+Final Design Ideas:
+- VSCode style text editor (with right side navbard/split?) and different files as sections about myself
+
