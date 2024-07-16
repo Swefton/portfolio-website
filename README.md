@@ -15,5 +15,4 @@ Inspiration Currently:
 - [Awwwards Portfolio Websites](https://www.awwwards.com/websites/portfolio/)
 
 Final Design Ideas:
-- VSCode style text editor (with right side navbard/split?) and different files as sections about myself
-
+- VSCode style text editor (with right side navbar/split?) and different files as sections about myself
