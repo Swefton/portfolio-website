@@ -5,17 +5,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 import '../styles/Resume.css';
 
-if (process.env.NODE_ENV === 'development') {
-  // Local dev uses the ESM module (if your dev server supports it)
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url,
-  ).toString();
-} else {
-  // Production uses the stable CDN path
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-}
-
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function Resume() {
   const containerRef = useRef(null);
