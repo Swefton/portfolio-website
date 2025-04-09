@@ -28,7 +28,7 @@ function Resume() {
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = '/Amrit Resume.pdf';
+    link.href = '/Amrit_Resume.pdf';
     link.download = 'Amrit_Resume.pdf';
     link.click();
   };
