@@ -29,8 +29,24 @@ function Resume() {
     return () => observer.disconnect();
   }, []);
 
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/Amrit Resume.pdf';
+    link.download = 'Amrit_Resume.pdf';
+    link.click();
+  };
+
   return (
     <div className="pdf-wrapper">
+      <button className="download-button" onClick={handleDownload}>
+        <img
+        src="/download-icon.svg"
+        alt="Download PDF"
+        height={20}
+        width={20}
+        className="icon"
+        /> 
+      </button>
       <div className="pdf-container" ref={containerRef}>
         <Document file="/Amrit Resume.pdf" loading="Loading resume...">
           <Page pageNumber={1} width={containerWidth * 1} />
