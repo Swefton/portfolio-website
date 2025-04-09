@@ -48,7 +48,7 @@ function Resume() {
         /> 
       </button>
       <div className="pdf-container" ref={containerRef}>
-        <Document file="/Amrit Resume.pdf" loading="Loading resume...">
+        <Document file="/Amrit_Resume.pdf" loading="Loading resume...">
           <Page pageNumber={1} width={containerWidth * 1} />
         </Document>
       </div>
