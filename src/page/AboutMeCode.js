@@ -1,47 +1,54 @@
 const code = `
 """
-Hi! I'm Amrit. I'm currently pursuing a Computer Science degree at Michigan State University. Alongside that,
-I'm minoring in Data Science with a concentration in Artificial Intelligence. 
-I'm passionate about Software Development, Process Automation, and Web Scraping.
+Hi! I'm Amrit. I'm currently pursuing a Bachelor's in Computer Science at Michigan State University with a minor in Data Science.
+I'm especially passionate about Software Development, Process Automation, and using AI to solve real-world problems.
 """
 
-# These are some of my favorite technologies:
+# Favorite technologies I work with:
 import selenium
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import statsmodels
+import statsmodels.api as sm
 import sklearn
+import tensorflow as tf
+import flask
+import react
 
-# I like competing at Hackathons and have won a few.
+# Hackathons I've competed in (and sometimes won!):
 hackathons = {
-    'Uncommon Hacks @ UChicago': 'Won Best Use of Auth0.',
-    'SpartaHack 8 @ MSU': 'Won Best Use of Twilio'
-    'Spartahack 9 @ MSU': '',
-    'EcoIntelliSense @ Purdue': '',
-    'SerenAI @ UofM': '',
-    'Bouncer @ UW Madison': ''
+    'SpartaHack 2025': 'Won Specialized Mastery for OpenFiche 🚀',
+    'Uncommon Hacks @ UChicago 2024': 'Won Best Use of Auth0 for Journalingo 🏆',
+    'MHacks 2024': 'Submitted Wolverine Helper using Meta Llama 3 🦙',
 }
-# My complete Devpost is linked in the bottom bar
+# Full list available on my Devpost (bottom bar)!
 
-# These are some projects I've worked on:
+# Some of my favorite projects:
 projects = {
-    'Web Scraper': 'Scraped data from a website and stored it in a database.',
-    'Web Automation': 'Analyzed data from a CSV file using Pandas and Matplotlib.',
-    'Automation/AI' : '',
-    'Machine Learning': ''
+    'OpenFiche': 'AI-resistant search engine with custom PageRank, NLP, and QT-based browser.',
+    'Journalingo': 'Video journaling app using tone and body language analysis to reveal emotions.',
+    'Wolverine Helper': 'LLM-powered assistant with embedded course data and modular vectorization.',
+    'Marketplace Deal Aggregator': 'Script to automate online deal scanning for the MSU Library.',
+    'Call Center AI Model': 'Trained a model on 1.85M data points to optimize call priority.'
 }
-# My complete GitHub is linked in the bottom bar
+# Find more on my GitHub (linked below)!
 
+# I also love contributing to open source projects! This is a list of some PRs I have:
+pull_requests = {
+    Hyprland : 'https://github.com/hyprwm/Hyprland/pull/6839',
+    Lavender : 'https://github.com/fvrests/lavender/pull/36'
+}
 
-# Feel free to learn more about me through my resume open on the top bar.
+# Currently:
+# - Resident Assistant at MSU (2024–)
+# - Student Library Assistant, Digital Media Center
+# - Previously a Data Science Intern at iSON Xperiences Ltd.
+
+# Resume's up top if you'd like to explore more!
 # Thanks for visiting!
-
 
 print(hackathons)
 print(projects)
-
-
 `;
 
 export default code;
