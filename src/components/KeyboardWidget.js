@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 
-export default function KeyboardWidget({ onVirtualKeyPress, onVirtualEnter }) {
+export default function KeyboardWidget({ onVirtualKeyPress, onVirtualEnter, onVirtualBackspace }) {
   const [input, setInput] = useState("");
   const [layoutName, setLayoutName] = useState("default");
   const keyboardRef = useRef();
@@ -15,16 +15,17 @@ export default function KeyboardWidget({ onVirtualKeyPress, onVirtualEnter }) {
   };
 
   const handleKeyPress = (button) => {
-    if (button === "{shift}" || button === "{lock}") handleShift();
-    else if (button === "{enter}") {
-      if (onVirtualEnter) onVirtualEnter();
-    } else if (button === "{space}") {
-      if (onVirtualKeyPress) onVirtualKeyPress(" ");
-    } else if (button === "{backspace}") {
-      // Optional: handle backspace using a dedicated prop
-    } else {
-      if (onVirtualKeyPress) onVirtualKeyPress(button);
-    }
+      if (button === "{shift}" || button === "{lock}") {
+          handleShift();
+      } else if (button === "{enter}") {
+          if (onVirtualEnter) onVirtualEnter();
+      } else if (button === "{space}") {
+          if (onVirtualKeyPress) onVirtualKeyPress(" ");
+      } else if (button === "{backspace}") {
+          if (onVirtualBackspace) onVirtualBackspace();
+      } else {
+          if (onVirtualKeyPress) onVirtualKeyPress(button);
+      }
   };
 
   const handleShift = () => {

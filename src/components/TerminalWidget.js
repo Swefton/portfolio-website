@@ -44,6 +44,9 @@ const TerminalWidget = forwardRef((props, ref) => {
     },
     setInputValue: (text) => {
       setInput(text);
+    },
+    removeLastChar: () => {
+      setInput((prev) => prev.slice(0, -1));
     }
   }));
 

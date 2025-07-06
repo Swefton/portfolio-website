@@ -21,12 +21,19 @@ export default function Home() {
     }
   };
 
+  const handleVirtualBackspace = () => {
+    if (terminalRef.current) {
+        terminalRef.current.removeLastChar();
+    }
+  };
+
   return (
     <main>
       {/* <GlobeWidget /> */}
       <KeyboardWidget
         onVirtualKeyPress={handleVirtualKeyPress}
         onVirtualEnter={handleVirtualEnter}
+        onVirtualBackspace={handleVirtualBackspace}
       />
       <TerminalWidget ref={terminalRef} />
     </main>
