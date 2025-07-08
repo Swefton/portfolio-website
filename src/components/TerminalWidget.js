@@ -1,83 +1,40 @@
-"use client";
+'use client'
 
-import { useState, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import Terminal, { ColorMode, TerminalOutput } from 'react-terminal-ui';
 
-const TerminalWidget = forwardRef((props, ref) => {
-  const [input, setInput] = useState("");
-  const [history, setHistory] = useState([]);
+const TerminalController = forwardRef((props, ref) => {
+  const [terminalLineData, setTerminalLineData] = useState([
+    <TerminalOutput key={0}>Welcome to the React Terminal UI Controlled Component!</TerminalOutput>,
+  ]);
 
-  const handleCommand = (command) => {
-    let output;
-    if (command === "help") {
-      output = "Available commands: help, github, clear";
-    } else if (command === "github") {
-      output = "Opening GitHub...";
-      window.open("https://github.com/yourusername", "_blank");
-    } else if (command === "clear") {
-      setHistory([]);
-      return;
-    } else {
-      output = `Command not found: ${command}`;
-    }
-    setHistory((prev) => [...prev, `> ${command}`, output]);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleCommand(input.trim());
-      setInput("");
-    } else if (e.key === "Backspace") {
-      setInput((prev) => prev.slice(0, -1));
-    } else if (e.key.length === 1) {
-      setInput((prev) => prev + e.key);
-    }
-  };
-
-  // Allow parent to add to input buffer
+  // Expose the sendCommand method to parent components
   useImperativeHandle(ref, () => ({
-    addToInput: (text) => {
-      setInput((prev) => prev + text);
-    },
-    executeInput: () => {
-      handleCommand(input.trim());
-      setInput("");
-    },
-    setInputValue: (text) => {
-      setInput(text);
-    },
-    removeLastChar: () => {
-      setInput((prev) => prev.slice(0, -1));
+    sendCommand: (command) => {
+      if (command === 'clear') {
+        setTerminalLineData([]);
+        return;
+      }
+      setTerminalLineData(prev => [
+        ...prev,
+        <TerminalOutput key={prev.length}>{`> ${command}`}</TerminalOutput>,
+        <TerminalOutput key={prev.length + 1}>{`Output for ${command}`}</TerminalOutput>
+      ]);
     }
   }));
 
   return (
-    <div
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      style={{
-        background: "black",
-        color: "lime",
-        padding: "1rem",
-        fontFamily: "monospace",
-        width: "90%",
-        maxWidth: "600px",
-        margin: "20px auto",
-        height: "300px",
-        overflowY: "auto",
-        borderRadius: "6px"
-      }}
+    <Terminal
+      name="React Terminal UI Controlled Component"
+      colorMode={ColorMode.Light}
+      prompt=""
+      onInput={() => {}}
     >
-      {history.map((line, index) => (
-        <div key={index}>{line}</div>
-      ))}
-      <div>
-        <span>&gt; </span>
-        <span>{input}</span>
-        <span className="cursor">_</span>
-      </div>
-    </div>
+      {terminalLineData}
+    </Terminal>
   );
 });
 
-TerminalWidget.displayName = "TerminalWidget";
-export default TerminalWidget;
+TerminalController.displayName = 'TerminalController';
+
+export default TerminalController;

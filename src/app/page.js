@@ -8,34 +8,21 @@ import { useRef } from "react";
 export default function Home() {
   const terminalRef = useRef();
 
-  const handleVirtualKeyPress = (char) => {
-    // Append character to TerminalWidget buffer
-    if (terminalRef.current) {
-      terminalRef.current.addToInput(char);
-    }
-  };
-
-  const handleVirtualEnter = () => {
-    if (terminalRef.current) {
-      terminalRef.current.executeInput();
-    }
-  };
-
-  const handleVirtualBackspace = () => {
-    if (terminalRef.current) {
-        terminalRef.current.removeLastChar();
+  const handleRunGithub = () => {
+    if (terminalRef.current && terminalRef.current.sendCommand) {
+      terminalRef.current.sendCommand("github");
     }
   };
 
   return (
     <main>
       {/* <GlobeWidget /> */}
-      <KeyboardWidget
-        onVirtualKeyPress={handleVirtualKeyPress}
-        onVirtualEnter={handleVirtualEnter}
-        onVirtualBackspace={handleVirtualBackspace}
-      />
+      <KeyboardWidget/>
       <TerminalWidget ref={terminalRef} />
+
+      <button onClick={handleRunGithub}>
+        Run github
+      </button>
     </main>
   );
 }

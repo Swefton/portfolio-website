@@ -1,11 +1,10 @@
-// src/components/KeyboardWidget.js
 "use client";
 
 import { useState, useRef } from 'react';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 
-export default function KeyboardWidget({ onVirtualKeyPress, onVirtualEnter, onVirtualBackspace }) {
+export default function KeyboardWidget() {
   const [input, setInput] = useState("");
   const [layoutName, setLayoutName] = useState("default");
   const keyboardRef = useRef();
@@ -15,21 +14,9 @@ export default function KeyboardWidget({ onVirtualKeyPress, onVirtualEnter, onVi
   };
 
   const handleKeyPress = (button) => {
-      if (button === "{shift}" || button === "{lock}") {
-          handleShift();
-      } else if (button === "{enter}") {
-          if (onVirtualEnter) onVirtualEnter();
-      } else if (button === "{space}") {
-          if (onVirtualKeyPress) onVirtualKeyPress(" ");
-      } else if (button === "{backspace}") {
-          if (onVirtualBackspace) onVirtualBackspace();
-      } else {
-          if (onVirtualKeyPress) onVirtualKeyPress(button);
-      }
-  };
-
-  const handleShift = () => {
-    setLayoutName(prev => (prev === "default" ? "shift" : "default"));
+    if (button === "{shift}" || button === "{lock}") {
+      setLayoutName(prev => (prev === "default" ? "shift" : "default"));
+    }
   };
 
   const handleInputChange = (e) => {

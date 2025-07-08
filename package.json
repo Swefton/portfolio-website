@@ -15,6 +15,7 @@
     "react-dom": "^19.0.0",
     "react-globe.gl": "^2.34.0",
     "react-simple-keyboard": "^3.8.89",
+    "react-terminal-ui": "^1.4.0",
     "simple-keyboard": "^3.8.64"
   },
   "devDependencies": {
