@@ -1,16 +1,28 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 
-export default function KeyboardWidget() {
+const KeyboardWidget = forwardRef((props, ref) => {
   const [input, setInput] = useState("");
   const [layoutName, setLayoutName] = useState("default");
   const keyboardRef = useRef();
 
+  useImperativeHandle(ref, () => ({
+    setInputValue: (newInput) => {
+      setInput(newInput);
+      keyboardRef.current.setInput(newInput);
+    },
+    clearInput: () => {
+      setInput("");
+      keyboardRef.current.clearInput();
+    }
+  }));
+
   const handleKeyboardChange = (input) => {
     setInput(input);
+    if (props.onInputChange) props.onInputChange(input);
   };
 
   const handleKeyPress = (button) => {
@@ -26,28 +38,12 @@ export default function KeyboardWidget() {
   };
 
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: 20,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 10,
-      maxWidth: '600px',
-      width: '90%',
-      color: 'black'
-    }}>
+    <div style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 10, maxWidth: '600px', width: '90%', color: 'black' }}>
       <input
         value={input}
         placeholder="Tap on the virtual keyboard to start"
         onChange={handleInputChange}
-        style={{
-          width: "100%",
-          padding: "10px",
-          fontSize: "16px",
-          marginBottom: "10px",
-          borderRadius: "4px",
-          border: "1px solid #333"
-        }}
+        style={{ width: "100%", padding: "10px", fontSize: "16px", marginBottom: "10px", borderRadius: "4px", border: "1px solid #333" }}
       />
       <Keyboard
         keyboardRef={r => (keyboardRef.current = r)}
@@ -74,4 +70,8 @@ export default function KeyboardWidget() {
       />
     </div>
   );
-}
+});
+
+KeyboardWidget.displayName = "KeyboardWidget";
+
+export default KeyboardWidget;
