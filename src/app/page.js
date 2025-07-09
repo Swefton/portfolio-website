@@ -5,6 +5,8 @@ import KeyboardWidget from "@/components/KeyboardWidget";
 import TerminalWidget from "@/components/TerminalWidget";
 import GlobeWidget from "@/components/GlobeWidget";
 import "./bento.css";
+import GlobeWidget from "@/components/GlobeWidget";
+import "./bento.css";
 
 export default function Home() {
   const terminalRef = useRef();
