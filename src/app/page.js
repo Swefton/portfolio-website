@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import KeyboardWidget from "@/components/KeyboardWidget";
 import TerminalWidget from "@/components/TerminalWidget";
+import GlobeWidget from "@/components/GlobeWidget";
+import "./bento.css";
 
 export default function Home() {
   const terminalRef = useRef();
@@ -43,10 +45,28 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <TerminalWidget ref={terminalRef} />
-      <button onClick={() => simulateTyping("run github")}>GitHub</button>
-      <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
+    <main className="bento-grid">
+
+        <div className="bento-tile terminal">
+          <TerminalWidget ref={terminalRef} />
+        </div>
+
+        <div className="bento-tile keyboard">
+          <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
+        </div>
+
+        <div className="bento-tile widget widget-1">
+          <GlobeWidget />
+        </div>
+
+        <div className="bento-tile widget widget-2">
+          <p>Future Widget 2</p>
+        </div>
+
+        <div className="bento-tile widget widget-3">
+          <p>Future Widget 3</p>
+        </div>
+    
     </main>
   );
 }
