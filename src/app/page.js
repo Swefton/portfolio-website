@@ -14,9 +14,18 @@ export default function Home() {
       const char = text[i];
       currentInput += char;
 
-      // Update virtual keyboard to highlight keys
+      // Update virtual keyboard input
       if (keyboardRef.current) {
         keyboardRef.current.setInputValue(currentInput);
+
+        // Highlight the key
+        const btn = keyboardRef.current.getButtonElement(char.toLowerCase());
+        if (btn) {
+          btn.classList.add('hg-activeButton');
+          setTimeout(() => {
+            btn.classList.remove('hg-activeButton');
+          }, 100);
+        }
       }
 
       // Update terminal display

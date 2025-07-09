@@ -10,14 +10,17 @@ const KeyboardWidget = forwardRef((props, ref) => {
   const keyboardRef = useRef();
 
   useImperativeHandle(ref, () => ({
-    setInputValue: (newInput) => {
-      setInput(newInput);
-      keyboardRef.current.setInput(newInput);
-    },
-    clearInput: () => {
-      setInput("");
-      keyboardRef.current.clearInput();
-    }
+      setInputValue: (newInput) => {
+        setInput(newInput);
+        keyboardRef.current.setInput(newInput);
+      },
+      clearInput: () => {
+        setInput("");
+        keyboardRef.current.clearInput();
+      },
+      getButtonElement: (button) => {
+        return keyboardRef.current.getButtonElement(button);
+      }
   }));
 
   const handleKeyboardChange = (input) => {
