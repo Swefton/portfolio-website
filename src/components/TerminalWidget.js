@@ -1,62 +1,71 @@
-'use client'
+"use client";
 
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import Terminal, { ColorMode, TerminalOutput } from 'react-terminal-ui';
 
-const TerminalController = forwardRef((props, ref) => {
+const TerminalWidget = forwardRef((props, ref) => {
   const [terminalLineData, setTerminalLineData] = useState([
     <TerminalOutput key={0}>Welcome to the React Terminal UI Controlled Component!</TerminalOutput>,
   ]);
-
   const [currentInput, setCurrentInput] = useState("");
 
-  // Expose control methods to parent
   useImperativeHandle(ref, () => ({
+    simulateTyping: async (text) => {
+      setCurrentInput("");
+      for (let i = 0; i < text.length; i++) {
+        setCurrentInput(prev => prev + text[i]);
+        await new Promise(res => setTimeout(res, 100));
+      }
+      handleSubmit(text);
+    },
     typeCharacter: (char) => {
       setCurrentInput(prev => prev + char);
     },
-    handleEnter: () => {
-      const trimmedCommand = currentInput.trim();
-      if (trimmedCommand === "clear") {
-        setTerminalLineData([]);
-        setCurrentInput("");
-        return;
-      }
-
-      setTerminalLineData(prev => [
-        ...prev,
-        <TerminalOutput key={prev.length}>{`> ${trimmedCommand}`}</TerminalOutput>,
-        <TerminalOutput key={prev.length + 1}>{`Output for ${trimmedCommand}`}</TerminalOutput>
-      ]);
-
-      // Handle redirects or folder logic if needed
-      if (trimmedCommand === "run github") {
-        window.open("https://github.com/your-username", "_blank");
-      }
-
+    handleEnter: (input) => {
+      handleSubmit(input);
+    },
+    setInputValue: (input) => {
+      setCurrentInput(input);
+    },
+    clearInput: () => {
       setCurrentInput("");
     },
-    clear: () => {
+  }));
+
+  const handleSubmit = (input) => {
+    const trimmed = input.trim();
+    let output;
+    if (trimmed === "run github") {
+      output = "Opening GitHub...";
+      window.open("https://github.com", "_blank");
+    } else if (trimmed === "clear") {
       setTerminalLineData([]);
       setCurrentInput("");
+      return;
+    } else {
+      output = `Unrecognized command: ${trimmed}`;
     }
-  }));
+
+    setTerminalLineData(prev => [
+      ...prev,
+      <TerminalOutput key={prev.length}>{`$ ${trimmed}`}</TerminalOutput>,
+      <TerminalOutput key={prev.length + 1}>{output}</TerminalOutput>,
+    ]);
+    setCurrentInput("");
+  };
 
   return (
     <Terminal
-      name="React Terminal UI Controlled Component"
+      name="React Terminal UI"
       colorMode={ColorMode.Light}
-      prompt="> "
-      onInput={() => {}}
+      prompt="$ "
+      onInput={handleSubmit}
+      startingInputValue={currentInput}
     >
-      {[
-        ...terminalLineData,
-        <TerminalOutput key={terminalLineData.length}>{`> ${currentInput}`}</TerminalOutput>
-      ]}
+      {terminalLineData}
     </Terminal>
   );
 });
 
-TerminalController.displayName = 'TerminalController';
-
-export default TerminalController;
+TerminalWidget.displayName = "TerminalWidget";
+export default TerminalWidget;

@@ -1,3 +1,4 @@
+// KeyboardWidget.jsx
 "use client";
 
 import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
@@ -10,17 +11,20 @@ const KeyboardWidget = forwardRef((props, ref) => {
   const keyboardRef = useRef();
 
   useImperativeHandle(ref, () => ({
-      setInputValue: (newInput) => {
-        setInput(newInput);
-        keyboardRef.current.setInput(newInput);
-      },
-      clearInput: () => {
-        setInput("");
-        keyboardRef.current.clearInput();
-      },
-      getButtonElement: (button) => {
-        return keyboardRef.current.getButtonElement(button);
-      }
+    setInputValue: (newInput) => {
+      setInput(newInput);
+      keyboardRef.current.setInput(newInput);
+    },
+    clearInput: () => {
+      setInput("");
+      keyboardRef.current.clearInput();
+    },
+    getButtonElement: (button) => {
+      return keyboardRef.current.getButtonElement(button);
+    },
+    getCurrentInput: () => {
+      return input;
+    },
   }));
 
   const handleKeyboardChange = (input) => {
@@ -31,6 +35,9 @@ const KeyboardWidget = forwardRef((props, ref) => {
   const handleKeyPress = (button) => {
     if (button === "{shift}" || button === "{lock}") {
       setLayoutName(prev => (prev === "default" ? "shift" : "default"));
+    }
+    if (props.onKeyPress) {
+      props.onKeyPress(button);
     }
   };
 
@@ -76,5 +83,4 @@ const KeyboardWidget = forwardRef((props, ref) => {
 });
 
 KeyboardWidget.displayName = "KeyboardWidget";
-
 export default KeyboardWidget;
