@@ -6,7 +6,6 @@ import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 
 const KeyboardWidget = forwardRef((props, ref) => {
-  const [input, setInput] = useState("");
   const [layoutName, setLayoutName] = useState("default");
   const keyboardRef = useRef();
 
@@ -16,7 +15,6 @@ const KeyboardWidget = forwardRef((props, ref) => {
       keyboardRef.current.setInput(newInput);
     },
     clearInput: () => {
-      setInput("");
       keyboardRef.current.clearInput();
     },
     getButtonElement: (button) => {
@@ -28,7 +26,6 @@ const KeyboardWidget = forwardRef((props, ref) => {
   }));
 
   const handleKeyboardChange = (input) => {
-    setInput(input);
     if (props.onInputChange) props.onInputChange(input);
   };
 
@@ -41,20 +38,7 @@ const KeyboardWidget = forwardRef((props, ref) => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const input = e.target.value;
-    setInput(input);
-    keyboardRef.current.setInput(input);
-  };
-
   return (
-    <div style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 10, maxWidth: '600px', width: '90%', color: 'black' }}>
-      <input
-        value={input}
-        placeholder="Tap on the virtual keyboard to start"
-        onChange={handleInputChange}
-        style={{ width: "100%", padding: "10px", fontSize: "16px", marginBottom: "10px", borderRadius: "4px", border: "1px solid #333" }}
-      />
       <Keyboard
         keyboardRef={r => (keyboardRef.current = r)}
         onChange={handleKeyboardChange}
@@ -78,7 +62,6 @@ const KeyboardWidget = forwardRef((props, ref) => {
           ]
         }}
       />
-    </div>
   );
 });
 
