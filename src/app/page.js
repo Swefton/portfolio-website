@@ -11,8 +11,37 @@ export default function Home() {
   const keyboardRef = useRef();
 
   const simulateTyping = async (text) => {
-    if (!terminalRef.current) return;
-    await terminalRef.current.simulateTyping(text);
+    let currentInput = "";
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      currentInput += char;
+
+      // Update virtual keyboard input
+      if (keyboardRef.current) {
+        keyboardRef.current.setInputValue(currentInput);
+
+        // Highlight the key
+        const btn = keyboardRef.current.getButtonElement(char.toLowerCase());
+        if (btn) {
+          btn.classList.add('hg-activeButton');
+          setTimeout(() => {
+            btn.classList.remove('hg-activeButton');
+          }, 100);
+        }
+      }
+
+      // Update terminal display
+      if (terminalRef.current && terminalRef.current.typeCharacter) {
+        terminalRef.current.typeCharacter(char);
+      }
+
+      await new Promise(res => setTimeout(res, 100)); // typing speed
+    }
+
+    // Simulate Enter
+    if (terminalRef.current && terminalRef.current.handleEnter) {
+      terminalRef.current.handleEnter(currentInput);
+    }
     if (keyboardRef.current) {
       keyboardRef.current.clearInput();
     }
@@ -49,7 +78,14 @@ export default function Home() {
 
         <div className="bento-tile terminal">
           <TerminalWidget ref={terminalRef} />
-          <button onClick={() => simulateTyping("run github")}>GitHub</button>
+          <div className= "terminal-buttons">
+            <button onClick={() => simulateTyping("run github")}>GitHub</button>
+            <button>Devpost</button>
+            <button>LinkedIn</button>
+            <button>Experience</button>
+            <button>Projects</button>
+            <button>Skills</button>
+          </div>
         </div>
 
         <div className="bento-tile keyboard">

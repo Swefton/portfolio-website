@@ -71,3 +71,17 @@
     grid-row: auto;
   }
 }
+
+.bento-tile.terminal {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; 
+}
+
+.terminal-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem; 
+  margin-top: 0.5rem; 
+}
+
