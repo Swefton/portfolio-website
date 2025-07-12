@@ -57,10 +57,11 @@ const TerminalWidget = forwardRef((props, ref) => {
   return (
     <Terminal
       name="React Terminal UI"
-      colorMode={ColorMode.Light}
+      colorMode={ColorMode.Dark}
       prompt="$ "
       onInput={handleSubmit}
       startingInputValue={currentInput}
+      height="95%"
     >
       {terminalLineData}
     </Terminal>
