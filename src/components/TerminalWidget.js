@@ -7,7 +7,9 @@ import "./Terminal.css";
 
 const TerminalWidget = forwardRef((props, ref) => {
   const [terminalLineData, setTerminalLineData] = useState([
-    <TerminalOutput key={0}>Welcome to the React Terminal UI Controlled Component!</TerminalOutput>,
+    <TerminalOutput key={0}>I'm Amrit Srivastava</TerminalOutput>,
+    <TerminalOutput key={1}>I like working with technologies that make computers work for you.</TerminalOutput>,
+    <TerminalOutput key={2}> not the other way around.</TerminalOutput>,
   ]);
   const [currentInput, setCurrentInput] = useState("");
 
@@ -58,12 +60,13 @@ const TerminalWidget = forwardRef((props, ref) => {
 
   return (
     <Terminal
-      name="React Terminal UI"
+      name="Amrit OS"
       colorMode={ColorMode.Dark}
-      prompt="$ "
+      prompt="$"
       onInput={handleSubmit}
       startingInputValue={currentInput}
       height="95%"
+      TopButtonsPanel={()=> null}
     >
       {terminalLineData}
     </Terminal>
