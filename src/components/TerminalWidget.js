@@ -3,6 +3,8 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import Terminal, { ColorMode, TerminalOutput } from 'react-terminal-ui';
 
+import "./Terminal.css";
+
 const TerminalWidget = forwardRef((props, ref) => {
   const [terminalLineData, setTerminalLineData] = useState([
     <TerminalOutput key={0}>Welcome to the React Terminal UI Controlled Component!</TerminalOutput>,

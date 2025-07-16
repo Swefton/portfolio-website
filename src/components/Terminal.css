@@ -1,0 +1,6 @@
+.react-terminal-line .cursor {
+  display: inline-block !important;
+  width: 0.6em !important; /* Approximate character width */
+  height: 1em !important;  /* Match the line height */
+  vertical-align: baseline !important; /* or middle/baseline depending on font */
+}
