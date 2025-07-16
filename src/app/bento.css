@@ -75,16 +75,40 @@
 .bento-tile.terminal {
   display: flex;
   flex-direction: column;
-  align-items: stretch; 
-}
-
-.terminal-buttons {
-  display: flex;
-  justify-content: flex-start;
-  gap: 0.5rem; 
-  margin-top: 0.5rem; 
+  height: 100%;
 }
 
 .bento-tile.terminal > *:first-child {
-  flex: 1 1 auto;
+  flex: 0 0 95%;
+  overflow: hidden; /* prevents overflow from TerminalWidget */
+}
+
+.terminal-buttons {
+  flex: 0 0 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.6rem;
+  color: #d4d4d4;
+  transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.terminal-button:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+.terminal-button img {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+  pointer-events: none;
 }

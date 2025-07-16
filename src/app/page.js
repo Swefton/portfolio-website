@@ -5,6 +5,7 @@ import KeyboardWidget from "@/components/KeyboardWidget";
 import TerminalWidget from "@/components/TerminalWidget";
 import GlobeWidget from "@/components/GlobeWidget";
 import AsciiChessBoard from "@/components/ChessWidget";
+
 import "./bento.css";
 
 export default function Home() {
@@ -79,17 +80,35 @@ export default function Home() {
   return (
     <main className="bento-grid">
 
-        <div className="bento-tile terminal">
-          <TerminalWidget ref={terminalRef} />
-          <div className= "terminal-buttons">
-            <button onClick={() => simulateTyping("run github")}>GitHub</button>
-            <button>Devpost</button>
-            <button>LinkedIn</button>
-            <button>Experience</button>
-            <button>Projects</button>
-            <button>Skills</button>
-          </div>
+    <div className="bento-tile terminal">
+      <TerminalWidget ref={terminalRef} />
+      <div className="terminal-buttons">
+        <div className="terminal-button" onClick={() => simulateTyping("run github")}>
+          <img src="/folder.svg" alt="GitHub" />
+          <span>GitHub</span>
         </div>
+        <div className="terminal-button" onClick={() => simulateTyping("run devpost")}>
+          <img src="/folder.svg" alt="Devpost" />
+          <span>Devpost</span>
+        </div>
+        <div className="terminal-button" onClick={() => simulateTyping("run linkedin")}>
+          <img src="/folder.svg" alt="LinkedIn" />
+          <span>LinkedIn</span>
+        </div>
+        <div className="terminal-button" onClick={() => simulateTyping("run experience")}>
+          <img src="/folder.svg" alt="Experience" />
+          <span>Experience</span>
+        </div>
+        <div className="terminal-button" onClick={() => simulateTyping("run projects")}>
+          <img src="/folder.svg" alt="Projects" />
+          <span>Projects</span>
+        </div>
+        <div className="terminal-button" onClick={() => simulateTyping("run skills")}>
+          <img src="/folder.svg" alt="Skills" />
+          <span>Skills</span>
+        </div>
+      </div>
+    </div>
 
         <div className="bento-tile keyboard">
           <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
