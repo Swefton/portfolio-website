@@ -4,6 +4,7 @@ import { useRef } from "react";
 import KeyboardWidget from "@/components/KeyboardWidget";
 import TerminalWidget from "@/components/TerminalWidget";
 import GlobeWidget from "@/components/GlobeWidget";
+import AsciiChessBoard from "@/components/ChessWidget";
 import "./bento.css";
 
 export default function Home() {
@@ -73,6 +74,8 @@ export default function Home() {
     }
   };
 
+  const moves = ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6"];
+
   return (
     <main className="bento-grid">
 
@@ -97,7 +100,7 @@ export default function Home() {
         </div>
 
         <div className="bento-tile widget widget-2">
-          <p>Future Widget 2</p>
+            <AsciiChessBoard moves={moves} interval={1000} />
         </div>
 
         <div className="bento-tile widget widget-3">
