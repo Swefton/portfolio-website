@@ -10,8 +10,8 @@ export default function GlobeWidget() {
     const container = containerRef.current;
     if (!container) return;
 
-    const width = container.clientWidth || 400;
-    const height = container.clientHeight || 400;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
     // Create main container with black background
     container.style.backgroundColor = 'black';
@@ -32,26 +32,26 @@ export default function GlobeWidget() {
     asciiRenderer.domElement.style.zIndex = "1";
     container.appendChild(asciiRenderer.domElement);
 
-    // CANVAS B: Arc Scene with proper depth testing
-    const arcScene = new THREE.Scene();
+    // CANVAS B: Marker Scene with proper depth testing
+    const markerScene = new THREE.Scene();
     
-    const arcCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    arcCamera.position.z = 3;
+    const markerCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    markerCamera.position.z = 3;
 
-    const arcRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    arcRenderer.setSize(width, height);
-    arcRenderer.setPixelRatio(window.devicePixelRatio);
-    arcRenderer.setClearColor(0x000000, 0); // Transparent clear
-    arcRenderer.domElement.style.position = "absolute";
-    arcRenderer.domElement.style.top = "0";
-    arcRenderer.domElement.style.left = "0";
-    arcRenderer.domElement.style.zIndex = "3";
-    arcRenderer.domElement.style.pointerEvents = "none";
+    const markerRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    markerRenderer.setSize(width, height);
+    markerRenderer.setPixelRatio(window.devicePixelRatio);
+    markerRenderer.setClearColor(0x000000, 0); // Transparent clear
+    markerRenderer.domElement.style.position = "absolute";
+    markerRenderer.domElement.style.top = "0";
+    markerRenderer.domElement.style.left = "0";
+    markerRenderer.domElement.style.zIndex = "3";
+    markerRenderer.domElement.style.pointerEvents = "none";
     
     // Enable depth testing for proper occlusion
-    arcRenderer.sortObjects = true;
-    arcRenderer.autoClear = true;
-    container.appendChild(arcRenderer.domElement);
+    markerRenderer.sortObjects = true;
+    markerRenderer.autoClear = true;
+    container.appendChild(markerRenderer.domElement);
 
     // Load earth texture for ASCII globe
     const textureLoader = new THREE.TextureLoader();
@@ -69,7 +69,7 @@ export default function GlobeWidget() {
     const asciiGlobe = new THREE.Mesh(asciiGlobeGeometry, asciiGlobeMaterial);
     asciiScene.add(asciiGlobe);
 
-    // Depth-writing globe for arc scene (Canvas B) - this creates the depth mask
+    // Depth-writing globe for marker scene (Canvas B) - this creates the depth mask
     const depthGlobeGeometry = new THREE.SphereGeometry(1, 64, 64);
     const depthGlobeMaterial = new THREE.MeshBasicMaterial({ 
       colorWrite: false,    // Don't draw color
@@ -78,7 +78,7 @@ export default function GlobeWidget() {
       side: THREE.FrontSide
     });
     const depthGlobe = new THREE.Mesh(depthGlobeGeometry, depthGlobeMaterial);
-    arcScene.add(depthGlobe);
+    markerScene.add(depthGlobe);
 
     // Helper function to convert lat/lng to 3D coordinates
     function latLngToVector3(lat, lng, radius = 1) {
@@ -92,8 +92,8 @@ export default function GlobeWidget() {
       );
     }
 
-    // Create arc between Delhi and Michigan (Canvas B)
-    const arcGroup = new THREE.Group();
+    // Create markers for cities (Canvas B)
+    const markerGroup = new THREE.Group();
     
     // Coordinates
     const delhi = { lat: 28.6139, lng: 77.2090 };
@@ -103,59 +103,6 @@ export default function GlobeWidget() {
     const delhiPos = latLngToVector3(delhi.lat, delhi.lng);
     const michiganPos = latLngToVector3(michigan.lat, michigan.lng);
     
-    // Create westward arc with many segments for granular occlusion
-    function createWestwardArc(start, end, arcHeight = 0.3) {
-      const points = [];
-      const numPoints = 200; // More points for finer occlusion granularity
-      
-      // Calculate intermediate points going westward
-      for (let i = 0; i <= numPoints; i++) {
-        const t = i / numPoints;
-        
-        // Interpolate longitude going westward (longer route)
-        let startLng = delhi.lng;
-        let endLng = michigan.lng;
-        
-        // Force westward path by going the long way
-        if (endLng > startLng) {
-          endLng -= 360; // Go west across dateline
-        }
-        
-        const lng = startLng + t * (endLng - startLng);
-        
-        // Interpolate latitude with arc curve
-        const lat = delhi.lat + t * (michigan.lat - delhi.lat);
-        
-        // Add height curve (parabolic arc)
-        const heightMultiplier = 1 + arcHeight * Math.sin(t * Math.PI);
-        const pos = latLngToVector3(lat, lng, heightMultiplier);
-        
-        points.push(pos);
-      }
-      
-      return points;
-    }
-    
-    // Create multiple line segments instead of one continuous line for better depth testing
-    const arcPoints = createWestwardArc(delhiPos, michiganPos);
-    
-    // Break arc into small segments that can be individually depth-tested
-    const segmentLength = 5; // Points per segment
-    for (let i = 0; i < arcPoints.length - segmentLength; i += segmentLength) {
-      const segmentPoints = arcPoints.slice(i, i + segmentLength + 1);
-      const segmentGeometry = new THREE.BufferGeometry().setFromPoints(segmentPoints);
-      const segmentMaterial = new THREE.LineBasicMaterial({ 
-        color: "limegreen", 
-        linewidth: 3,
-        depthTest: true,      // Test against depth buffer
-        depthWrite: false,    // Don't write to depth buffer
-        transparent: false
-      });
-      const segment = new THREE.Line(segmentGeometry, segmentMaterial);
-      arcGroup.add(segment);
-    }
-    
-    // Add markers for cities
     const markerGeometry = new THREE.SphereGeometry(0.02, 16, 16);
     const markerMaterial = new THREE.MeshBasicMaterial({ 
       color: "red",
@@ -165,15 +112,15 @@ export default function GlobeWidget() {
     
     const delhiMarker = new THREE.Mesh(markerGeometry, markerMaterial);
     delhiMarker.position.copy(delhiPos.clone().multiplyScalar(1.02));
-    arcGroup.add(delhiMarker);
+    markerGroup.add(delhiMarker);
     
     const michiganMarker = new THREE.Mesh(markerGeometry, markerMaterial);
     michiganMarker.position.copy(michiganPos.clone().multiplyScalar(1.02));
-    arcGroup.add(michiganMarker);
+    markerGroup.add(michiganMarker);
     
-    arcScene.add(arcGroup);
+    markerScene.add(markerGroup);
     
-    // Add labels for cities (positioned relative to arc canvas)
+    // Add labels for cities (positioned relative to marker canvas)
     const labelGroup = document.createElement('div');
     labelGroup.style.position = 'absolute';
     labelGroup.style.top = '0';
@@ -187,22 +134,30 @@ export default function GlobeWidget() {
     const delhiLabel = document.createElement('div');
     delhiLabel.textContent = 'home';
     delhiLabel.style.position = 'absolute';
-    delhiLabel.style.color = 'white';
+    delhiLabel.style.color = 'black';
+    delhiLabel.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    delhiLabel.style.padding = '2px 6px';
+    delhiLabel.style.borderRadius = '4px';
     delhiLabel.style.fontSize = '12px';
     delhiLabel.style.fontFamily = 'monospace';
+    delhiLabel.style.fontWeight = 'bold';
     delhiLabel.style.pointerEvents = 'none';
     labelGroup.appendChild(delhiLabel);
     
     const michiganLabel = document.createElement('div');
     michiganLabel.textContent = 'university';
     michiganLabel.style.position = 'absolute';
-    michiganLabel.style.color = 'white';
+    michiganLabel.style.color = 'black';
+    michiganLabel.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    michiganLabel.style.padding = '2px 6px';
+    michiganLabel.style.borderRadius = '4px';
     michiganLabel.style.fontSize = '12px';
     michiganLabel.style.fontFamily = 'monospace';
+    michiganLabel.style.fontWeight = 'bold';
     michiganLabel.style.pointerEvents = 'none';
     labelGroup.appendChild(michiganLabel);
     
-    // Function to update label positions
+    // Function to update label positions and visibility
     function updateLabelPositions(rotation) {
       // Apply current rotation to positions for proper depth testing
       const rotatedDelhiPos = delhiPos.clone();
@@ -211,27 +166,43 @@ export default function GlobeWidget() {
       const rotatedMichiganPos = michiganPos.clone();
       rotatedMichiganPos.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotation);
       
+      // Check if positions are visible (z > 0 means front-facing)
+      const delhiVisible = rotatedDelhiPos.z > 0;
+      const michiganVisible = rotatedMichiganPos.z > 0;
+      
+      // Control marker visibility
+      delhiMarker.visible = delhiVisible;
+      michiganMarker.visible = michiganVisible;
+      
       // Delhi label position
-      const delhiScreenPos = rotatedDelhiPos.clone();
-      delhiScreenPos.project(arcCamera);
-      
-      const delhiX = (delhiScreenPos.x * 0.5 + 0.5) * width;
-      const delhiY = (delhiScreenPos.y * -0.5 + 0.5) * height;
-      
-      delhiLabel.style.left = delhiX + 'px';
-      delhiLabel.style.top = (delhiY - 25) + 'px';
-      delhiLabel.style.display = rotatedDelhiPos.z > 0 ? 'block' : 'none';
+      if (delhiVisible) {
+        const delhiScreenPos = rotatedDelhiPos.clone();
+        delhiScreenPos.project(markerCamera);
+        
+        const delhiX = (delhiScreenPos.x * 0.5 + 0.5) * width;
+        const delhiY = (delhiScreenPos.y * -0.5 + 0.5) * height;
+        
+        delhiLabel.style.left = delhiX + 'px';
+        delhiLabel.style.top = (delhiY - 25) + 'px';
+        delhiLabel.style.display = 'block';
+      } else {
+        delhiLabel.style.display = 'none';
+      }
       
       // Michigan label position
-      const michiganScreenPos = rotatedMichiganPos.clone();
-      michiganScreenPos.project(arcCamera);
-      
-      const michiganX = (michiganScreenPos.x * 0.5 + 0.5) * width;
-      const michiganY = (michiganScreenPos.y * -0.5 + 0.5) * height;
-      
-      michiganLabel.style.left = michiganX + 'px';
-      michiganLabel.style.top = (michiganY - 25) + 'px';
-      michiganLabel.style.display = rotatedMichiganPos.z > 0 ? 'block' : 'none';
+      if (michiganVisible) {
+        const michiganScreenPos = rotatedMichiganPos.clone();
+        michiganScreenPos.project(markerCamera);
+        
+        const michiganX = (michiganScreenPos.x * 0.5 + 0.5) * width;
+        const michiganY = (michiganScreenPos.y * -0.5 + 0.5) * height;
+        
+        michiganLabel.style.left = michiganX + 'px';
+        michiganLabel.style.top = (michiganY - 25) + 'px';
+        michiganLabel.style.display = 'block';
+      } else {
+        michiganLabel.style.display = 'none';
+      }
     }
     
     // Mouse interaction for horizontal rotation
@@ -253,10 +224,10 @@ export default function GlobeWidget() {
       rotationVelocity = deltaX * 0.01;
       currentRotation += rotationVelocity;
       
-      // Apply rotation to both globes and arc group
+      // Apply rotation to both globes and marker group
       asciiGlobe.rotation.y = currentRotation;
       depthGlobe.rotation.y = currentRotation;
-      arcGroup.rotation.y = currentRotation;
+      markerGroup.rotation.y = currentRotation;
       
       previousMouseX = event.clientX;
     };
@@ -282,10 +253,10 @@ export default function GlobeWidget() {
       rotationVelocity = deltaX * 0.01;
       currentRotation += rotationVelocity;
       
-      // Apply rotation to both globes and arc group
+      // Apply rotation to both globes and marker group
       asciiGlobe.rotation.y = currentRotation;
       depthGlobe.rotation.y = currentRotation;
-      arcGroup.rotation.y = currentRotation;
+      markerGroup.rotation.y = currentRotation;
       
       previousMouseX = event.touches[0].clientX;
       event.preventDefault();
@@ -314,12 +285,19 @@ export default function GlobeWidget() {
     asciiCanvas.style.top = "0";
     asciiCanvas.style.left = "0";
     asciiCanvas.style.pointerEvents = "none";
-    asciiCanvas.style.zIndex = "2"; // Above ASCII renderer, below arc renderer
+    asciiCanvas.style.zIndex = "2"; // Above ASCII renderer, below marker renderer
+    asciiCanvas.style.imageRendering = "pixelated"; // Prevent blurring
+    asciiCanvas.style.imageRendering = "crisp-edges"; // Alternative for different browsers
     container.appendChild(asciiCanvas);
 
     const asciiContext = asciiCanvas.getContext("2d");
+    
+    // Configure context for crisp rendering
+    asciiContext.imageSmoothingEnabled = false;
+    asciiContext.textAlign = "left";
+    asciiContext.textBaseline = "top";
     asciiContext.font = "8px monospace";
-    asciiContext.fillStyle = "white";
+    asciiContext.fillStyle = "lime"; // Changed from white to lime green for better contrast
 
     // Render target for ASCII
     const renderTarget = new THREE.WebGLRenderTarget(width, height);
@@ -335,14 +313,21 @@ export default function GlobeWidget() {
       const pixelBuffer = new Uint8Array(width * height * 4);
       asciiRenderer.readRenderTargetPixels(renderTarget, 0, 0, width, height, pixelBuffer);
 
-      // Convert to ASCII
+      // Convert to ASCII with improved sampling
       asciiContext.clearRect(0, 0, width, height);
-      for (let y = 0; y < height; y += 8) {
-        for (let x = 0; x < width; x += 4) {
+      const stepX = 4;
+      const stepY = 8;
+      
+      for (let y = 0; y < height; y += stepY) {
+        for (let x = 0; x < width; x += stepX) {
           const i = (y * width + x) * 4;
           const brightness = (pixelBuffer[i] + pixelBuffer[i + 1] + pixelBuffer[i + 2]) / 3;
           const charIndex = Math.floor((brightness / 255) * (chars.length - 1));
-          asciiContext.fillText(chars[charIndex], x, y);
+          
+          // Only render characters where there's content
+          if (brightness > 10) {
+            asciiContext.fillText(chars[charIndex], x, y);
+          }
         }
       }
     }
@@ -358,10 +343,10 @@ export default function GlobeWidget() {
         rotationVelocity *= 0.95;
         currentRotation += rotationVelocity;
         
-        // Apply rotation to both globes and arc group
+        // Apply rotation to both globes and marker group
         asciiGlobe.rotation.y = currentRotation;
         depthGlobe.rotation.y = currentRotation;
-        arcGroup.rotation.y = currentRotation;
+        markerGroup.rotation.y = currentRotation;
       }
       
       // Update label positions to track their geographic locations
@@ -372,9 +357,9 @@ export default function GlobeWidget() {
         renderAscii();
       }
       
-      // Render the arc scene with depth testing
-      // The depth globe writes to depth buffer first, then arcs are tested against it
-      arcRenderer.render(arcScene, arcCamera);
+      // Render the marker scene with depth testing
+      // The depth globe writes to depth buffer first, then markers are tested against it
+      markerRenderer.render(markerScene, markerCamera);
       
       frameCount++;
     };
@@ -397,8 +382,8 @@ export default function GlobeWidget() {
       if (container.contains(asciiRenderer.domElement)) {
         container.removeChild(asciiRenderer.domElement);
       }
-      if (container.contains(arcRenderer.domElement)) {
-        container.removeChild(arcRenderer.domElement);
+      if (container.contains(markerRenderer.domElement)) {
+        container.removeChild(markerRenderer.domElement);
       }
       if (container.contains(asciiCanvas)) {
         container.removeChild(asciiCanvas);
@@ -409,7 +394,7 @@ export default function GlobeWidget() {
       
       // Dispose resources
       asciiRenderer.dispose();
-      arcRenderer.dispose();
+      markerRenderer.dispose();
       renderTarget.dispose();
       asciiGlobeGeometry.dispose();
       asciiGlobeMaterial.dispose();
@@ -425,8 +410,8 @@ export default function GlobeWidget() {
     <div 
       ref={containerRef} 
       style={{ 
-        width: '400px', 
-        height: '400px', 
+        width: '100%', 
+        height: '100%', 
         position: 'relative',
         border: '1px solid #333'
       }} 
