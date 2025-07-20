@@ -1,0 +1,150 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-family: monospace;
+    background-color: black;
+    color: limegreen;
+    padding: 1rem;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.boardWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #0a0a0a;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.columnHeaders {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.rankSpacer {
+    width: 24px;
+}
+
+.fileHeader {
+    width: 32px;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+.rank {
+    width: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}
+
+.square {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
+
+.lightSquare {
+    background-color: #2a2a2a;
+}
+
+.darkSquare {
+    background-color: #1a1a1a;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.button {
+    background-color: #333;
+    color: limegreen;
+    border: 1px solid limegreen;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.button:disabled {
+    background-color: #222;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.movesList {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.5rem;
+    background-color: #111;
+    min-height: 0;
+}
+
+.movesHeader {
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+    color: #888;
+}
+
+.movesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.25rem;
+}
+
+.moveButton {
+    background-color: #333;
+    color: limegreen;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 0.2rem 0.3rem;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 10px;
+}
+
+.activeMoveButton {
+    background-color: limegreen;
+    color: black;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 0.2rem 0.3rem;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 10px;
+}
+
+.currentMoveInfo {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    border-top: 1px solid #333;
+    padding-top: 0.5rem;
+}

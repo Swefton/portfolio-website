@@ -1,7 +1,9 @@
+// AsciiChessBoard.js
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Chess } from 'chess.js';
+import styles from './AsciiChessBoard.module.css';
 
 const pieceUnicode = {
     p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚',
@@ -30,18 +32,11 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
     const [gameHistory, setGameHistory] = useState([]);
     const timerRef = useRef(null);
 
-    // Initialize game history with starting position
     useEffect(() => {
         const initialChess = new Chess();
-        setGameHistory([{
-            board: generateBoardGrid(initialChess.board()),
-            fen: initialChess.fen(),
-            move: null,
-            moveNumber: 0
-        }]);
+        setGameHistory([{ board: generateBoardGrid(initialChess.board()), fen: initialChess.fen(), move: null, moveNumber: 0 }]);
     }, []);
 
-    // Auto-play logic
     useEffect(() => {
         if (!isPlaying || currentMove >= moves.length) return;
 
@@ -56,7 +51,6 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
         if (moveIndex >= moves.length) return;
 
         const newChess = new Chess();
-        // Replay all moves up to the current index
         for (let i = 0; i <= moveIndex; i++) {
             newChess.move(moves[i]);
         }
@@ -80,9 +74,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
 
     const goToMove = (moveIndex) => {
         clearTimeout(timerRef.current);
-        
         if (moveIndex === 0) {
-            // Go to starting position
             const initialChess = new Chess();
             setBoardGrid(generateBoardGrid(initialChess.board()));
             setCurrentMove(0);
@@ -121,73 +113,23 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
     };
 
     return (
-        <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            fontFamily: 'monospace',
-            backgroundColor: 'black',
-            color: 'limegreen',
-            padding: '1rem',
-            borderRadius: '8px',
-            maxWidth: 'fit-content'
-        }}>
-            {/* Chess Board */}
-            <div style={{
-                display: 'inline-block',
-                border: '2px solid #333',
-                borderRadius: '4px',
-                padding: '8px',
-                backgroundColor: '#0a0a0a'
-            }}>
-                {/* Column headers */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: '4px'
-                }}>
-                    <div style={{ width: '24px' }}></div>
+        <div className={styles.container}>
+            <div className={styles.boardWrapper}>
+                <div className={styles.columnHeaders}>
+                    <div className={styles.rankSpacer}></div>
                     {'abcdefgh'.split('').map(file => (
-                        <div key={file} style={{
-                            width: '32px',
-                            textAlign: 'center',
-                            fontSize: '12px',
-                            color: '#666'
-                        }}>
-                            {file}
-                        </div>
+                        <div key={file} className={styles.fileHeader}>{file}</div>
                     ))}
                 </div>
-                
-                {/* Board rows */}
                 {boardGrid.map((row, rowIndex) => (
-                    <div key={rowIndex} style={{ display: 'flex', alignItems: 'center' }}>
-                        {/* Rank number */}
-                        <div style={{
-                            width: '24px',
-                            textAlign: 'center',
-                            fontSize: '12px',
-                            color: '#666'
-                        }}>
-                            {row.rank}
-                        </div>
-                        {/* Squares */}
+                    <div key={rowIndex} className={styles.row}>
+                        <div className={styles.rank}>{row.rank}</div>
                         {row.squares.map((piece, colIndex) => {
                             const isLight = (rowIndex + colIndex) % 2 === 0;
                             return (
                                 <div
                                     key={colIndex}
-                                    style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '20px',
-                                        backgroundColor: isLight ? '#2a2a2a' : '#1a1a1a',
-                                        border: '1px solid #333',
-                                        boxSizing: 'border-box'
-                                    }}
+                                    className={`${styles.square} ${isLight ? styles.lightSquare : styles.darkSquare}`}
                                 >
                                     {piece === '·' ? '' : piece}
                                 </div>
@@ -197,128 +139,22 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                 ))}
             </div>
 
-            {/* Controls */}
-            <div style={{ 
-                display: 'flex', 
-                gap: '0.5rem', 
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexWrap: 'wrap'
-            }}>
-                <button 
-                    onClick={resetGame}
-                    style={{
-                        backgroundColor: '#333',
-                        color: 'limegreen',
-                        border: '1px solid limegreen',
-                        borderRadius: '4px',
-                        padding: '0.25rem 0.5rem',
-                        cursor: 'pointer',
-                        fontFamily: 'monospace',
-                        fontSize: '12px'
-                    }}
-                >
-                    ⏮ Reset
-                </button>
-                <button 
-                    onClick={previousMove}
-                    disabled={currentMove === 0}
-                    style={{
-                        backgroundColor: currentMove === 0 ? '#222' : '#333',
-                        color: currentMove === 0 ? '#666' : 'limegreen',
-                        border: '1px solid limegreen',
-                        borderRadius: '4px',
-                        padding: '0.25rem 0.5rem',
-                        cursor: currentMove === 0 ? 'not-allowed' : 'pointer',
-                        fontFamily: 'monospace',
-                        fontSize: '12px'
-                    }}
-                >
-                    ◀ Prev
-                </button>
-                <button 
-                    onClick={togglePlayPause}
-                    style={{
-                        backgroundColor: '#333',
-                        color: 'limegreen',
-                        border: '1px solid limegreen',
-                        borderRadius: '4px',
-                        padding: '0.25rem 0.5rem',
-                        cursor: 'pointer',
-                        fontFamily: 'monospace',
-                        fontSize: '12px'
-                    }}
-                >
-                    {isPlaying ? '⏸ Pause' : '▶ Play'}
-                </button>
-                <button 
-                    onClick={nextMove}
-                    disabled={currentMove >= moves.length}
-                    style={{
-                        backgroundColor: currentMove >= moves.length ? '#222' : '#333',
-                        color: currentMove >= moves.length ? '#666' : 'limegreen',
-                        border: '1px solid limegreen',
-                        borderRadius: '4px',
-                        padding: '0.25rem 0.5rem',
-                        cursor: currentMove >= moves.length ? 'not-allowed' : 'pointer',
-                        fontFamily: 'monospace',
-                        fontSize: '12px'
-                    }}
-                >
-                    Next ▶
-                </button>
+            <div className={styles.controls}>
+                <button onClick={resetGame} className={styles.button}>Reset</button>
+                <button onClick={previousMove} disabled={currentMove === 0} className={styles.button}>Prev</button>
+                <button onClick={togglePlayPause} className={styles.button}>{isPlaying ? 'Pause' : 'Play'}</button>
+                <button onClick={nextMove} disabled={currentMove >= moves.length} className={styles.button}>Next</button>
             </div>
 
-            {/* Move List */}
-            <div style={{
-                maxHeight: '120px',
-                overflowY: 'auto',
-                border: '1px solid #333',
-                borderRadius: '4px',
-                padding: '0.5rem',
-                backgroundColor: '#111'
-            }}>
-                <div style={{ 
-                    fontSize: '12px', 
-                    marginBottom: '0.5rem',
-                    color: '#888'
-                }}>
-                    Moves ({currentMove}/{moves.length}):
-                </div>
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
-                    gap: '0.25rem'
-                }}>
-                    <button
-                        onClick={() => goToMove(0)}
-                        style={{
-                            backgroundColor: currentMove === 0 ? 'limegreen' : '#333',
-                            color: currentMove === 0 ? 'black' : 'limegreen',
-                            border: '1px solid #555',
-                            borderRadius: '3px',
-                            padding: '0.2rem 0.3rem',
-                            cursor: 'pointer',
-                            fontFamily: 'monospace',
-                            fontSize: '10px'
-                        }}
-                    >
-                        Start
-                    </button>
+            <div className={styles.movesList}>
+                <div className={styles.movesHeader}>Moves ({currentMove}/{moves.length}):</div>
+                <div className={styles.movesGrid}>
+                    <button onClick={() => goToMove(0)} className={currentMove === 0 ? styles.activeMoveButton : styles.moveButton}>Start</button>
                     {moves.map((move, index) => (
                         <button
                             key={index}
                             onClick={() => goToMove(index + 1)}
-                            style={{
-                                backgroundColor: currentMove === index + 1 ? 'limegreen' : '#333',
-                                color: currentMove === index + 1 ? 'black' : 'limegreen',
-                                border: '1px solid #555',
-                                borderRadius: '3px',
-                                padding: '0.2rem 0.3rem',
-                                cursor: 'pointer',
-                                fontFamily: 'monospace',
-                                fontSize: '10px'
-                            }}
+                            className={currentMove === index + 1 ? styles.activeMoveButton : styles.moveButton}
                         >
                             {Math.floor(index / 2) + 1}.{index % 2 === 0 ? '' : '..'} {move}
                         </button>
@@ -326,16 +162,8 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                 </div>
             </div>
 
-            {/* Current Move Info */}
-            <div style={{
-                fontSize: '12px',
-                color: '#888',
-                textAlign: 'center',
-                borderTop: '1px solid #333',
-                paddingTop: '0.5rem'
-            }}>
-                {currentMove === 0 ? 'Starting position' : 
-                 `Move ${currentMove}: ${moves[currentMove - 1]}`}
+            <div className={styles.currentMoveInfo}>
+                {currentMove === 0 ? 'Starting position' : `Move ${currentMove}: ${moves[currentMove - 1]}`}
             </div>
         </div>
     );

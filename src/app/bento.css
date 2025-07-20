@@ -10,8 +10,8 @@
   display: grid;
   height: 100vh;
   width: 100vw;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr 0.6fr 1.2fr 0.8fr;
   gap: 16px;
   padding: 8px;
 }
@@ -21,74 +21,83 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
   overflow: hidden;
-  padding: 8px;
+  padding: None;
   box-sizing: border-box;
+  min-height: 0;
+  min-width: 0;
 }
 
+/* Left side - Terminal focus area */
 .terminal {
-  grid-column: 1 / span 3;
+  grid-column: 1 / span 4;
   grid-row: 1 / span 3;
-}
-
-.keyboard {
-  grid-column: 1 / span 3;
-  grid-row: 4 / span 1;
-}
-
-.widget {
-    background-color: grey;
-}
-
-.widget-1 {
-  grid-column: 4 / span 3;
-  grid-row: 1 / span 2;
-}
-
-.widget-2 {
-  grid-column: 4 / span 3;
-  grid-row: 3 / span 1;
-}
-
-.widget-3 {
-  grid-column: 4 / span 3;
-  grid-row: 4 / span 1;
-}
-
-@media (max-width: 1024px) {
-  .bento-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto;
-  }
-
-  .terminal,
-  .keyboard,
-  .widget-1,
-  .widget-2,
-  .widget-3 {
-    grid-column: span 2;
-    grid-row: auto;
-  }
-}
-
-.bento-tile.terminal {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
+.keyboard {
+  grid-column: 1 / span 4;
+  grid-row: 4 / span 1;
+}
+
+/* Right side - Dynamic mixed layout */
+.widget {
+  background-color: grey;
+  overflow: auto;
+}
+
+/* Temp widget - Rectangle next to globe */
+.widget-1 {
+  grid-column: 5 / span 3;
+  grid-row: 1 / span 1;
+}
+
+/* Globe widget - Square */
+.widget-2 {
+  grid-column: 8 / span 1;
+  grid-row: 1 / span 1;
+  overflow: hidden;
+}
+
+/* Chess widget - Tall vertical space */
+.widget-3 {
+  grid-column: 5 / span 2;
+  grid-row: 2 / span 3;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Temp widget - Medium square */
+.widget-4 {
+  grid-column: 7 / span 2;
+  grid-row: 2 / span 2;
+}
+
+/* Temp widget - Small horizontal */
+.widget-5 {
+  grid-column: 7 / span 2;
+  grid-row: 4 / span 1;
+}
+
+/* Terminal specific styling */
 .bento-tile.terminal > *:first-child {
-  flex: 0 0 95%;
-  overflow: hidden; /* prevents overflow from TerminalWidget */
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .terminal-buttons {
-  flex: 0 0 5%;
+  flex: 0 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  padding-top: 8px;
+  min-height: 40px;
 }
 
 .terminal-button {
@@ -111,4 +120,58 @@
   width: 24px;
   object-fit: contain;
   pointer-events: none;
+}
+
+/* Responsive considerations for smaller desktop screens */
+@media (max-width: 1400px) {
+  .bento-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  .terminal {
+    grid-column: 1 / span 3;
+  }
+  
+  .keyboard {
+    grid-column: 1 / span 3;
+  }
+  
+  .widget-1 {
+    grid-column: 4 / span 2;
+  }
+  
+  .widget-2 {
+    grid-column: 6 / span 1;
+  }
+  
+  .widget-3 {
+    grid-column: 4 / span 2;
+  }
+  
+  .widget-4 {
+    grid-column: 6 / span 1;
+  }
+  
+  .widget-5 {
+    grid-column: 4 / span 3;
+  }
+}
+
+/* Mobile */
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .terminal,
+  .keyboard,
+  .widget-1,
+  .widget-2,
+  .widget-3,
+  .widget-4,
+  .widget-5 {
+    grid-column: span 2;
+    grid-row: auto;
+  }
 }

@@ -75,57 +75,90 @@ export default function Home() {
     }
   };
 
-  const moves = ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6"];
+  const moves = ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "h3", "b5", "Bb3", "d6"];
 
   return (
     <main className="bento-grid">
-
-    <div className="bento-tile terminal">
-      <TerminalWidget ref={terminalRef} />
-      <div className="terminal-buttons">
-        <div className="terminal-button" onClick={() => simulateTyping("run github")}>
-          <img src="/folder.svg" alt="GitHub" />
-          <span>GitHub</span>
-        </div>
-        <div className="terminal-button" onClick={() => simulateTyping("run devpost")}>
-          <img src="/folder.svg" alt="Devpost" />
-          <span>Devpost</span>
-        </div>
-        <div className="terminal-button" onClick={() => simulateTyping("run linkedin")}>
-          <img src="/folder.svg" alt="LinkedIn" />
-          <span>LinkedIn</span>
-        </div>
-        <div className="terminal-button" onClick={() => simulateTyping("run experience")}>
-          <img src="/folder.svg" alt="Experience" />
-          <span>Experience</span>
-        </div>
-        <div className="terminal-button" onClick={() => simulateTyping("run projects")}>
-          <img src="/folder.svg" alt="Projects" />
-          <span>Projects</span>
-        </div>
-        <div className="terminal-button" onClick={() => simulateTyping("run skills")}>
-          <img src="/folder.svg" alt="Skills" />
-          <span>Skills</span>
+      {/* Left side - Terminal focus area */}
+      <div className="bento-tile terminal">
+        <TerminalWidget ref={terminalRef} />
+        <div className="terminal-buttons">
+          <div className="terminal-button" onClick={() => simulateTyping("run github")}>
+            <img src="/folder.svg" alt="GitHub" />
+            <span>GitHub</span>
+          </div>
+          <div className="terminal-button" onClick={() => simulateTyping("run devpost")}>
+            <img src="/folder.svg" alt="Devpost" />
+            <span>Devpost</span>
+          </div>
+          <div className="terminal-button" onClick={() => simulateTyping("run linkedin")}>
+            <img src="/folder.svg" alt="LinkedIn" />
+            <span>LinkedIn</span>
+          </div>
+          <div className="terminal-button" onClick={() => simulateTyping("run experience")}>
+            <img src="/folder.svg" alt="Experience" />
+            <span>Experience</span>
+          </div>
+          <div className="terminal-button" onClick={() => simulateTyping("run projects")}>
+            <img src="/folder.svg" alt="Projects" />
+            <span>Projects</span>
+          </div>
+          <div className="terminal-button" onClick={() => simulateTyping("run skills")}>
+            <img src="/folder.svg" alt="Skills" />
+            <span>Skills</span>
+          </div>
         </div>
       </div>
-    </div>
 
-        <div className="bento-tile keyboard">
-          <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
-        </div>
+      <div className="bento-tile keyboard">
+        <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
+      </div>
 
-        <div className="bento-tile widget widget-1">
-          <GlobeWidget />
+      {/* Right side - Dynamic mixed layout */}
+      <div className="bento-tile widget widget-1">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          color: 'white'
+        }}>
+          <p>Temp Widget 1</p>
         </div>
+      </div>
 
-        <div className="bento-tile widget widget-2">
-            <AsciiChessBoard moves={moves} interval={1000} />
-        </div>
+      <div className="bento-tile widget widget-2">
+        <GlobeWidget />
+      </div>
 
-        <div className="bento-tile widget widget-3">
-          <p>Future Widget 3</p>
+      <div className="bento-tile widget widget-3">
+        <AsciiChessBoard moves={moves} interval={1500} />
+      </div>
+
+      <div className="bento-tile widget widget-4">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          color: 'white'
+        }}>
+          <p>Temp Widget 4</p>
         </div>
-    
+      </div>
+
+      <div className="bento-tile widget widget-5">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          color: 'white'
+        }}>
+          <p>Temp Widget 5</p>
+        </div>
+      </div>
     </main>
   );
 }
