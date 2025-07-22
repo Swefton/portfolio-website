@@ -10,8 +10,8 @@ export default function GlobeWidget() {
     const container = containerRef.current;
     if (!container) return;
 
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    let width = container.clientWidth;
+    let height = container.clientHeight;
 
     // Create main container with black background
     container.style.backgroundColor = 'black';
@@ -156,7 +156,31 @@ export default function GlobeWidget() {
     michiganLabel.style.fontWeight = 'bold';
     michiganLabel.style.pointerEvents = 'none';
     labelGroup.appendChild(michiganLabel);
+
+    // ASCII Canvas overlay 
+    const asciiCanvas = document.createElement("canvas");
+    asciiCanvas.style.position = "absolute";
+    asciiCanvas.style.top = "0";
+    asciiCanvas.style.left = "0";
+    asciiCanvas.style.pointerEvents = "none";
+    asciiCanvas.style.zIndex = "2"; // Above ASCII renderer, below marker renderer
+    asciiCanvas.style.imageRendering = "pixelated"; // Prevent blurring
+    asciiCanvas.style.imageRendering = "crisp-edges"; // Alternative for different browsers
+    container.appendChild(asciiCanvas);
+
+    const asciiContext = asciiCanvas.getContext("2d");
     
+    // Configure context for crisp rendering
+    asciiContext.imageSmoothingEnabled = false;
+    asciiContext.textAlign = "left";
+    asciiContext.textBaseline = "top";
+    asciiContext.font = "8px monospace";
+    asciiContext.fillStyle = "lime"; // Changed from white to lime green for better contrast
+
+    // Render target for ASCII (will be resized dynamically)
+    let renderTarget = new THREE.WebGLRenderTarget(width, height);
+    const chars = " .:-=+*#%@";
+
     // Function to update label positions and visibility
     function updateLabelPositions(rotation) {
       // Apply current rotation to positions for proper depth testing
@@ -205,16 +229,127 @@ export default function GlobeWidget() {
       }
     }
     
-    // Mouse interaction for horizontal rotation
+    // Resize handler function
+    function handleResize() {
+      const newWidth = container.clientWidth;
+      const newHeight = container.clientHeight;
+      
+      if (newWidth === width && newHeight === height) return; // No change
+      
+      width = newWidth;
+      height = newHeight;
+      
+      // Update cameras
+      asciiCamera.aspect = width / height;
+      asciiCamera.updateProjectionMatrix();
+      
+      markerCamera.aspect = width / height;
+      markerCamera.updateProjectionMatrix();
+      
+      // Update renderers
+      asciiRenderer.setSize(width, height);
+      markerRenderer.setSize(width, height);
+      
+      // Update ASCII canvas
+      asciiCanvas.width = width;
+      asciiCanvas.height = height;
+      
+      // Reconfigure ASCII context after canvas resize
+      asciiContext.imageSmoothingEnabled = false;
+      asciiContext.textAlign = "left";
+      asciiContext.textBaseline = "top";
+      asciiContext.font = "8px monospace";
+      asciiContext.fillStyle = "lime";
+      
+      // Update render target
+      renderTarget.dispose();
+      renderTarget = new THREE.WebGLRenderTarget(width, height);
+    }
+    
+    // Set initial canvas size and configure context
+    asciiCanvas.width = width;
+    asciiCanvas.height = height;
+    
+    // Initial context configuration (important for first render)
+    asciiContext.imageSmoothingEnabled = false;
+    asciiContext.textAlign = "left";
+    asciiContext.textBaseline = "top";
+    asciiContext.font = "8px monospace";
+    asciiContext.fillStyle = "lime";
+    
+    // Create ResizeObserver to watch container size changes
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        handleResize();
+      }
+    });
+    
+    // Start observing the container
+    resizeObserver.observe(container);
+    
+    // Also listen to window resize as fallback
+    window.addEventListener('resize', handleResize);
+
+    function renderAscii() {
+      // Render ASCII globe to texture
+      asciiRenderer.setRenderTarget(renderTarget);
+      asciiRenderer.render(asciiScene, asciiCamera);
+      asciiRenderer.setRenderTarget(null);
+
+      // Read pixels
+      const pixelBuffer = new Uint8Array(width * height * 4);
+      asciiRenderer.readRenderTargetPixels(renderTarget, 0, 0, width, height, pixelBuffer);
+
+      // Convert to ASCII with improved sampling
+      asciiContext.clearRect(0, 0, width, height);
+      const stepX = 4;
+      const stepY = 8;
+      
+      for (let y = 0; y < height; y += stepY) {
+        for (let x = 0; x < width; x += stepX) {
+          const i = (y * width + x) * 4;
+          const brightness = (pixelBuffer[i] + pixelBuffer[i + 1] + pixelBuffer[i + 2]) / 3;
+          const charIndex = Math.floor((brightness / 255) * (chars.length - 1));
+          
+          // Only render characters where there's content
+          if (brightness > 10) {
+            asciiContext.fillText(chars[charIndex], x, y);
+          }
+        }
+      }
+    }
+    
+    // Animation state for auto-rotation
     let isDragging = false;
     let previousMouseX = 0;
     let rotationVelocity = 0;
     let currentRotation = 0;
+    let autoRotationPaused = false;
+    let pauseTimeoutId = null;
+    
+    const AUTO_ROTATION_SPEED = 0.005; // Slow, steady rotation
+    const PAUSE_DURATION = 3000; // 3 seconds
+    
+    // Helper function to pause auto-rotation temporarily
+    const pauseAutoRotation = () => {
+      autoRotationPaused = true;
+      
+      // Clear any existing timeout
+      if (pauseTimeoutId) {
+        clearTimeout(pauseTimeoutId);
+      }
+      
+      // Resume after pause duration
+      pauseTimeoutId = setTimeout(() => {
+        autoRotationPaused = false;
+      }, PAUSE_DURATION);
+    };
     
     const onMouseDown = (event) => {
       isDragging = true;
       previousMouseX = event.clientX;
       rotationVelocity = 0;
+      pauseAutoRotation();
     };
     
     const onMouseMove = (event) => {
@@ -242,6 +377,7 @@ export default function GlobeWidget() {
         isDragging = true;
         previousMouseX = event.touches[0].clientX;
         rotationVelocity = 0;
+        pauseAutoRotation();
         event.preventDefault();
       }
     };
@@ -277,69 +413,19 @@ export default function GlobeWidget() {
     asciiRenderer.domElement.addEventListener('touchend', onTouchEnd);
     asciiRenderer.domElement.addEventListener('touchcancel', onTouchEnd);
 
-    // ASCII Canvas overlay 
-    const asciiCanvas = document.createElement("canvas");
-    asciiCanvas.width = width;
-    asciiCanvas.height = height;
-    asciiCanvas.style.position = "absolute";
-    asciiCanvas.style.top = "0";
-    asciiCanvas.style.left = "0";
-    asciiCanvas.style.pointerEvents = "none";
-    asciiCanvas.style.zIndex = "2"; // Above ASCII renderer, below marker renderer
-    asciiCanvas.style.imageRendering = "pixelated"; // Prevent blurring
-    asciiCanvas.style.imageRendering = "crisp-edges"; // Alternative for different browsers
-    container.appendChild(asciiCanvas);
-
-    const asciiContext = asciiCanvas.getContext("2d");
-    
-    // Configure context for crisp rendering
-    asciiContext.imageSmoothingEnabled = false;
-    asciiContext.textAlign = "left";
-    asciiContext.textBaseline = "top";
-    asciiContext.font = "8px monospace";
-    asciiContext.fillStyle = "lime"; // Changed from white to lime green for better contrast
-
-    // Render target for ASCII
-    const renderTarget = new THREE.WebGLRenderTarget(width, height);
-    const chars = " .:-=+*#%@";
-
-    function renderAscii() {
-      // Render ASCII globe to texture
-      asciiRenderer.setRenderTarget(renderTarget);
-      asciiRenderer.render(asciiScene, asciiCamera);
-      asciiRenderer.setRenderTarget(null);
-
-      // Read pixels
-      const pixelBuffer = new Uint8Array(width * height * 4);
-      asciiRenderer.readRenderTargetPixels(renderTarget, 0, 0, width, height, pixelBuffer);
-
-      // Convert to ASCII with improved sampling
-      asciiContext.clearRect(0, 0, width, height);
-      const stepX = 4;
-      const stepY = 8;
-      
-      for (let y = 0; y < height; y += stepY) {
-        for (let x = 0; x < width; x += stepX) {
-          const i = (y * width + x) * 4;
-          const brightness = (pixelBuffer[i] + pixelBuffer[i + 1] + pixelBuffer[i + 2]) / 3;
-          const charIndex = Math.floor((brightness / 255) * (chars.length - 1));
-          
-          // Only render characters where there's content
-          if (brightness > 10) {
-            asciiContext.fillText(chars[charIndex], x, y);
-          }
-        }
-      }
-    }
-
     // Animation loop
     let frameCount = 0;
     const animate = () => {
       requestAnimationFrame(animate);
       
-      // Auto-rotation only when not dragging
+      // Handle rotation
       if (!isDragging) {
-        // Add some momentum/inertia
+        if (!autoRotationPaused) {
+          // Continuous auto-rotation when not paused
+          currentRotation += AUTO_ROTATION_SPEED;
+        }
+        
+        // Add some momentum/inertia from user interaction
         rotationVelocity *= 0.95;
         currentRotation += rotationVelocity;
         
@@ -368,6 +454,15 @@ export default function GlobeWidget() {
 
     // Cleanup
     return () => {
+      // Clear any pending timeouts
+      if (pauseTimeoutId) {
+        clearTimeout(pauseTimeoutId);
+      }
+      
+      // Disconnect resize observer
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+      
       // Remove event listeners
       asciiRenderer.domElement.removeEventListener('mousedown', onMouseDown);
       asciiRenderer.domElement.removeEventListener('mousemove', onMouseMove);
