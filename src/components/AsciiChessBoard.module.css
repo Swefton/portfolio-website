@@ -11,7 +11,9 @@
     box-sizing: border-box;
     overflow: hidden;
 }
-
+.carousel {
+    text-align: center;
+}
 .boardWrapper {
     display: flex;
     flex-direction: column;

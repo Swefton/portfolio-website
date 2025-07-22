@@ -114,6 +114,9 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
 
     return (
         <div className={styles.container}>
+            <div className={styles.carousel}>
+                <p>In my free time I like playing Chess. This was the best game I've played.</p>
+            </div>
             <div className={styles.boardWrapper}>
                 <div className={styles.columnHeaders}>
                     <div className={styles.rankSpacer}></div>
