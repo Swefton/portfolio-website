@@ -5,6 +5,7 @@ import KeyboardWidget from "@/components/KeyboardWidget";
 import TerminalWidget from "@/components/TerminalWidget";
 import GlobeWidget from "@/components/GlobeWidget";
 import AsciiChessBoard from "@/components/ChessWidget";
+import AboutMe from "@/components/AboutWidget";
 
 import "./bento.css";
 
@@ -116,15 +117,7 @@ export default function Home() {
 
       {/* Right side - Dynamic mixed layout */}
       <div className="bento-tile widget widget-1">
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          color: 'white'
-        }}>
-          <p>Temp Widget 1</p>
-        </div>
+          <AboutMe />
       </div>
 
       <div className="bento-tile widget widget-2">
