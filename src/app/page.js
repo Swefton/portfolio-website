@@ -6,6 +6,8 @@ import TerminalWidget from "@/components/TerminalWidget";
 import GlobeWidget from "@/components/GlobeWidget";
 import AsciiChessBoard from "@/components/ChessWidget";
 import AboutMe from "@/components/AboutWidget";
+import MatrixRainWidget from "@/components/MatrixWidget";
+import ConwayWidget from "@/components/ConwayWidget";
 
 import "./bento.css";
 
@@ -129,28 +131,11 @@ export default function Home() {
       </div>
 
       <div className="bento-tile widget widget-4">
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          color: 'white'
-        }}>
-          <p>Temp Widget 4</p>
-        </div>
+          <ConwayWidget />
       </div>
 
       <div className="bento-tile widget widget-5">
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          color: 'white'
-        }}>
-          <p>Temp Widget 5</p>
-        </div>
+        <MatrixRainWidget />
       </div>
     </main>
   );
