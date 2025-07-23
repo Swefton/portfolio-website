@@ -1,58 +1,22 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { useAnimationTick } from '../app/page'; // Import the hook
-
-// Memoized cell component to prevent unnecessary re-renders
-const Cell = ({ isAlive, onClick, isLight }) => (
-  <span
-    onClick={onClick}
-    style={{
-      width: '8px',
-      height: '8px',
-      cursor: 'pointer',
-      color: isAlive ? '#00ff00' : '#003300',
-      backgroundColor: isAlive ? '#00ff0020' : 'transparent',
-      border: '1px solid #002200',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '6px'
-    }}
-  >
-    {isAlive ? '█' : '·'}
-  </span>
-);
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 const ConwayWidget = () => {
   const [grid, setGrid] = useState([]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(750);
   const [generation, setGeneration] = useState(0);
+  const canvasRef = useRef();
   const containerRef = useRef();
-  const lastUpdateRef = useRef(0);
   const [dimensions, setDimensions] = useState({ rows: 20, cols: 30 });
   
-  const { tick } = useAnimationTick();
+  const cellSize = 8;
 
-  // Memoized empty grid creator
+  // Keep all your existing game logic (createEmptyGrid, countNeighbors, nextGeneration)
   const createEmptyGrid = useCallback(() => {
     return Array(dimensions.rows).fill().map(() => Array(dimensions.cols).fill(0));
   }, [dimensions]);
 
-  // Memoized random pattern generator
-  const randomizeGrid = useCallback(() => {
-    const newGrid = createEmptyGrid();
-    for (let i = 0; i < dimensions.rows; i++) {
-      for (let j = 0; j < dimensions.cols; j++) {
-        newGrid[i][j] = Math.random() > 0.7 ? 1 : 0;
-      }
-    }
-    setGrid(newGrid);
-    setGeneration(0);
-  }, [createEmptyGrid, dimensions]);
-
-  // Optimized neighbor counting with bounds checking
   const countNeighbors = useCallback((grid, x, y) => {
-    // Safety check - ensure grid exists and has proper dimensions
     if (!grid || !grid[x] || grid.length === 0) return 0;
     
     let count = 0;
@@ -70,10 +34,8 @@ const ConwayWidget = () => {
     return count;
   }, []);
 
-  // Optimized next generation calculation
   const nextGeneration = useCallback(() => {
     setGrid(prevGrid => {
-      // Safety check - ensure we have a valid grid before processing
       if (!prevGrid || prevGrid.length === 0 || !prevGrid[0]) {
         return prevGrid;
       }
@@ -87,7 +49,6 @@ const ConwayWidget = () => {
           const neighbors = countNeighbors(prevGrid, i, j);
           const isAlive = prevGrid[i][j] === 1;
           
-          // Conway's rules optimized
           if (isAlive) {
             newGrid[i][j] = (neighbors === 2 || neighbors === 3) ? 1 : 0;
           } else {
@@ -100,88 +61,105 @@ const ConwayWidget = () => {
     setGeneration(prev => prev + 1);
   }, [countNeighbors]);
 
-  // Game loop using global animation tick
+  // Canvas rendering function
+  const drawGrid = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || grid.length === 0) return;
+    
+    const ctx = canvas.getContext('2d');
+    const width = dimensions.cols * cellSize;
+    const height = dimensions.rows * cellSize;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
+    
+    // Draw cells
+    for (let i = 0; i < dimensions.rows; i++) {
+      for (let j = 0; j < dimensions.cols; j++) {
+        const x = j * cellSize;
+        const y = i * cellSize;
+        
+        if (grid[i] && grid[i][j] === 1) {
+          // Alive cell
+          ctx.fillStyle = '#00ff0020';
+          ctx.fillRect(x, y, cellSize, cellSize);
+          ctx.fillStyle = '#00ff00';
+          ctx.fillText('█', x + 1, y + cellSize - 1);
+        } else {
+          // Dead cell
+          ctx.fillStyle = '#003300';
+          ctx.fillText('·', x + 1, y + cellSize - 1);
+        }
+        
+        // Grid lines
+        ctx.strokeStyle = '#002200';
+        ctx.strokeRect(x, y, cellSize, cellSize);
+      }
+    }
+  }, [grid, dimensions, cellSize]);
+
+  // Handle canvas clicks
+  const handleCanvasClick = useCallback((event) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    
+    if (row >= 0 && row < dimensions.rows && col >= 0 && col < dimensions.cols) {
+      setGrid(prevGrid => {
+        if (!prevGrid || !prevGrid[row]) return prevGrid;
+        
+        const newGrid = prevGrid.map((r, i) => 
+          i === row ? r.map((c, j) => j === col ? (c ? 0 : 1) : c) : [...r]
+        );
+        return newGrid;
+      });
+    }
+  }, [dimensions, cellSize]);
+
+  // Draw grid whenever it changes
+  useEffect(() => {
+    drawGrid();
+  }, [drawGrid]);
+
+  // Game loop
   useEffect(() => {
     if (!isPlaying || grid.length === 0) return;
     
-    const now = performance.now();
-    if (now - lastUpdateRef.current < speed) {
-      return;
-    }
+    const interval = setInterval(() => {
+      nextGeneration();
+    }, speed);
     
-    lastUpdateRef.current = now;
-    nextGeneration();
-  }, [tick, isPlaying, speed, nextGeneration, grid.length]);
+    return () => clearInterval(interval);
+  }, [isPlaying, speed, nextGeneration, grid.length]);
 
-  // Handle resize with debouncing
+  // Initialize grid and canvas size
   useEffect(() => {
-    let resizeTimeout;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        if (containerRef.current) {
-          const rect = containerRef.current.getBoundingClientRect();
-          const cellSize = 8;
-          const newCols = Math.floor((rect.width - 20) / cellSize);
-          const newRows = Math.floor((rect.height - 60) / cellSize);
-          
-          setDimensions({ 
-            rows: Math.max(10, newRows), 
-            cols: Math.max(15, newCols) 
-          });
-        }
-      }, 100); // 100ms debounce
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
+    canvas.width = dimensions.cols * cellSize;
+    canvas.height = dimensions.rows * cellSize;
     
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-    };
-  }, []);
-
-  // Initialize with random pattern when dimensions change
-  useEffect(() => {
+    const ctx = canvas.getContext('2d');
+    ctx.font = '6px monospace';
+    
     if (dimensions.rows > 0 && dimensions.cols > 0) {
-      randomizeGrid();
+      const newGrid = createEmptyGrid();
+      for (let i = 0; i < dimensions.rows; i++) {
+        for (let j = 0; j < dimensions.cols; j++) {
+          newGrid[i][j] = Math.random() > 0.7 ? 1 : 0;
+        }
+      }
+      setGrid(newGrid);
+      setGeneration(0);
     }
-  }, [dimensions, randomizeGrid]);
-
-  // Optimized cell click handler
-  const cellClick = useCallback((row, col) => {
-    setGrid(prevGrid => {
-      if (!prevGrid || !prevGrid[row]) return prevGrid;
-      
-      const newGrid = prevGrid.map((r, i) => 
-        i === row ? r.map((c, j) => j === col ? (c ? 0 : 1) : c) : [...r]
-      );
-      return newGrid;
-    });
-  }, []);
-
-  // Memoized grid rendering to prevent unnecessary re-renders
-  const renderedGrid = useMemo(() => {
-    if (grid.length === 0) return null;
-    
-    return grid.map((row, i) => (
-      <div key={i} style={{ display: 'flex', lineHeight: '8px', height: '8px' }}>
-        {row.map((cell, j) => {
-          const isLight = (i + j) % 2 === 0;
-          return (
-            <Cell
-              key={j}
-              isAlive={cell === 1}
-              onClick={() => cellClick(i, j)}
-              isLight={isLight}
-            />
-          );
-        })}
-      </div>
-    ));
-  }, [grid, cellClick]);
+  }, [dimensions, createEmptyGrid, cellSize]);
 
   return (
     <div 
@@ -210,16 +188,22 @@ const ConwayWidget = () => {
         <span>Gen: {generation}</span>
       </div>
 
-      {/* Game Grid */}
+      {/* Canvas Grid */}
       <div style={{ 
         flex: 1,
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 10px'
+        padding: '10px'
       }}>
-        {renderedGrid}
+        <canvas
+          ref={canvasRef}
+          onClick={handleCanvasClick}
+          style={{
+            cursor: 'pointer',
+            border: '1px solid #002200'
+          }}
+        />
       </div>
 
       {/* Controls */}
@@ -230,8 +214,14 @@ const ConwayWidget = () => {
         <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
           <button 
             onClick={() => {
-              setGeneration(0); 
-              randomizeGrid();
+              setGeneration(0);
+              const newGrid = createEmptyGrid();
+              for (let i = 0; i < dimensions.rows; i++) {
+                for (let j = 0; j < dimensions.cols; j++) {
+                  newGrid[i][j] = Math.random() > 0.7 ? 1 : 0;
+                }
+              }
+              setGrid(newGrid);
             }}
             style={{
               background: '#001100',
