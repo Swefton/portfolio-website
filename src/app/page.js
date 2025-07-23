@@ -134,7 +134,7 @@ export default function Home() {
     <AnimationProvider>
       <main className="bento-grid">
         {/* Left side - Terminal focus area */}
-        <div className="bento-tile terminal">
+        <div className="bento-tile widget terminal">
           <TerminalWidget ref={terminalRef} />
           <div className="terminal-buttons">
             <div className="terminal-button" onClick={() => simulateTyping("run github")}>
@@ -164,7 +164,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="bento-tile keyboard">
+        <div className="bento-tile widget keyboard">
           <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
         </div>
 

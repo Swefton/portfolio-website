@@ -13,7 +13,7 @@
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: 1fr 0.6fr 1.2fr 0.8fr;
   gap: 16px;
-  padding: 8px;
+  padding: 2% 2% 2% 2%;
 }
 
 .bento-tile {
@@ -45,6 +45,8 @@
 /* Right side - Dynamic mixed layout */
 .widget {
   background-color: grey;
+  border-style: solid;
+  border-color: aqua;
   overflow: auto;
 }
 
