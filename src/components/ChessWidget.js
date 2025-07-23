@@ -1,8 +1,9 @@
 // AsciiChessBoard.js
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Chess } from 'chess.js';
+import { useAnimationTick } from '../app/page'; 
 import styles from './AsciiChessBoard.module.css';
 
 const pieceUnicode = {
@@ -26,28 +27,27 @@ const generateBoardGrid = (board) => {
 
 const AsciiChessBoard = ({ moves, interval = 1000 }) => {
     const [chess] = useState(new Chess());
-    const [boardGrid, setBoardGrid] = useState(generateBoardGrid(chess.board()));
+    const [boardGrid, setBoardGrid] = useState(() => generateBoardGrid(chess.board()));
     const [currentMove, setCurrentMove] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [gameHistory, setGameHistory] = useState([]);
-    const timerRef = useRef(null);
+    const lastMoveTimeRef = useRef(0);
+    
+    const { tick } = useAnimationTick();
 
+    // Initialize game history
     useEffect(() => {
         const initialChess = new Chess();
-        setGameHistory([{ board: generateBoardGrid(initialChess.board()), fen: initialChess.fen(), move: null, moveNumber: 0 }]);
+        setGameHistory([{ 
+            board: generateBoardGrid(initialChess.board()), 
+            fen: initialChess.fen(), 
+            move: null, 
+            moveNumber: 0 
+        }]);
     }, []);
 
-    useEffect(() => {
-        if (!isPlaying || currentMove >= moves.length) return;
-
-        timerRef.current = setTimeout(() => {
-            makeMove(currentMove);
-        }, interval);
-
-        return () => clearTimeout(timerRef.current);
-    }, [currentMove, moves, isPlaying, interval]);
-
-    const makeMove = (moveIndex) => {
+    // Optimized move making function
+    const makeMove = useCallback((moveIndex) => {
         if (moveIndex >= moves.length) return;
 
         const newChess = new Chess();
@@ -70,10 +70,22 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
 
         setBoardGrid(newBoardState.board);
         setCurrentMove(moveIndex + 1);
-    };
+    }, [moves]);
 
-    const goToMove = (moveIndex) => {
-        clearTimeout(timerRef.current);
+    // Animation logic using global tick
+    useEffect(() => {
+        if (!isPlaying || currentMove >= moves.length) return;
+        
+        const now = performance.now();
+        if (now - lastMoveTimeRef.current < interval) {
+            return;
+        }
+        
+        lastMoveTimeRef.current = now;
+        makeMove(currentMove);
+    }, [tick, isPlaying, currentMove, moves.length, interval, makeMove]);
+
+    const goToMove = useCallback((moveIndex) => {
         if (moveIndex === 0) {
             const initialChess = new Chess();
             setBoardGrid(generateBoardGrid(initialChess.board()));
@@ -82,42 +94,38 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
             setBoardGrid(gameHistory[moveIndex].board);
             setCurrentMove(moveIndex);
         }
-    };
+    }, [moves.length, gameHistory]);
 
-    const togglePlayPause = () => {
-        setIsPlaying(!isPlaying);
-    };
+    const togglePlayPause = useCallback(() => {
+        setIsPlaying(prev => !prev);
+    }, []);
 
-    const nextMove = () => {
+    const nextMove = useCallback(() => {
         if (currentMove < moves.length) {
-            clearTimeout(timerRef.current);
             setIsPlaying(false);
             makeMove(currentMove);
         }
-    };
+    }, [currentMove, moves.length, makeMove]);
 
-    const previousMove = () => {
+    const previousMove = useCallback(() => {
         if (currentMove > 0) {
-            clearTimeout(timerRef.current);
             setIsPlaying(false);
             goToMove(currentMove - 1);
         }
-    };
+    }, [currentMove, goToMove]);
 
-    const resetGame = () => {
-        clearTimeout(timerRef.current);
+    const resetGame = useCallback(() => {
         setCurrentMove(0);
         setIsPlaying(true);
         const initialChess = new Chess();
         setBoardGrid(generateBoardGrid(initialChess.board()));
-    };
+        lastMoveTimeRef.current = 0;
+    }, []);
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.carousel}>
-                <p>In my free time I like playing Chess. This was the best game I've played.</p>
-            </div>
-            <div className={styles.boardWrapper}>
+    // Memoized board rendering
+    const renderedBoard = useMemo(() => {
+        return (
+            <>
                 <div className={styles.columnHeaders}>
                     <div className={styles.rankSpacer}></div>
                     {'abcdefgh'.split('').map(file => (
@@ -140,6 +148,40 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                         })}
                     </div>
                 ))}
+            </>
+        );
+    }, [boardGrid]);
+
+    // Memoized moves list
+    const renderedMovesList = useMemo(() => {
+        return (
+            <div className={styles.movesGrid}>
+                <button 
+                    onClick={() => goToMove(0)} 
+                    className={currentMove === 0 ? styles.activeMoveButton : styles.moveButton}
+                >
+                    Start
+                </button>
+                {moves.map((move, index) => (
+                    <button
+                        key={index}
+                        onClick={() => goToMove(index + 1)}
+                        className={currentMove === index + 1 ? styles.activeMoveButton : styles.moveButton}
+                    >
+                        {Math.floor(index / 2) + 1}.{index % 2 === 0 ? '' : '..'} {move}
+                    </button>
+                ))}
+            </div>
+        );
+    }, [moves, currentMove, goToMove]);
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.carousel}>
+                <p>In my free time I like playing Chess. This was the best game I've played.</p>
+            </div>
+            <div className={styles.boardWrapper}>
+                {renderedBoard}
             </div>
 
             <div className={styles.controls}>
@@ -151,18 +193,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
 
             <div className={styles.movesList}>
                 <div className={styles.movesHeader}>Moves ({currentMove}/{moves.length}):</div>
-                <div className={styles.movesGrid}>
-                    <button onClick={() => goToMove(0)} className={currentMove === 0 ? styles.activeMoveButton : styles.moveButton}>Start</button>
-                    {moves.map((move, index) => (
-                        <button
-                            key={index}
-                            onClick={() => goToMove(index + 1)}
-                            className={currentMove === index + 1 ? styles.activeMoveButton : styles.moveButton}
-                        >
-                            {Math.floor(index / 2) + 1}.{index % 2 === 0 ? '' : '..'} {move}
-                        </button>
-                    ))}
-                </div>
+                {renderedMovesList}
             </div>
 
             <div className={styles.currentMoveInfo}>

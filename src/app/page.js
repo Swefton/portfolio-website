@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, createContext, useContext, useEffect, useState } from "react";
 import KeyboardWidget from "@/components/KeyboardWidget";
 import TerminalWidget from "@/components/TerminalWidget";
 import GlobeWidget from "@/components/GlobeWidget";
@@ -10,6 +10,56 @@ import MatrixRainWidget from "@/components/MatrixWidget";
 import ConwayWidget from "@/components/ConwayWidget";
 
 import "./bento.css";
+
+// Global Animation Context
+const AnimationContext = createContext();
+
+export const useAnimationTick = () => {
+  const context = useContext(AnimationContext);
+  if (!context) {
+    throw new Error('useAnimationTick must be used within AnimationProvider');
+  }
+  return context;
+};
+
+// Animation Provider Component
+const AnimationProvider = ({ children }) => {
+  const [tick, setTick] = useState(0);
+  const [deltaTime, setDeltaTime] = useState(0);
+  const lastTimeRef = useRef(performance.now());
+  const animationIdRef = useRef();
+
+  useEffect(() => {
+    let running = true;
+    
+    const animate = (currentTime) => {
+      if (!running) return;
+      
+      const delta = currentTime - lastTimeRef.current;
+      lastTimeRef.current = currentTime;
+      
+      setDeltaTime(delta);
+      setTick(prev => prev + 1);
+      
+      animationIdRef.current = requestAnimationFrame(animate);
+    };
+    
+    animationIdRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      running = false;
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <AnimationContext.Provider value={{ tick, deltaTime }}>
+      {children}
+    </AnimationContext.Provider>
+  );
+};
 
 export default function Home() {
   const terminalRef = useRef();
@@ -81,62 +131,64 @@ export default function Home() {
   const moves = ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "h3", "b5", "Bb3", "d6"];
 
   return (
-    <main className="bento-grid">
-      {/* Left side - Terminal focus area */}
-      <div className="bento-tile terminal">
-        <TerminalWidget ref={terminalRef} />
-        <div className="terminal-buttons">
-          <div className="terminal-button" onClick={() => simulateTyping("run github")}>
-            <img src="/folder.svg" alt="GitHub" />
-            <span>GitHub</span>
-          </div>
-          <div className="terminal-button" onClick={() => simulateTyping("run devpost")}>
-            <img src="/folder.svg" alt="Devpost" />
-            <span>Devpost</span>
-          </div>
-          <div className="terminal-button" onClick={() => simulateTyping("run linkedin")}>
-            <img src="/folder.svg" alt="LinkedIn" />
-            <span>LinkedIn</span>
-          </div>
-          <div className="terminal-button" onClick={() => simulateTyping("run experience")}>
-            <img src="/folder.svg" alt="Experience" />
-            <span>Experience</span>
-          </div>
-          <div className="terminal-button" onClick={() => simulateTyping("run projects")}>
-            <img src="/folder.svg" alt="Projects" />
-            <span>Projects</span>
-          </div>
-          <div className="terminal-button" onClick={() => simulateTyping("run skills")}>
-            <img src="/folder.svg" alt="Skills" />
-            <span>Skills</span>
+    <AnimationProvider>
+      <main className="bento-grid">
+        {/* Left side - Terminal focus area */}
+        <div className="bento-tile terminal">
+          <TerminalWidget ref={terminalRef} />
+          <div className="terminal-buttons">
+            <div className="terminal-button" onClick={() => simulateTyping("run github")}>
+              <img src="/folder.svg" alt="GitHub" />
+              <span>GitHub</span>
+            </div>
+            <div className="terminal-button" onClick={() => simulateTyping("run devpost")}>
+              <img src="/folder.svg" alt="Devpost" />
+              <span>Devpost</span>
+            </div>
+            <div className="terminal-button" onClick={() => simulateTyping("run linkedin")}>
+              <img src="/folder.svg" alt="LinkedIn" />
+              <span>LinkedIn</span>
+            </div>
+            <div className="terminal-button" onClick={() => simulateTyping("run experience")}>
+              <img src="/folder.svg" alt="Experience" />
+              <span>Experience</span>
+            </div>
+            <div className="terminal-button" onClick={() => simulateTyping("run projects")}>
+              <img src="/folder.svg" alt="Projects" />
+              <span>Projects</span>
+            </div>
+            <div className="terminal-button" onClick={() => simulateTyping("run skills")}>
+              <img src="/folder.svg" alt="Skills" />
+              <span>Skills</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="bento-tile keyboard">
-        <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
-      </div>
+        <div className="bento-tile keyboard">
+          <KeyboardWidget ref={keyboardRef} onKeyPress={handleKeyboardKeyPress} />
+        </div>
 
-      {/* Right side - Dynamic mixed layout */}
-      <div className="bento-tile widget widget-1">
-          <AboutMe />
-      </div>
+        {/* Right side - Dynamic mixed layout */}
+        <div className="bento-tile widget widget-1">
+            <AboutMe />
+        </div>
 
-      <div className="bento-tile widget widget-2">
-        <GlobeWidget />
-      </div>
+        <div className="bento-tile widget widget-2">
+          <GlobeWidget />
+        </div>
 
-      <div className="bento-tile widget widget-3">
-        <AsciiChessBoard moves={moves} interval={1500} />
-      </div>
+        <div className="bento-tile widget widget-3">
+          <AsciiChessBoard moves={moves} interval={1500} />
+        </div>
 
-      <div className="bento-tile widget widget-4">
-          <ConwayWidget />
-      </div>
+        <div className="bento-tile widget widget-4">
+            <ConwayWidget />
+        </div>
 
-      <div className="bento-tile widget widget-5">
-        <MatrixRainWidget />
-      </div>
-    </main>
+        <div className="bento-tile widget widget-5">
+          <MatrixRainWidget />
+        </div>
+      </main>
+    </AnimationProvider>
   );
 }

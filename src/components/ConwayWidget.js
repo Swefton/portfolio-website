@@ -1,21 +1,44 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useAnimationTick } from '../app/page'; // Import the hook
+
+// Memoized cell component to prevent unnecessary re-renders
+const Cell = ({ isAlive, onClick, isLight }) => (
+  <span
+    onClick={onClick}
+    style={{
+      width: '8px',
+      height: '8px',
+      cursor: 'pointer',
+      color: isAlive ? '#00ff00' : '#003300',
+      backgroundColor: isAlive ? '#00ff0020' : 'transparent',
+      border: '1px solid #002200',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '6px'
+    }}
+  >
+    {isAlive ? '█' : '·'}
+  </span>
+);
 
 const ConwayWidget = () => {
   const [grid, setGrid] = useState([]);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [speed, setSpeed] = useState(200);
+  const [speed, setSpeed] = useState(750);
   const [generation, setGeneration] = useState(0);
-  const intervalRef = useRef();
   const containerRef = useRef();
-
+  const lastUpdateRef = useRef(0);
   const [dimensions, setDimensions] = useState({ rows: 20, cols: 30 });
+  
+  const { tick } = useAnimationTick();
 
-  // Initialize empty grid
+  // Memoized empty grid creator
   const createEmptyGrid = useCallback(() => {
     return Array(dimensions.rows).fill().map(() => Array(dimensions.cols).fill(0));
   }, [dimensions]);
 
-  // Random pattern generator
+  // Memoized random pattern generator
   const randomizeGrid = useCallback(() => {
     const newGrid = createEmptyGrid();
     for (let i = 0; i < dimensions.rows; i++) {
@@ -27,34 +50,47 @@ const ConwayWidget = () => {
     setGeneration(0);
   }, [createEmptyGrid, dimensions]);
 
-  // Count living neighbors
-  const countNeighbors = (grid, x, y) => {
+  // Optimized neighbor counting with bounds checking
+  const countNeighbors = useCallback((grid, x, y) => {
+    // Safety check - ensure grid exists and has proper dimensions
+    if (!grid || !grid[x] || grid.length === 0) return 0;
+    
     let count = 0;
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        if (i === 0 && j === 0) continue;
-        const newX = x + i;
-        const newY = y + j;
-        if (newX >= 0 && newX < dimensions.rows && newY >= 0 && newY < dimensions.cols) {
-          count += grid[newX][newY];
+    const maxRow = grid.length - 1;
+    const maxCol = grid[0] ? grid[0].length - 1 : 0;
+    
+    for (let i = Math.max(0, x - 1); i <= Math.min(maxRow, x + 1); i++) {
+      for (let j = Math.max(0, y - 1); j <= Math.min(maxCol, y + 1); j++) {
+        if (i === x && j === y) continue;
+        if (grid[i] && typeof grid[i][j] !== 'undefined') {
+          count += grid[i][j];
         }
       }
     }
     return count;
-  };
+  }, []);
 
-  // Next generation calculation
+  // Optimized next generation calculation
   const nextGeneration = useCallback(() => {
     setGrid(prevGrid => {
-      const newGrid = createEmptyGrid();
-      for (let i = 0; i < dimensions.rows; i++) {
-        for (let j = 0; j < dimensions.cols; j++) {
+      // Safety check - ensure we have a valid grid before processing
+      if (!prevGrid || prevGrid.length === 0 || !prevGrid[0]) {
+        return prevGrid;
+      }
+      
+      const rows = prevGrid.length;
+      const cols = prevGrid[0].length;
+      const newGrid = Array(rows).fill().map(() => Array(cols).fill(0));
+      
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
           const neighbors = countNeighbors(prevGrid, i, j);
-          if (prevGrid[i][j] === 1) {
-            // Cell is alive
-            newGrid[i][j] = neighbors === 2 || neighbors === 3 ? 1 : 0;
+          const isAlive = prevGrid[i][j] === 1;
+          
+          // Conway's rules optimized
+          if (isAlive) {
+            newGrid[i][j] = (neighbors === 2 || neighbors === 3) ? 1 : 0;
           } else {
-            // Cell is dead
             newGrid[i][j] = neighbors === 3 ? 1 : 0;
           }
         }
@@ -62,35 +98,49 @@ const ConwayWidget = () => {
       return newGrid;
     });
     setGeneration(prev => prev + 1);
-  }, [createEmptyGrid, dimensions]);
+  }, [countNeighbors]);
 
-  // Game loop
+  // Game loop using global animation tick
   useEffect(() => {
-    if (isPlaying) {
-      intervalRef.current = setInterval(nextGeneration, speed);
-    } else {
-      clearInterval(intervalRef.current);
+    if (!isPlaying || grid.length === 0) return;
+    
+    const now = performance.now();
+    if (now - lastUpdateRef.current < speed) {
+      return;
     }
-    return () => clearInterval(intervalRef.current);
-  }, [isPlaying, speed, nextGeneration]);
+    
+    lastUpdateRef.current = now;
+    nextGeneration();
+  }, [tick, isPlaying, speed, nextGeneration, grid.length]);
 
-  // Initialize with random pattern and handle resize
+  // Handle resize with debouncing
   useEffect(() => {
+    let resizeTimeout;
+    
     const handleResize = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const cellSize = 8;
-        const newCols = Math.floor((rect.width - 20) / cellSize);
-        const newRows = Math.floor((rect.height - 60) / cellSize);
-        
-        setDimensions({ rows: Math.max(10, newRows), cols: Math.max(15, newCols) });
-      }
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (containerRef.current) {
+          const rect = containerRef.current.getBoundingClientRect();
+          const cellSize = 8;
+          const newCols = Math.floor((rect.width - 20) / cellSize);
+          const newRows = Math.floor((rect.height - 60) / cellSize);
+          
+          setDimensions({ 
+            rows: Math.max(10, newRows), 
+            cols: Math.max(15, newCols) 
+          });
+        }
+      }, 100); // 100ms debounce
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
     
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
   }, []);
 
   // Initialize with random pattern when dimensions change
@@ -100,14 +150,38 @@ const ConwayWidget = () => {
     }
   }, [dimensions, randomizeGrid]);
 
-  const cellClick = (row, col) => {
+  // Optimized cell click handler
+  const cellClick = useCallback((row, col) => {
     setGrid(prevGrid => {
-      const newGrid = [...prevGrid];
-      newGrid[row] = [...newGrid[row]];
-      newGrid[row][col] = newGrid[row][col] ? 0 : 1;
+      if (!prevGrid || !prevGrid[row]) return prevGrid;
+      
+      const newGrid = prevGrid.map((r, i) => 
+        i === row ? r.map((c, j) => j === col ? (c ? 0 : 1) : c) : [...r]
+      );
       return newGrid;
     });
-  };
+  }, []);
+
+  // Memoized grid rendering to prevent unnecessary re-renders
+  const renderedGrid = useMemo(() => {
+    if (grid.length === 0) return null;
+    
+    return grid.map((row, i) => (
+      <div key={i} style={{ display: 'flex', lineHeight: '8px', height: '8px' }}>
+        {row.map((cell, j) => {
+          const isLight = (i + j) % 2 === 0;
+          return (
+            <Cell
+              key={j}
+              isAlive={cell === 1}
+              onClick={() => cellClick(i, j)}
+              isLight={isLight}
+            />
+          );
+        })}
+      </div>
+    ));
+  }, [grid, cellClick]);
 
   return (
     <div 
@@ -145,30 +219,7 @@ const ConwayWidget = () => {
         justifyContent: 'center',
         padding: '0 10px'
       }}>
-        {grid.map((row, i) => (
-          <div key={i} style={{ display: 'flex', lineHeight: '8px', height: '8px' }}>
-            {row.map((cell, j) => (
-              <span
-                key={j}
-                onClick={() => cellClick(i, j)}
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  cursor: 'pointer',
-                  color: cell ? '#00ff00' : '#003300',
-                  backgroundColor: cell ? '#00ff0020' : 'transparent',
-                  border: '1px solid #002200',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '6px'
-                }}
-              >
-                {cell ? '█' : '·'}
-              </span>
-            ))}
-          </div>
-        ))}
+        {renderedGrid}
       </div>
 
       {/* Controls */}
@@ -176,9 +227,12 @@ const ConwayWidget = () => {
         padding: '8px 10px',
         fontSize: '9px'
       }}>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
           <button 
-            onClick={() => {setGeneration(0); randomizeGrid();}}
+            onClick={() => {
+              setGeneration(0); 
+              randomizeGrid();
+            }}
             style={{
               background: '#001100',
               border: '1px solid #00ff00',
@@ -191,21 +245,20 @@ const ConwayWidget = () => {
             Random
           </button>
           
-          <span style={{ marginLeft: '8px' }}>Speed:</span>
-          <input 
-            type="range"
-            min="50"
-            max="500"
-            value={speed}
-            onChange={(e) => setSpeed(Number(e.target.value))}
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
             style={{
-              flex: 1,
-              height: '12px',
-              background: '#002200',
-              outline: 'none'
+              background: '#001100',
+              border: '1px solid #00ff00',
+              color: '#00ff00',
+              padding: '4px 8px',
+              fontSize: '9px',
+              cursor: 'pointer',
+              marginLeft: '8px'
             }}
-          />
-          <span>{speed}ms</span>
+          >
+            {isPlaying ? 'Pause' : 'Play'}
+          </button>
         </div>
       </div>
     </div>
