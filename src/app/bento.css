@@ -27,6 +27,12 @@
   min-height: 0;
   min-width: 0;
 }
+.widget {
+  background-color: grey;
+  border-style: solid;
+  border-color: aqua;
+  overflow: auto;
+}
 
 /* Left side - Terminal focus area */
 .terminal {
@@ -35,6 +41,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: black;
 }
 
 .keyboard {
@@ -43,12 +50,6 @@
 }
 
 /* Right side - Dynamic mixed layout */
-.widget {
-  background-color: grey;
-  border-style: solid;
-  border-color: aqua;
-  overflow: auto;
-}
 
 /* Temp widget - Rectangle next to globe */
 .widget-1 {
@@ -100,6 +101,7 @@
   align-items: center;
   gap: 0.5rem;
   padding-top: 8px;
+  padding-bottom: 8px;
   min-height: 40px;
 }
 
