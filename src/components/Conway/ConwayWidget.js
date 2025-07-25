@@ -8,11 +8,46 @@ const ConwayWidget = () => {
   const [generation, setGeneration] = useState(0);
   const canvasRef = useRef();
   const containerRef = useRef();
-  const [dimensions, setDimensions] = useState({ rows: 20, cols: 30 });
-  
-  const cellSize = 8;
+  const [dimensions, setDimensions] = useState({ rows: 30, cols: 30 });
+  const [cellSize, setCellSize] = useState(8);
 
-  // Keep all your existing game logic (createEmptyGrid, countNeighbors, nextGeneration)
+  // Calculate optimal cell size based on container dimensions
+  const calculateCellSize = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return 8;
+    
+    const containerRect = container.getBoundingClientRect();
+    const availableWidth = containerRect.width - 40; // Account for padding
+    const availableHeight = containerRect.height - 120; // Account for header and controls
+    
+    const maxCellWidth = Math.floor(availableWidth / dimensions.cols);
+    const maxCellHeight = Math.floor(availableHeight / dimensions.rows);
+    
+    // Use the smaller dimension to ensure the grid fits in both directions
+    const optimalSize = Math.min(maxCellWidth, maxCellHeight);
+    
+    // Set a reasonable minimum and maximum cell size
+    return Math.max(8, Math.min(optimalSize, 25));
+  }, [dimensions]);
+
+  // Update cell size when container or dimensions change
+  useEffect(() => {
+    const updateCellSize = () => {
+      const newCellSize = calculateCellSize();
+      setCellSize(newCellSize);
+    };
+
+    updateCellSize();
+    
+    const resizeObserver = new ResizeObserver(updateCellSize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+    
+    return () => resizeObserver.disconnect();
+  }, [calculateCellSize]);
+
+  // Keep all your existing game logic
   const createEmptyGrid = useCallback(() => {
     return Array(dimensions.rows).fill().map(() => Array(dimensions.cols).fill(0));
   }, [dimensions]);
@@ -71,8 +106,9 @@ const ConwayWidget = () => {
     const width = dimensions.cols * cellSize;
     const height = dimensions.rows * cellSize;
     
-    // Clear canvas
-    ctx.clearRect(0, 0, width, height);
+    // Clear canvas with dark background
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, width, height);
     
     // Draw cells
     for (let i = 0; i < dimensions.rows; i++) {
@@ -81,15 +117,13 @@ const ConwayWidget = () => {
         const y = i * cellSize;
         
         if (grid[i] && grid[i][j] === 1) {
-          // Alive cell
-          ctx.fillStyle = '#00ff0020';
-          ctx.fillRect(x, y, cellSize, cellSize);
+          // Alive cell - solid green
           ctx.fillStyle = '#00ff00';
-          ctx.fillText('█', x + 1, y + cellSize - 1);
+          ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         } else {
-          // Dead cell
-          ctx.fillStyle = '#003300';
-          ctx.fillText('·', x + 1, y + cellSize - 1);
+          // Dead cell - dark green
+          ctx.fillStyle = '#001100';
+          ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         }
         
         // Grid lines
@@ -146,9 +180,6 @@ const ConwayWidget = () => {
     
     canvas.width = dimensions.cols * cellSize;
     canvas.height = dimensions.rows * cellSize;
-    
-    const ctx = canvas.getContext('2d');
-    ctx.font = '6px monospace';
     
     if (dimensions.rows > 0 && dimensions.cols > 0) {
       const newGrid = createEmptyGrid();
