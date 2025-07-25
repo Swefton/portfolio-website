@@ -1,0 +1,53 @@
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #0a0a0a;
+  font-family: Monaco, "Lucida Console", monospace;
+  font-size: 10px;
+  color: #00ff00;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
+.canvasContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.canvas {
+  cursor: pointer;
+  border: 1px solid #002200;
+}
+
+.controls {
+  padding: 8px 10px;
+  font-size: 9px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  background: #001100;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+  padding: 4px 8px;
+  font-size: 9px;
+  cursor: pointer;
+}

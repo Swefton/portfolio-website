@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo } from 'react';
-import { useAnimationTick } from '../app/page'; // Import the hook
+import { useAnimationTick } from '../../app/page';
+import styles from './Matrix.module.css';
 
 const MatrixRainWidget = () => {
   const canvasRef = useRef();
@@ -119,20 +120,10 @@ const MatrixRainWidget = () => {
   }, [tick, asciiChars]);
 
   return (
-    <div style={{
-      height: '100%',
-      width: '100%',
-      backgroundColor: '#000000',
-      overflow: 'hidden'
-    }}>
+    <div className={styles.container}>
       <canvas 
         ref={canvasRef}
-        style={{ 
-          display: 'block',
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#000000'
-        }}
+        className={styles.canvas}
       />
     </div>
   );

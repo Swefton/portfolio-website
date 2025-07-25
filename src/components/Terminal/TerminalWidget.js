@@ -38,14 +38,23 @@ const TerminalWidget = forwardRef((props, ref) => {
     const trimmed = input.trim();
     let output;
     if (trimmed === "run github") {
-      output = "Opening GitHub...";
-      window.open("https://github.com", "_blank");
+        output = "Opening GitHub...";
+        window.open("https://github.com", "_blank");
     } else if (trimmed === "clear") {
-      setTerminalLineData([]);
-      setCurrentInput("");
-      return;
+        setTerminalLineData([]);
+        setCurrentInput("");
+        return;
+    } else if (
+        trimmed === "run projects" ||
+        trimmed === "run experience" ||
+        trimmed === "run skills"
+    ) {
+        output = `Executing: ${trimmed}`;
+        if (props.onCommand) {
+            props.onCommand(trimmed);
+        }
     } else {
-      output = `Unrecognized command: ${trimmed}`;
+        output = `Unrecognized command: ${trimmed}`;
     }
 
     setTerminalLineData(prev => [
@@ -71,5 +80,4 @@ const TerminalWidget = forwardRef((props, ref) => {
   );
 });
 
-TerminalWidget.displayName = "TerminalWidget";
 export default TerminalWidget;

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import styles from './Conway.module.css';
 
 const ConwayWidget = () => {
   const [grid, setGrid] = useState([]);
@@ -164,54 +165,26 @@ const ConwayWidget = () => {
   return (
     <div 
       ref={containerRef}
-      style={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#0a0a0a',
-        fontFamily: 'Monaco, "Lucida Console", monospace',
-        fontSize: '10px',
-        color: '#00ff00',
-        overflow: 'hidden'
-      }}
+      className={styles.container}
     >
       {/* Header */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        padding: '8px 10px',
-        fontSize: '11px'
-      }}>
+      <div className={styles.header}>
         <span>Conway's Life</span>
         <span>Gen: {generation}</span>
       </div>
 
       {/* Canvas Grid */}
-      <div style={{ 
-        flex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '10px'
-      }}>
+      <div className={styles.canvasContainer}>
         <canvas
           ref={canvasRef}
           onClick={handleCanvasClick}
-          style={{
-            cursor: 'pointer',
-            border: '1px solid #002200'
-          }}
+          className={styles.canvas}
         />
       </div>
 
       {/* Controls */}
-      <div style={{ 
-        padding: '8px 10px',
-        fontSize: '9px'
-      }}>
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
+      <div className={styles.controls}>
+        <div className={styles.buttonRow}>
           <button 
             onClick={() => {
               setGeneration(0);
@@ -223,29 +196,14 @@ const ConwayWidget = () => {
               }
               setGrid(newGrid);
             }}
-            style={{
-              background: '#001100',
-              border: '1px solid #00ff00',
-              color: '#00ff00',
-              padding: '4px 8px',
-              fontSize: '9px',
-              cursor: 'pointer'
-            }}
+            className={styles.button}
           >
             Random
           </button>
           
           <button 
             onClick={() => setIsPlaying(!isPlaying)}
-            style={{
-              background: '#001100',
-              border: '1px solid #00ff00',
-              color: '#00ff00',
-              padding: '4px 8px',
-              fontSize: '9px',
-              cursor: 'pointer',
-              marginLeft: '8px'
-            }}
+            className={styles.button}
           >
             {isPlaying ? 'Pause' : 'Play'}
           </button>
@@ -253,6 +211,7 @@ const ConwayWidget = () => {
       </div>
     </div>
   );
+
 };
 
 export default ConwayWidget;

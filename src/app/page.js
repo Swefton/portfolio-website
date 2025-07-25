@@ -1,13 +1,14 @@
 "use client";
 
 import { useRef, createContext, useContext, useEffect, useState } from "react";
-import KeyboardWidget from "@/components/KeyboardWidget";
-import TerminalWidget from "@/components/TerminalWidget";
-import GlobeWidget from "@/components/GlobeWidget";
-import AsciiChessBoard from "@/components/ChessWidget";
-import AboutMe from "@/components/AboutWidget";
-import MatrixRainWidget from "@/components/MatrixWidget";
-import ConwayWidget from "@/components/ConwayWidget";
+import KeyboardWidget from "@/components/Keyboard/KeyboardWidget";
+import TerminalWidget from "@/components/Terminal/TerminalWidget";
+import GlobeWidget from "@/components/Globe/GlobeWidget";
+import AsciiChessBoard from "@/components/Chess/ChessWidget";
+import AboutMe from "@/components/About/AboutWidget";
+import MatrixRainWidget from "@/components/Matrix/MatrixWidget";
+import ConwayWidget from "@/components/Conway/ConwayWidget";
+import ProjectsViewer from "@/components/Modal/Projects";
 
 import "./bento.css";
 
@@ -64,6 +65,20 @@ const AnimationProvider = ({ children }) => {
 export default function Home() {
   const terminalRef = useRef();
   const keyboardRef = useRef();
+
+  const [activePopup, setActivePopup] = useState(null);
+
+  const handleCommand = (command) => {
+      if (command === "run projects") {
+          setActivePopup("projects");
+      }
+      if (command === "run experience") {
+          setActivePopup("experience");
+      }
+      if (command === "run skills") {
+          setActivePopup("skills");
+      }
+  };
 
   const simulateTyping = async (text) => {
     let currentInput = "";
@@ -135,7 +150,7 @@ export default function Home() {
       <main className="bento-grid">
         {/* Left side - Terminal focus area */}
         <div className="bento-tile widget terminal">
-          <TerminalWidget ref={terminalRef} />
+          <TerminalWidget ref={terminalRef} onCommand={handleCommand} />
           <div className="terminal-buttons">
             <div className="terminal-button" onClick={() => simulateTyping("run github")}>
               <img src="/folder.svg" alt="GitHub" />
@@ -188,6 +203,11 @@ export default function Home() {
         <div className="bento-tile widget widget-5">
           <MatrixRainWidget />
         </div>
+
+        <ProjectsViewer
+          open={activePopup === "projects"}
+          onClose={() => setActivePopup(null)}
+        />
       </main>
     </AnimationProvider>
   );

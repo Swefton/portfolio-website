@@ -1,10 +1,9 @@
-// AsciiChessBoard.js
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Chess } from 'chess.js';
-import { useAnimationTick } from '../app/page'; 
-import styles from './AsciiChessBoard.module.css';
+import { useAnimationTick } from '../../app/page'; 
+import styles from './ChessWidget.module.css';
 
 const pieceUnicode = {
     p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚',
