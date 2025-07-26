@@ -1,10 +1,12 @@
 {
   "name": "tui-portfolio",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
+    "generate:colors": "node generate-colors-css.js",
+    "dev": "npm run generate:colors && next dev --turbopack",
+    "build": "npm run generate:colors && next build",
     "start": "next start",
     "lint": "next lint"
   },

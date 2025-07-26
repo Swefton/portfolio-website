@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { COLORS } from '@/styles/colors';
 import styles from './Conway.module.css';
 
 const ConwayWidget = () => {
@@ -107,7 +108,7 @@ const ConwayWidget = () => {
     const height = dimensions.rows * cellSize;
     
     // Clear canvas with dark background
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = COLORS.BG_SECONDARY;
     ctx.fillRect(0, 0, width, height);
     
     // Draw cells
@@ -118,16 +119,16 @@ const ConwayWidget = () => {
         
         if (grid[i] && grid[i][j] === 1) {
           // Alive cell - solid green
-          ctx.fillStyle = '#00ff00';
+          ctx.fillStyle = COLORS.TEXT_PRIMARY;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         } else {
           // Dead cell - dark green
-          ctx.fillStyle = '#001100';
+          ctx.fillStyle = COLORS.BG_BUTTON;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         }
         
         // Grid lines
-        ctx.strokeStyle = '#002200';
+        ctx.strokeStyle = COLORS.BORDER_CANVAS;
         ctx.strokeRect(x, y, cellSize, cellSize);
       }
     }

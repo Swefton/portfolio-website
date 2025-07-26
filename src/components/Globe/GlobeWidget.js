@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { COLORS } from '@/styles/colors';
 
 export default function GlobeWidget() {
   const containerRef = useRef();
@@ -14,7 +15,7 @@ export default function GlobeWidget() {
     let height = container.clientHeight;
 
     // Create main container with black background
-    container.style.backgroundColor = 'black';
+    container.style.backgroundColor = COLORS.BG_PRIMARY;
 
     // CANVAS A: ASCII Globe Scene (background layer)
     const asciiScene = new THREE.Scene();
@@ -25,7 +26,7 @@ export default function GlobeWidget() {
     const asciiRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     asciiRenderer.setSize(width, height);
     asciiRenderer.setPixelRatio(window.devicePixelRatio);
-    asciiRenderer.setClearColor(0x000000, 0); // Transparent clear
+    asciiRenderer.setClearColor(COLORS.CANVAS_CLEAR, 0); // Transparent clear
     asciiRenderer.domElement.style.position = "absolute";
     asciiRenderer.domElement.style.top = "0";
     asciiRenderer.domElement.style.left = "0";
@@ -41,7 +42,7 @@ export default function GlobeWidget() {
     const markerRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     markerRenderer.setSize(width, height);
     markerRenderer.setPixelRatio(window.devicePixelRatio);
-    markerRenderer.setClearColor(0x000000, 0); // Transparent clear
+    markerRenderer.setClearColor(COLORS.CANVAS_CLEAR, 0); // Transparent clear
     markerRenderer.domElement.style.position = "absolute";
     markerRenderer.domElement.style.top = "0";
     markerRenderer.domElement.style.left = "0";
@@ -105,7 +106,7 @@ export default function GlobeWidget() {
     
     const markerGeometry = new THREE.SphereGeometry(0.02, 16, 16);
     const markerMaterial = new THREE.MeshBasicMaterial({ 
-      color: "red",
+      color: COLORS.ACCENT_RED,
       depthTest: true,      // Test against depth buffer
       depthWrite: false     // Don't write to depth buffer
     });
@@ -134,8 +135,8 @@ export default function GlobeWidget() {
     const delhiLabel = document.createElement('div');
     delhiLabel.textContent = 'home';
     delhiLabel.style.position = 'absolute';
-    delhiLabel.style.color = 'black';
-    delhiLabel.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    delhiLabel.style.color = COLORS.TEXT_ON_ACCENT;
+    delhiLabel.style.backgroundColor = COLORS.LABEL_BG;
     delhiLabel.style.padding = '2px 6px';
     delhiLabel.style.borderRadius = '4px';
     delhiLabel.style.fontSize = '12px';
@@ -147,8 +148,8 @@ export default function GlobeWidget() {
     const michiganLabel = document.createElement('div');
     michiganLabel.textContent = 'university';
     michiganLabel.style.position = 'absolute';
-    michiganLabel.style.color = 'black';
-    michiganLabel.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    michiganLabel.style.color = COLORS.TEXT_ON_ACCENT;
+    michiganLabel.style.backgroundColor = COLORS.LABEL_BG;
     michiganLabel.style.padding = '2px 6px';
     michiganLabel.style.borderRadius = '4px';
     michiganLabel.style.fontSize = '12px';
@@ -175,7 +176,7 @@ export default function GlobeWidget() {
     asciiContext.textAlign = "left";
     asciiContext.textBaseline = "top";
     asciiContext.font = "8px monospace";
-    asciiContext.fillStyle = "lime"; // Changed from white to lime green for better contrast
+    asciiContext.fillStyle = COLORS.LIME_GREEN; // Changed from white to lime green for better contrast
 
     // Render target for ASCII (will be resized dynamically)
     let renderTarget = new THREE.WebGLRenderTarget(width, height);
@@ -259,7 +260,7 @@ export default function GlobeWidget() {
       asciiContext.textAlign = "left";
       asciiContext.textBaseline = "top";
       asciiContext.font = "8px monospace";
-      asciiContext.fillStyle = "lime";
+      asciiContext.fillStyle = COLORS.LIME_GREEN;
       
       // Update render target
       renderTarget.dispose();
@@ -275,7 +276,7 @@ export default function GlobeWidget() {
     asciiContext.textAlign = "left";
     asciiContext.textBaseline = "top";
     asciiContext.font = "8px monospace";
-    asciiContext.fillStyle = "lime";
+    asciiContext.fillStyle = COLORS.LIME_GREEN;
     
     // Create ResizeObserver to watch container size changes
     const resizeObserver = new ResizeObserver(entries => {

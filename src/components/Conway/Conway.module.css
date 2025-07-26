@@ -3,10 +3,10 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #0a0a0a;
+  background-color: var(--color-bg-secondary);
   font-family: Monaco, "Lucida Console", monospace;
   font-size: 10px;
-  color: #00ff00;
+  color: var(--color-text-primary);
   overflow: hidden;
 }
 
@@ -28,7 +28,7 @@
 
 .canvas {
   cursor: pointer;
-  border: 1px solid #002200;
+  border: 1px solid var(--color-border-canvas);
 }
 
 .controls {
@@ -44,9 +44,9 @@
 }
 
 .button {
-  background: #001100;
-  border: 1px solid #00ff00;
-  color: #00ff00;
+  background: var(--color-bg-button);
+  border: 1px solid var(--color-text-primary);
+  color: var(--color-text-primary);
   padding: 4px 8px;
   font-size: 9px;
   cursor: pointer;

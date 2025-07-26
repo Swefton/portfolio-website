@@ -28,9 +28,9 @@
   min-width: 0;
 }
 .widget {
-  background-color: grey;
+  background-color: var(--color-accent-grey);
   border-style: solid;
-  border-color: aqua;
+  border-color: var(--color-accent-aqua);
   overflow: auto;
 }
 
@@ -41,7 +41,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: black;
+  background-color: var(--color-bg-primary);
 }
 
 .keyboard {
@@ -111,13 +111,13 @@
   align-items: center;
   cursor: pointer;
   font-size: 0.6rem;
-  color: #d4d4d4;
+  color: var(--color-text-secondary);
   transition: transform 0.1s ease, color 0.2s ease;
 }
 
 .terminal-button:hover {
   transform: scale(1.05);
-  color: white;
+  color: var(--color-white);
 }
 
 .terminal-button img {

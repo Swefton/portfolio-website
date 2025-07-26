@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { useAnimationTick } from '../../app/page';
+import { COLORS } from '@/styles/colors';
 import styles from './Matrix.module.css';
 
 const MatrixRainWidget = () => {
@@ -73,7 +74,7 @@ const MatrixRainWidget = () => {
     const trails = trailsRef.current;
 
     // Semi-transparent black background for trailing effect
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillStyle = COLORS.MATRIX_TRAIL;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Set font once
@@ -86,7 +87,7 @@ const MatrixRainWidget = () => {
         trails[i].forEach((trail, index) => {
           const alpha = Math.max(0, 1 - (index * 0.1));
           const greenValue = Math.floor(255 * alpha);
-          ctx.fillStyle = `rgb(0, ${greenValue}, 0)`;
+          ctx.fillStyle = COLORS.getRGB(0, greenValue, 0);
           ctx.fillText(trail.char, i * fontSize, trail.y);
         });
       }
@@ -111,7 +112,7 @@ const MatrixRainWidget = () => {
         }
 
         // Draw the leading character brighter
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = COLORS.WHITE;
         ctx.fillText(char, i * fontSize, y);
       }
 
