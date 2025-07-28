@@ -1,91 +1,135 @@
-// colors.js - Centralized color constants for the entire application
-// These colors align with the CSS custom properties in globals.css
+// HUD-inspired color system based on style guide
+// Primary color tokens for consistent theming
 
 export const COLORS = {
-  // Primary colors
-  BLACK: '#000000',
-  WHITE: '#ffffff',
+  // Base colors from style guide
+  BG_PRIMARY: '#0E0F10',        // --hud-bg: Deep black base
+  BG_SECONDARY: '#1A1C1F',      // --hud-surface: Widget backgrounds
+  ACCENT_PINK: '#F36CA6',       // --hud-pink: Primary accent
+  ACCENT_SOFT_PINK: '#FFB8D2',  // --hud-soft-pink: Secondary accent
+  TEXT_PRIMARY: '#FFFFFF',      // --hud-white: High contrast text
+  TEXT_SECONDARY: '#AAAAAA',    // --hud-gray: Labels, secondary text
+  GRID_LINES: 'rgba(255,255,255,0.08)', // --hud-grid: Structural overlays
+  OVERLAY: 'rgba(14,15,16,0.85)', // --hud-overlay: Modal backgrounds
+
+  // Derived colors for specific use cases
+  BORDER_PRIMARY: '#F36CA6',    // Same as accent pink
+  BORDER_SECONDARY: '#FFB8D2',  // Soft pink for subtle borders
   
-  // Terminal/Matrix theme colors
-  LIME_GREEN: '#00ff00',
-  LIME_GREEN_BRIGHT: 'limegreen',
-  
-  // Background colors
-  BG_PRIMARY: '#000000',
-  BG_SECONDARY: '#0a0a0a', 
-  BG_TERTIARY: '#111111',
-  BG_QUATERNARY: '#1a1a1a',
-  BG_BUTTON: '#001100',
-  BG_BUTTON_SECONDARY: '#333333',
-  BG_BUTTON_DISABLED: '#222222',
-  BG_LIGHT_SQUARE: '#2a2a2a',
-  BG_DARK_SQUARE: '#1a1a1a',
-  
-  // Border colors
-  BORDER_PRIMARY: '#333333',
-  BORDER_SECONDARY: '#555555', 
-  BORDER_TERTIARY: '#222222',
-  BORDER_CANVAS: '#002200',
-  
-  // Text colors
-  TEXT_PRIMARY: '#00ff00',
-  TEXT_SECONDARY: '#d4d4d4',
-  TEXT_TERTIARY: '#eeeeee',
-  TEXT_MUTED: '#666666',
-  TEXT_MUTED_SECONDARY: '#888888',
-  TEXT_DISABLED: '#666666',
-  TEXT_ON_ACCENT: '#000000',
-  
-  // Accent colors
-  ACCENT_AQUA: 'aqua',
-  ACCENT_GREY: 'grey',
-  ACCENT_RED: 'red',
-  
-  // Overlay colors
-  OVERLAY: 'rgba(0, 0, 0, 0.7)',
-  SHADOW: 'rgba(0, 0, 0, 0.6)',
+  // Interactive states
+  HOVER_GLOW: '#FFB8D2',       // Soft pink for hover effects
+  FOCUS_GLOW: '#F36CA6',       // Primary pink for focus
   
   // Component-specific colors
-  MATRIX_TRAIL: 'rgba(0, 0, 0, 0.1)',
-  CANVAS_CLEAR: 0x000000,
-  LABEL_BG: 'rgba(255, 255, 255, 0.9)',
+  BUTTON_BG: 'transparent',
+  BUTTON_BORDER: '#F36CA6',
+  BUTTON_TEXT: '#FFFFFF',
+  BUTTON_HOVER_BG: 'rgba(255,184,210,0.1)',
   
-  // Dynamic color functions
-  getRGB: (r, g, b) => `rgb(${r}, ${g}, ${b})`,
-  getRGBA: (r, g, b, a) => `rgba(${r}, ${g}, ${b}, ${a})`,
-  getHex: (color) => color,
+  // Terminal colors
+  TERMINAL_BG: '#0E0F10',
+  TERMINAL_TEXT: '#FFFFFF',
+  TERMINAL_PROMPT: '#FFB8D2',
+  TERMINAL_INPUT: '#FFFFFF',
+  
+  // Chess widget colors
+  CHESS_LIGHT_SQUARE: 'rgba(255,184,210,0.1)', // Very subtle soft pink
+  CHESS_DARK_SQUARE: '#1A1C1F',
+  CHESS_BORDER: '#F36CA6',
+  CHESS_TEXT: '#FFFFFF',
+  
+  // Conway's Game of Life
+  CONWAY_ALIVE: '#F36CA6',     // Pink for alive cells
+  CONWAY_DEAD: 'rgba(255,255,255,0.08)', // Grid lines color for dead cells
+  CONWAY_GRID_BG: '#1A1C1F',   // Surface color
+  
+  // Matrix rain
+  MATRIX_CHARS: '#FFB8D2',     // Soft pink characters
+  MATRIX_TRAIL: 'rgba(14,15,16,0.7)', // Semi-transparent for trail
+  
+  // Globe widget
+  GLOBE_LINES: '#FFB8D2',      // Soft pink for globe lines
+  GLOBE_MARKERS: '#F36CA6',    // Primary pink for markers
+  GLOBE_LABELS: '#FFFFFF',     // White for text labels
+  GLOBE_LABEL_BG: 'rgba(243,108,166,0.8)', // Pink background for labels
+  
+  // Modal colors
+  MODAL_OVERLAY: 'rgba(14,15,16,0.85)',
+  MODAL_BG: '#1A1C1F',
+  MODAL_BORDER: '#F36CA6',
+  MODAL_HEADER: '#F36CA6',
+  MODAL_TEXT: '#FFFFFF',
+  MODAL_SIDEBAR_BG: '#0E0F10',
+  MODAL_SIDEBAR_HOVER: 'rgba(255,184,210,0.1)',
+  
+  // Keyboard widget
+  KEY_BG: 'transparent',
+  KEY_BORDER: '#F36CA6',
+  KEY_TEXT: '#FFFFFF',
+  KEY_ACTIVE: 'rgba(255,184,210,0.2)',
+  KEY_PRESSED: '#FFB8D2',
+
+  // Utility function for dynamic RGB values
+  getRGB: (r, g, b) => `rgb(${r}, ${g}, ${b})`
 };
 
-// CSS Custom Property mappings (for reference)
+// CSS Custom Properties mapping for use in CSS files
 export const CSS_VARS = {
-  '--color-black': COLORS.BLACK,
-  '--color-white': COLORS.WHITE,
-  '--color-lime-green': COLORS.LIME_GREEN,
-  '--color-lime-green-bright': COLORS.LIME_GREEN_BRIGHT,
+  // Base HUD colors
+  '--hud-bg': COLORS.BG_PRIMARY,
+  '--hud-surface': COLORS.BG_SECONDARY,
+  '--hud-pink': COLORS.ACCENT_PINK,
+  '--hud-soft-pink': COLORS.ACCENT_SOFT_PINK,
+  '--hud-white': COLORS.TEXT_PRIMARY,
+  '--hud-gray': COLORS.TEXT_SECONDARY,
+  '--hud-grid': COLORS.GRID_LINES,
+  '--hud-overlay': COLORS.OVERLAY,
+
+  // Legacy mappings (keeping for backward compatibility during transition)
   '--color-bg-primary': COLORS.BG_PRIMARY,
   '--color-bg-secondary': COLORS.BG_SECONDARY,
-  '--color-bg-tertiary': COLORS.BG_TERTIARY,
-  '--color-bg-quaternary': COLORS.BG_QUATERNARY,
-  '--color-bg-button': COLORS.BG_BUTTON,
-  '--color-bg-button-secondary': COLORS.BG_BUTTON_SECONDARY,
-  '--color-bg-button-disabled': COLORS.BG_BUTTON_DISABLED,
-  '--color-bg-light-square': COLORS.BG_LIGHT_SQUARE,
-  '--color-bg-dark-square': COLORS.BG_DARK_SQUARE,
-  '--color-border-primary': COLORS.BORDER_PRIMARY,
-  '--color-border-secondary': COLORS.BORDER_SECONDARY,
-  '--color-border-tertiary': COLORS.BORDER_TERTIARY,
-  '--color-border-canvas': COLORS.BORDER_CANVAS,
+  '--color-bg-tertiary': COLORS.BG_SECONDARY,    // Same as secondary for consistency
+  '--color-bg-quaternary': COLORS.BG_PRIMARY,    // Darker variant
+  
   '--color-text-primary': COLORS.TEXT_PRIMARY,
   '--color-text-secondary': COLORS.TEXT_SECONDARY,
-  '--color-text-tertiary': COLORS.TEXT_TERTIARY,
-  '--color-text-muted': COLORS.TEXT_MUTED,
-  '--color-text-muted-secondary': COLORS.TEXT_MUTED_SECONDARY,
-  '--color-text-disabled': COLORS.TEXT_DISABLED,
-  '--color-text-on-accent': COLORS.TEXT_ON_ACCENT,
-  '--color-accent-aqua': COLORS.ACCENT_AQUA,
-  '--color-accent-grey': COLORS.ACCENT_GREY,
+  '--color-text-tertiary': COLORS.TEXT_PRIMARY,  // Same as primary
+  '--color-text-muted': COLORS.TEXT_SECONDARY,
+  '--color-text-muted-secondary': COLORS.TEXT_SECONDARY,
+  '--color-text-disabled': COLORS.TEXT_SECONDARY,
+  '--color-text-on-accent': COLORS.TEXT_PRIMARY,
+  
+  '--color-border-primary': COLORS.BORDER_PRIMARY,
+  '--color-border-secondary': COLORS.BORDER_SECONDARY,
+  '--color-border-tertiary': COLORS.GRID_LINES,
+  '--color-border-canvas': COLORS.BORDER_PRIMARY,
+  
+  '--color-accent-grey': COLORS.BG_SECONDARY,    // Using surface color
+  '--color-accent-aqua': COLORS.ACCENT_PINK,     // Mapping aqua to pink
+  '--color-accent-red': COLORS.ACCENT_PINK,      // Using pink for markers
+  
   '--color-overlay': COLORS.OVERLAY,
-  '--color-shadow': COLORS.SHADOW,
+  '--color-shadow': COLORS.ACCENT_SOFT_PINK,
+  
+  // Button colors
+  '--color-bg-button': COLORS.BUTTON_BG,
+  '--color-bg-button-secondary': COLORS.BUTTON_BG,
+  '--color-bg-button-disabled': COLORS.BG_SECONDARY,
+  
+  // Chess specific
+  '--color-bg-light-square': COLORS.CHESS_LIGHT_SQUARE,
+  '--color-bg-dark-square': COLORS.CHESS_DARK_SQUARE,
+  
+  // Matrix specific
+  '--color-matrix-trail': COLORS.MATRIX_TRAIL,
+  
+  // Globe specific
+  '--color-canvas-clear': 'rgba(0,0,0,0)',
+  
+  // Labels
+  '--color-label-bg': COLORS.GLOBE_LABEL_BG,
+  
+  // Legacy green colors (mapping to pink theme)
+  '--color-lime-green-bright': COLORS.ACCENT_PINK,
+  '--color-white': COLORS.TEXT_PRIMARY
 };
-
-export default COLORS;

@@ -1,27 +1,33 @@
+/* Chess Widget - HUD Theme */
 .container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    font-family: monospace;
-    background-color: var(--color-bg-primary);
-    color: var(--color-lime-green-bright);
+    font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
+    background-color: var(--hud-surface);
+    color: var(--hud-white);
     padding: 1rem;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
 }
+
 .carousel {
     text-align: center;
+    color: var(--hud-gray);
+    font-size: 0.875rem;
+    line-height: 1.4;
 }
+
 .boardWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 2px solid var(--color-border-primary);
+    border: 1px solid var(--hud-pink);
     border-radius: 4px;
     padding: 8px;
-    background-color: var(--color-bg-secondary);
+    background-color: var(--hud-bg);
     width: fit-content;
     margin: 0 auto;
 }
@@ -40,7 +46,10 @@
     width: 32px;
     text-align: center;
     font-size: 12px;
-    color: var(--color-text-muted);
+    font-weight: 500;
+    color: var(--hud-pink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .row {
@@ -52,7 +61,8 @@
     width: 24px;
     text-align: center;
     font-size: 12px;
-    color: var(--color-text-muted);
+    font-weight: 500;
+    color: var(--hud-pink);
 }
 
 .square {
@@ -61,17 +71,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    border: 1px solid var(--color-border-primary);
+    font-size: 18px;
+    border: 1px solid var(--hud-pink);
     box-sizing: border-box;
+    transition: all 0.1s ease;
 }
 
 .lightSquare {
-    background-color: var(--color-bg-light-square);
+    background-color: rgba(255,184,210,0.08);
 }
 
 .darkSquare {
-    background-color: var(--color-bg-dark-square);
+    background-color: var(--hud-surface);
+}
+
+.square:hover {
+    box-shadow: inset 0 0 4px var(--hud-soft-pink);
 }
 
 .controls {
@@ -83,36 +98,56 @@
 }
 
 .button {
-    background-color: var(--color-bg-button-secondary);
-    color: var(--color-lime-green-bright);
-    border: 1px solid var(--color-lime-green-bright);
+    background: transparent;
+    color: var(--hud-white);
+    border: 1px solid var(--hud-pink);
     border-radius: 4px;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.75rem;
     cursor: pointer;
-    font-family: monospace;
-    font-size: 12px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+}
+
+.button:hover {
+    background: rgba(255,184,210,0.1);
+    box-shadow: 0 0 4px var(--hud-soft-pink);
+    transform: scale(1.02);
+}
+
+.button:active {
+    background: rgba(243,108,166,0.2);
 }
 
 .button:disabled {
-    background-color: var(--color-bg-button-disabled);
-    color: var(--color-text-disabled);
+    background: transparent;
+    border-color: var(--hud-gray);
+    color: var(--hud-gray);
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .movesList {
     flex: 1;
     overflow-y: auto;
-    border: 1px solid var(--color-border-primary);
+    border: 1px solid var(--hud-pink);
     border-radius: 4px;
     padding: 0.5rem;
-    background-color: var(--color-bg-tertiary);
+    background-color: var(--hud-bg);
     min-height: 0;
 }
 
 .movesHeader {
-    font-size: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--color-text-muted-secondary);
+    color: var(--hud-pink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .movesGrid {
@@ -122,31 +157,40 @@
 }
 
 .moveButton {
-    background-color: var(--color-bg-button-secondary);
-    color: var(--color-lime-green-bright);
-    border: 1px solid var(--color-border-secondary);
+    background: transparent;
+    color: var(--hud-white);
+    border: 1px solid var(--hud-gray);
     border-radius: 3px;
-    padding: 0.2rem 0.3rem;
+    padding: 0.2rem 0.4rem;
     cursor: pointer;
-    font-family: monospace;
-    font-size: 10px;
+    font-family: inherit;
+    font-size: 0.625rem;
+    transition: all 0.15s ease;
+}
+
+.moveButton:hover {
+    border-color: var(--hud-soft-pink);
+    background: rgba(255,184,210,0.05);
 }
 
 .activeMoveButton {
-    background-color: var(--color-lime-green-bright);
-    color: var(--color-text-on-accent);
-    border: 1px solid var(--color-border-secondary);
+    background: var(--hud-pink);
+    color: var(--hud-white);
+    border: 1px solid var(--hud-pink);
     border-radius: 3px;
-    padding: 0.2rem 0.3rem;
+    padding: 0.2rem 0.4rem;
     cursor: pointer;
-    font-family: monospace;
-    font-size: 10px;
+    font-family: inherit;
+    font-size: 0.625rem;
+    font-weight: 600;
+    box-shadow: 0 0 4px var(--hud-soft-pink);
 }
 
 .currentMoveInfo {
-    font-size: 12px;
-    color: var(--color-text-muted-secondary);
+    font-size: 0.75rem;
+    color: var(--hud-gray);
     text-align: center;
-    border-top: 1px solid var(--color-border-primary);
+    border-top: 1px solid var(--hud-pink);
     padding-top: 0.5rem;
+    margin-top: 0.5rem;
 }

@@ -53,7 +53,7 @@ const MatrixRainWidget = () => {
     };
   }, []);
 
-  // Animation logic triggered by global tick
+  // Animation logic triggered by global tick using HUD colors
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || columnsRef.current === 0) return;
@@ -73,21 +73,22 @@ const MatrixRainWidget = () => {
     const drops = dropsRef.current;
     const trails = trailsRef.current;
 
-    // Semi-transparent black background for trailing effect
-    ctx.fillStyle = COLORS.MATRIX_TRAIL;
+    // Semi-transparent black background for trailing effect using HUD colors
+    ctx.fillStyle = 'rgba(14,15,16,0.7)'; // HUD background with transparency
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Set font once
     ctx.font = `${fontSize}px monospace`;
 
-    // Draw characters
+    // Draw characters using HUD pink theme
     for (let i = 0; i < drops.length; i++) {
-      // Update trail
+      // Update trail with HUD soft pink
       if (trails[i].length > 0) {
         trails[i].forEach((trail, index) => {
           const alpha = Math.max(0, 1 - (index * 0.1));
-          const greenValue = Math.floor(255 * alpha);
-          ctx.fillStyle = COLORS.getRGB(0, greenValue, 0);
+          // Use HUD soft pink with fading alpha
+          const r = 255, g = 184, b = 210;
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
           ctx.fillText(trail.char, i * fontSize, trail.y);
         });
       }
@@ -111,8 +112,8 @@ const MatrixRainWidget = () => {
           trails[i].pop();
         }
 
-        // Draw the leading character brighter
-        ctx.fillStyle = COLORS.WHITE;
+        // Draw the leading character in bright HUD white
+        ctx.fillStyle = COLORS.TEXT_PRIMARY;
         ctx.fillText(char, i * fontSize, y);
       }
 

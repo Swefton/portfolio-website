@@ -14,7 +14,7 @@ export default function GlobeWidget() {
     let width = container.clientWidth;
     let height = container.clientHeight;
 
-    // Create main container with black background
+    // Create main container with HUD background
     container.style.backgroundColor = COLORS.BG_PRIMARY;
 
     // CANVAS A: ASCII Globe Scene (background layer)
@@ -26,7 +26,7 @@ export default function GlobeWidget() {
     const asciiRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     asciiRenderer.setSize(width, height);
     asciiRenderer.setPixelRatio(window.devicePixelRatio);
-    asciiRenderer.setClearColor(COLORS.CANVAS_CLEAR, 0); // Transparent clear
+    asciiRenderer.setClearColor(0x000000, 0); // Transparent clear
     asciiRenderer.domElement.style.position = "absolute";
     asciiRenderer.domElement.style.top = "0";
     asciiRenderer.domElement.style.left = "0";
@@ -42,7 +42,7 @@ export default function GlobeWidget() {
     const markerRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     markerRenderer.setSize(width, height);
     markerRenderer.setPixelRatio(window.devicePixelRatio);
-    markerRenderer.setClearColor(COLORS.CANVAS_CLEAR, 0); // Transparent clear
+    markerRenderer.setClearColor(0x000000, 0); // Transparent clear
     markerRenderer.domElement.style.position = "absolute";
     markerRenderer.domElement.style.top = "0";
     markerRenderer.domElement.style.left = "0";
@@ -93,7 +93,7 @@ export default function GlobeWidget() {
       );
     }
 
-    // Create markers for cities (Canvas B)
+    // Create markers for cities (Canvas B) using HUD colors
     const markerGroup = new THREE.Group();
     
     // Coordinates
@@ -105,8 +105,9 @@ export default function GlobeWidget() {
     const michiganPos = latLngToVector3(michigan.lat, michigan.lng);
     
     const markerGeometry = new THREE.SphereGeometry(0.02, 16, 16);
+    // Use HUD pink for markers
     const markerMaterial = new THREE.MeshBasicMaterial({ 
-      color: COLORS.ACCENT_RED,
+      color: new THREE.Color(COLORS.ACCENT_PINK),
       depthTest: true,      // Test against depth buffer
       depthWrite: false     // Don't write to depth buffer
     });
@@ -121,7 +122,7 @@ export default function GlobeWidget() {
     
     markerScene.add(markerGroup);
     
-    // Add labels for cities (positioned relative to marker canvas)
+    // Add labels for cities (positioned relative to marker canvas) using HUD colors
     const labelGroup = document.createElement('div');
     labelGroup.style.position = 'absolute';
     labelGroup.style.top = '0';
@@ -135,27 +136,31 @@ export default function GlobeWidget() {
     const delhiLabel = document.createElement('div');
     delhiLabel.textContent = 'home';
     delhiLabel.style.position = 'absolute';
-    delhiLabel.style.color = COLORS.TEXT_ON_ACCENT;
-    delhiLabel.style.backgroundColor = COLORS.LABEL_BG;
+    delhiLabel.style.color = COLORS.TEXT_PRIMARY;
+    delhiLabel.style.backgroundColor = COLORS.ACCENT_PINK;
     delhiLabel.style.padding = '2px 6px';
     delhiLabel.style.borderRadius = '4px';
     delhiLabel.style.fontSize = '12px';
-    delhiLabel.style.fontFamily = 'monospace';
+    delhiLabel.style.fontFamily = 'Inter, DM Sans, Rubik, monospace';
     delhiLabel.style.fontWeight = 'bold';
     delhiLabel.style.pointerEvents = 'none';
+    delhiLabel.style.textTransform = 'uppercase';
+    delhiLabel.style.letterSpacing = '0.05em';
     labelGroup.appendChild(delhiLabel);
     
     const michiganLabel = document.createElement('div');
     michiganLabel.textContent = 'university';
     michiganLabel.style.position = 'absolute';
-    michiganLabel.style.color = COLORS.TEXT_ON_ACCENT;
-    michiganLabel.style.backgroundColor = COLORS.LABEL_BG;
+    michiganLabel.style.color = COLORS.TEXT_PRIMARY;
+    michiganLabel.style.backgroundColor = COLORS.ACCENT_PINK;
     michiganLabel.style.padding = '2px 6px';
     michiganLabel.style.borderRadius = '4px';
     michiganLabel.style.fontSize = '12px';
-    michiganLabel.style.fontFamily = 'monospace';
+    michiganLabel.style.fontFamily = 'Inter, DM Sans, Rubik, monospace';
     michiganLabel.style.fontWeight = 'bold';
     michiganLabel.style.pointerEvents = 'none';
+    michiganLabel.style.textTransform = 'uppercase';
+    michiganLabel.style.letterSpacing = '0.05em';
     labelGroup.appendChild(michiganLabel);
 
     // ASCII Canvas overlay 
@@ -171,12 +176,12 @@ export default function GlobeWidget() {
 
     const asciiContext = asciiCanvas.getContext("2d");
     
-    // Configure context for crisp rendering
+    // Configure context for crisp rendering with HUD colors
     asciiContext.imageSmoothingEnabled = false;
     asciiContext.textAlign = "left";
     asciiContext.textBaseline = "top";
     asciiContext.font = "8px monospace";
-    asciiContext.fillStyle = COLORS.LIME_GREEN; // Changed from white to lime green for better contrast
+    asciiContext.fillStyle = COLORS.ACCENT_SOFT_PINK; // Use HUD soft pink for ASCII
 
     // Render target for ASCII (will be resized dynamically)
     let renderTarget = new THREE.WebGLRenderTarget(width, height);
@@ -260,7 +265,7 @@ export default function GlobeWidget() {
       asciiContext.textAlign = "left";
       asciiContext.textBaseline = "top";
       asciiContext.font = "8px monospace";
-      asciiContext.fillStyle = COLORS.LIME_GREEN;
+      asciiContext.fillStyle = COLORS.ACCENT_SOFT_PINK;
       
       // Update render target
       renderTarget.dispose();
@@ -276,7 +281,7 @@ export default function GlobeWidget() {
     asciiContext.textAlign = "left";
     asciiContext.textBaseline = "top";
     asciiContext.font = "8px monospace";
-    asciiContext.fillStyle = COLORS.LIME_GREEN;
+    asciiContext.fillStyle = COLORS.ACCENT_SOFT_PINK;
     
     // Create ResizeObserver to watch container size changes
     const resizeObserver = new ResizeObserver(entries => {

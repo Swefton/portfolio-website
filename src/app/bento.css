@@ -1,3 +1,4 @@
+/* Bento Grid Styles - Consistent widget theming */
 .container {
   display: flex;
   height: 100%;
@@ -17,20 +18,21 @@
 }
 
 .bento-tile {
-  font-family: 'M PLUS 2 Variable', sans-serif;
+  font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: None;
+  padding: none;
   box-sizing: border-box;
   min-height: 0;
   min-width: 0;
 }
+
+/* Consistent widget styling - ALL widgets use same background and border */
 .widget {
-  background-color: var(--color-accent-grey);
-  border-style: solid;
-  border-color: var(--color-accent-aqua);
+  background-color: var(--hud-surface) !important;
+  border: 1px solid var(--hud-pink) !important;
   overflow: auto;
 }
 
@@ -41,7 +43,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--color-bg-primary);
+  background-color: var(--hud-bg) !important; /* Terminal gets darker background */
 }
 
 .keyboard {
@@ -50,22 +52,19 @@
 }
 
 /* Right side - Dynamic mixed layout */
-
-/* Temp widget - Rectangle next to globe */
 .widget-1 {
   grid-column: 5 / span 3;
   grid-row: 1 / span 1;
-  padding: 4%;
+  padding: 1rem;
 }
 
-/* Globe widget - Square */
 .widget-2 {
   grid-column: 8 / span 1;
   grid-row: 1 / span 1;
   overflow: hidden;
+  padding: 0;
 }
 
-/* Chess widget - Tall vertical space */
 .widget-3 {
   grid-column: 5 / span 2;
   grid-row: 2 / span 3;
@@ -75,16 +74,16 @@
   flex-direction: column;
 }
 
-/* Temp widget - Medium square */
 .widget-4 {
   grid-column: 7 / span 2;
   grid-row: 2 / span 2;
+  padding: 0;
 }
 
-/* Temp widget - Small horizontal */
 .widget-5 {
   grid-column: 7 / span 2;
   grid-row: 4 / span 1;
+  padding: 0;
 }
 
 /* Terminal specific styling */
@@ -111,13 +110,14 @@
   align-items: center;
   cursor: pointer;
   font-size: 0.6rem;
-  color: var(--color-text-secondary);
+  color: var(--hud-gray);
   transition: transform 0.1s ease, color 0.2s ease;
 }
 
 .terminal-button:hover {
   transform: scale(1.05);
-  color: var(--color-white);
+  color: var(--hud-white);
+  text-shadow: 0 0 4px var(--hud-soft-pink);
 }
 
 .terminal-button img {
@@ -125,6 +125,11 @@
   width: 32px;
   object-fit: contain;
   pointer-events: none;
+  filter: brightness(0) saturate(100%) invert(67%) sepia(13%) saturate(7%) hue-rotate(314deg) brightness(90%) contrast(86%);
+}
+
+.terminal-button:hover img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(104%) contrast(104%);
 }
 
 /* Responsive considerations for smaller desktop screens */

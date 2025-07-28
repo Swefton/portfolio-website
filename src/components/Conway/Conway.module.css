@@ -1,12 +1,13 @@
+/* Conway's Game of Life - HUD Theme */
 .container {
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-bg-secondary);
-  font-family: Monaco, "Lucida Console", monospace;
-  font-size: 10px;
-  color: var(--color-text-primary);
+  background-color: var(--hud-surface);
+  font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
+  font-size: 0.75rem;
+  color: var(--hud-white);
   overflow: hidden;
 }
 
@@ -14,8 +15,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 10px;
-  font-size: 11px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--hud-pink);
+  background-color: var(--hud-bg);
+  color: var(--hud-pink);
 }
 
 .canvasContainer {
@@ -23,31 +30,53 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 1rem;
+  background-color: var(--hud-bg);
 }
 
 .canvas {
   cursor: pointer;
-  border: 1px solid var(--color-border-canvas);
+  border: 1px solid var(--hud-pink);
+  transition: box-shadow 0.2s ease;
+}
+
+.canvas:hover {
+  box-shadow: 0 0 8px var(--hud-soft-pink);
 }
 
 .controls {
-  padding: 8px 10px;
-  font-size: 9px;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--hud-pink);
+  background-color: var(--hud-bg);
 }
 
 .buttonRow {
   display: flex;
-  gap: 8px;
+  gap: 0.75rem;
   justify-content: center;
   align-items: center;
 }
 
 .button {
-  background: var(--color-bg-button);
-  border: 1px solid var(--color-text-primary);
-  color: var(--color-text-primary);
-  padding: 4px 8px;
-  font-size: 9px;
+  background: transparent;
+  border: 1px solid var(--hud-pink);
+  color: var(--hud-white);
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.button:hover {
+  background: rgba(255,184,210,0.1);
+  box-shadow: 0 0 4px var(--hud-soft-pink);
+  transform: scale(1.02);
+}
+
+.button:active {
+  background: rgba(243,108,166,0.2);
 }

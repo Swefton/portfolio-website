@@ -18,16 +18,13 @@ const ConwayWidget = () => {
     if (!container) return 8;
     
     const containerRect = container.getBoundingClientRect();
-    const availableWidth = containerRect.width - 40; // Account for padding
-    const availableHeight = containerRect.height - 120; // Account for header and controls
+    const availableWidth = containerRect.width - 40;
+    const availableHeight = containerRect.height - 120;
     
     const maxCellWidth = Math.floor(availableWidth / dimensions.cols);
     const maxCellHeight = Math.floor(availableHeight / dimensions.rows);
     
-    // Use the smaller dimension to ensure the grid fits in both directions
     const optimalSize = Math.min(maxCellWidth, maxCellHeight);
-    
-    // Set a reasonable minimum and maximum cell size
     return Math.max(8, Math.min(optimalSize, 25));
   }, [dimensions]);
 
@@ -48,7 +45,6 @@ const ConwayWidget = () => {
     return () => resizeObserver.disconnect();
   }, [calculateCellSize]);
 
-  // Keep all your existing game logic
   const createEmptyGrid = useCallback(() => {
     return Array(dimensions.rows).fill().map(() => Array(dimensions.cols).fill(0));
   }, [dimensions]);
@@ -98,7 +94,7 @@ const ConwayWidget = () => {
     setGeneration(prev => prev + 1);
   }, [countNeighbors]);
 
-  // Canvas rendering function
+  // Canvas rendering function with HUD colors
   const drawGrid = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || grid.length === 0) return;
@@ -107,28 +103,29 @@ const ConwayWidget = () => {
     const width = dimensions.cols * cellSize;
     const height = dimensions.rows * cellSize;
     
-    // Clear canvas with dark background
-    ctx.fillStyle = COLORS.BG_SECONDARY;
+    // Clear canvas with HUD background
+    ctx.fillStyle = COLORS.BG_PRIMARY;
     ctx.fillRect(0, 0, width, height);
     
-    // Draw cells
+    // Draw cells using HUD color scheme
     for (let i = 0; i < dimensions.rows; i++) {
       for (let j = 0; j < dimensions.cols; j++) {
         const x = j * cellSize;
         const y = i * cellSize;
         
         if (grid[i] && grid[i][j] === 1) {
-          // Alive cell - solid green
-          ctx.fillStyle = COLORS.TEXT_PRIMARY;
+          // Alive cell - HUD pink
+          ctx.fillStyle = COLORS.ACCENT_PINK;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         } else {
-          // Dead cell - dark green
-          ctx.fillStyle = COLORS.BG_BUTTON;
+          // Dead cell - subtle grid color
+          ctx.fillStyle = COLORS.GRID_LINES;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         }
         
-        // Grid lines
-        ctx.strokeStyle = COLORS.BORDER_CANVAS;
+        // Grid lines using HUD pink borders
+        ctx.strokeStyle = COLORS.ACCENT_PINK;
+        ctx.lineWidth = 0.5;
         ctx.strokeRect(x, y, cellSize, cellSize);
       }
     }
@@ -243,7 +240,6 @@ const ConwayWidget = () => {
       </div>
     </div>
   );
-
 };
 
 export default ConwayWidget;
