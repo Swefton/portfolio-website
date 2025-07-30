@@ -1,8 +1,108 @@
-.hg-button.hg-functionBtn.hg-button-space {
-  width: 50%;
+/* keyboard.css - Container-relative version */
+
+.hg-theme-default {
+  background-color: #ececec;
+  border-radius: 0.2em;
+  box-sizing: border-box;
+  font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+  overflow: hidden;
+  padding: 2%; /* 2% of container height/width */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+.hg-theme-default .hg-button span,
+.hg-theme-default .hg-button span svg {
+  pointer-events: none;
+}
+
+.hg-theme-default button.hg-button {
+  border-width: 0;
+  font-size: inherit;
+  outline: 0;
+}
+
+.hg-theme-default .hg-button {
+  display: inline-block;
+  flex-grow: 1;
+}
+
+.hg-theme-default .hg-row {
+  display: flex;
+  flex: 1; /* Each row gets equal height distribution */
+  min-height: 0;
+}
+
+.hg-theme-default .hg-row:not(:last-child) {
+  margin-bottom: 1%; /* 1% of container height */
+}
+
+.hg-theme-default .hg-row .hg-button-container,
+.hg-theme-default .hg-row .hg-button:not(:last-child) {
+  margin-right: 1%; /* 1% of container width */
+}
+
+.hg-theme-default .hg-row > div:last-child {
+  margin-right: 0;
+}
+
+.hg-theme-default .hg-row .hg-button-container {
+  display: flex;
+  flex: 1;
+}
+
+.hg-theme-default .hg-button {
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #b5b5b5;
+  border-radius: 0.2em;
+  box-shadow: 0 0 0.1em rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  height: 100%; /* Take full available row height */
+  justify-content: center;
+  padding: 0.3em 0.5em; /* Relative to font size */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-size: 1em; /* Will inherit from parent */
+  min-height: 0;
+  min-width: 0;
+}
+
+.hg-theme-default .hg-button.hg-activeButton {
+  background: #efefef;
+}
+
+.hg-theme-default .hg-button.hg-selectedButton {
+  background: rgba(5, 25, 70, 0.53);
+  color: #fff;
+}
+
+.hg-theme-default .hg-row:last-child {
+  justify-content: center;
+}
+
+/* Space bar styling */
+.hg-button.hg-functionBtn.hg-button-space {
+  flex: 0 0 50%;
+}
+
+/* Make sure the keyboard container fills its parent */
 .react-simple-keyboard {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(100% + 0.5vw); /* Base font size that scales slightly */
+}
+
+/* For very small containers, make font even smaller */
+.bento-tile.keyboard .react-simple-keyboard {
+  font-size: clamp(0.7rem, 2vw, 1rem); /* Responsive font size with limits */
 }
