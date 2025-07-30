@@ -23,45 +23,9 @@ const KeyboardWidget = forwardRef((props, ref) => {
         "{tab} q w e r t y u i o p [ ] \\",
         "{capslock} a s d f g h j k l ; ' {enter}",
         "{shiftleft} z x c v b n m , . / {shiftright}",
-        "{controlleft} {altleft} {metaleft} {space} {altright} {controlright}"
-      ],
-      shift: [
-        "~ ! @ # $ % ^ & * ( ) _ + {backspace}",
-        "{tab} Q W E R T Y U I O P { } |",
-        '{capslock} A S D F G H J K L : " {enter}',
-        "{shiftleft} Z X C V B N M < > ? {shiftright}",
-        "{controlleft} {altleft} {metaleft} {space} {altright} {controlright}"
+        "{space}"
       ]
     },
-    display: {
-      "{backspace}": "⌫",
-      "{tab}": "⇥",
-      "{enter}": "↵",
-      "{capslock}": "⇪",
-      "{shiftleft}": "⇧",
-      "{shiftright}": "⇧",
-      "{controlleft}": "⌃",
-      "{controlright}": "⌃",
-      "{altleft}": "⌥",
-      "{altright}": "⌥",
-      "{metaleft}": "⌘",
-      "{metaright}": "⌘",
-      "{space}": "␣"
-    },
-    onKeyPress: (button) => {
-      if (
-        button === "{shift}" ||
-        button === "{shiftleft}" ||
-        button === "{shiftright}" ||
-        button === "{capslock}"
-      ) {
-        handleShift();
-      }
-    }
-  };
-
-  const handleShift = () => {
-    setLayoutName(prev => (prev === "default" ? "shift" : "default"));
   };
 
   useImperativeHandle(ref, () => ({
