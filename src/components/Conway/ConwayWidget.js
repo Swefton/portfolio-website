@@ -94,7 +94,7 @@ const ConwayWidget = () => {
     setGeneration(prev => prev + 1);
   }, [countNeighbors]);
 
-  // Canvas rendering function with HUD colors
+  // Canvas rendering function with conservative HUD colors
   const drawGrid = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || grid.length === 0) return;
@@ -107,15 +107,14 @@ const ConwayWidget = () => {
     ctx.fillStyle = COLORS.BG_PRIMARY;
     ctx.fillRect(0, 0, width, height);
     
-    // Draw cells using HUD color scheme
+    // Draw cells using conservative HUD color scheme
     for (let i = 0; i < dimensions.rows; i++) {
       for (let j = 0; j < dimensions.cols; j++) {
         const x = j * cellSize;
         const y = i * cellSize;
         
         if (grid[i] && grid[i][j] === 1) {
-          // Alive cell - HUD pink
-          ctx.fillStyle = COLORS.ACCENT_PINK;
+          ctx.fillStyle = COLORS.ACCENT_SOFT_PINK;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         } else {
           // Dead cell - subtle grid color
@@ -123,8 +122,8 @@ const ConwayWidget = () => {
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         }
         
-        // Grid lines using HUD pink borders
-        ctx.strokeStyle = COLORS.ACCENT_PINK;
+        // Grid lines using neutral gray instead of pink
+        ctx.strokeStyle = COLORS.GRID_LINES;
         ctx.lineWidth = 0.5;
         ctx.strokeRect(x, y, cellSize, cellSize);
       }
@@ -160,7 +159,7 @@ const ConwayWidget = () => {
     drawGrid();
   }, [drawGrid]);
 
-  // Game loop
+  // Game loop;
   useEffect(() => {
     if (!isPlaying || grid.length === 0) return;
     
@@ -199,7 +198,7 @@ const ConwayWidget = () => {
       {/* Header */}
       <div className={styles.header}>
         <span>Conway's Life</span>
-        <span>Gen: {generation}</span>
+        <h4>Gen: {generation}</h4>
       </div>
 
       {/* Canvas Grid */}

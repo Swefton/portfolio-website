@@ -8,3 +8,8 @@
 .react-terminal-line {
   text-wrap-mode: wrap !important; 
 }
+
+.react-terminal-wrapper {
+  background-color: var(--hug-bg) !important;
+  border-bottom: 1px solid var(--hud-white) !important;
+}

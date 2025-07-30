@@ -33,17 +33,16 @@ const TwoColumnSelector = ({ open, onClose, items }) => {
             >
                 {/* Sidebar */}
                 <div className={styles.sidebar}>
-                    {items.map((item, index) => (
-                        <div
-                            key={index}
-                            onClick={() => setSelectedIndex(index)}
-                            className={styles.sidebarItem}
-                        >
-                            {item.label}
-                        </div>
-                    ))}
+                {items.map((item, index) => (
+                    <div
+                    key={index}
+                    onClick={() => setSelectedIndex(index)}
+                    className={`${styles.sidebarItem} ${index === selectedIndex ? styles.selected : ''}`}
+                    >
+                    {item.label}
+                    </div>
+                ))}
                 </div>
-
                 {/* Content */}
                 <div className={styles.content}>
                     {items[selectedIndex].content}

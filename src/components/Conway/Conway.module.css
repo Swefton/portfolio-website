@@ -4,7 +4,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--hud-surface);
   font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
   font-size: 0.75rem;
   color: var(--hud-white);
@@ -20,9 +19,9 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--hud-pink);
+  border-bottom: 1px solid var(--hud-white);
   background-color: var(--hud-bg);
-  color: var(--hud-pink);
+  /* color: var(--hud-pink); */
 }
 
 .canvasContainer {
@@ -36,17 +35,17 @@
 
 .canvas {
   cursor: pointer;
-  border: 1px solid var(--hud-pink);
+  border: 1px solid var(--hud-white);
   transition: box-shadow 0.2s ease;
 }
 
 .canvas:hover {
-  box-shadow: 0 0 8px var(--hud-soft-pink);
+  box-shadow: 0 0 8px rgba(255,255,255,0.3);
 }
 
 .controls {
   padding: 0.75rem 1rem;
-  border-top: 1px solid var(--hud-pink);
+  border-top: 1px solid var(--hud-white);
   background-color: var(--hud-bg);
 }
 
@@ -59,7 +58,7 @@
 
 .button {
   background: transparent;
-  border: 1px solid var(--hud-pink);
+  border: 1px solid var(--hud-gray);
   color: var(--hud-white);
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
@@ -72,11 +71,11 @@
 }
 
 .button:hover {
-  background: rgba(255,184,210,0.1);
-  box-shadow: 0 0 4px var(--hud-soft-pink);
+  background: rgba(255,255,255,0.1);
+  border-color: var(--hud-white);
   transform: scale(1.02);
 }
 
 .button:active {
-  background: rgba(243,108,166,0.2);
+  background: rgba(255,255,255,0.15);
 }

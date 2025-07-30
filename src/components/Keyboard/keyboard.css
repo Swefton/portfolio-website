@@ -1,12 +1,10 @@
-/* keyboard.css - Container-relative version */
-
+/* keyboard.css - HUD Theme */
 .hg-theme-default {
-  background-color: #ececec;
-  border-radius: 0.2em;
+  background-color: var(--hud-bg);
   box-sizing: border-box;
-  font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+  font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
   overflow: hidden;
-  padding: 2%; /* 2% of container height/width */
+  padding: 2%;
   touch-action: manipulation;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -15,6 +13,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.hg-theme-default span {
+  color: var(--hud-white) !important;
 }
 
 .hg-theme-default .hg-button span,
@@ -35,17 +37,17 @@
 
 .hg-theme-default .hg-row {
   display: flex;
-  flex: 1; /* Each row gets equal height distribution */
+  flex: 1;
   min-height: 0;
 }
 
 .hg-theme-default .hg-row:not(:last-child) {
-  margin-bottom: 1%; /* 1% of container height */
+  margin-bottom: 1%;
 }
 
 .hg-theme-default .hg-row .hg-button-container,
 .hg-theme-default .hg-row .hg-button:not(:last-child) {
-  margin-right: 1%; /* 1% of container width */
+  margin-right: 1%;
 }
 
 .hg-theme-default .hg-row > div:last-child {
@@ -57,31 +59,46 @@
   flex: 1;
 }
 
+/* Main button styling - neutral HUD colors */
 .hg-theme-default .hg-button {
   align-items: center;
-  background: #fff;
-  border-bottom: 1px solid #b5b5b5;
+  background: var(--hud-surface);
+  border: 1px solid var(--hud-gray);
   border-radius: 0.2em;
-  box-shadow: 0 0 0.1em rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
-  height: 100%; /* Take full available row height */
+  height: 100%;
   justify-content: center;
-  padding: 0.3em 0.5em; /* Relative to font size */
+  padding: 0.3em 0.5em;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-size: 1em; /* Will inherit from parent */
+  font-size: 1em;
   min-height: 0;
   min-width: 0;
+  color: var(--hud-white);
+  font-weight: 500;
+  transition: all 0.1s ease;
 }
 
+/* Hover state - subtle white highlight */
+.hg-theme-default .hg-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--hud-white);
+}
+
+/* Active/pressed state - ONLY place pink is used for important feedback */
 .hg-theme-default .hg-button.hg-activeButton {
-  background: #efefef;
+  background: var(--hud-pink);
+  border-color: var(--hud-pink);
+  color: var(--hud-white);
+  box-shadow: 0 0 4px var(--hud-soft-pink);
 }
 
+/* Selected state - also uses pink for important state indication */
 .hg-theme-default .hg-button.hg-selectedButton {
-  background: rgba(5, 25, 70, 0.53);
-  color: #fff;
+  background: rgba(243, 108, 166, 0.3);
+  border-color: var(--hud-pink);
+  color: var(--hud-white);
 }
 
 .hg-theme-default .hg-row:last-child {
@@ -99,10 +116,22 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  font-size: calc(100% + 0.5vw); /* Base font size that scales slightly */
+  font-size: calc(100% + 0.5vw);
 }
 
 /* For very small containers, make font even smaller */
 .bento-tile.keyboard .react-simple-keyboard {
-  font-size: clamp(0.7rem, 2vw, 1rem); /* Responsive font size with limits */
+  font-size: clamp(0.7rem, 2vw, 1rem);
+}
+
+/* Physical keyboard highlight when typing */
+.hg-theme-default .hg-button.hg-highlighted {
+  background: var(--hud-pink);
+  border-color: var(--hud-pink);
+  color: var(--hud-white);
+  box-shadow: 0 0 6px var(--hud-soft-pink);
+}
+
+.hg-activeButton {
+  
 }

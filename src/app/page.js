@@ -154,27 +154,27 @@ export default function Home() {
           <div className="terminal-buttons">
             <div className="terminal-button" onClick={() => simulateTyping("run github")}>
               <img src="/folder.svg" alt="GitHub" />
-              <span>GitHub</span>
+              <p>GitHub</p>
             </div>
             <div className="terminal-button" onClick={() => simulateTyping("run devpost")}>
               <img src="/folder.svg" alt="Devpost" />
-              <span>Devpost</span>
+              <p>Devpost</p>
             </div>
             <div className="terminal-button" onClick={() => simulateTyping("run linkedin")}>
               <img src="/folder.svg" alt="LinkedIn" />
-              <span>LinkedIn</span>
+              <p>LinkedIn</p>
             </div>
             <div className="terminal-button" onClick={() => simulateTyping("run experience")}>
               <img src="/folder.svg" alt="Experience" />
-              <span>Experience</span>
+              <p>Experience</p>
             </div>
             <div className="terminal-button" onClick={() => simulateTyping("run projects")}>
               <img src="/folder.svg" alt="Projects" />
-              <span>Projects</span>
+              <p>Projects</p>
             </div>
             <div className="terminal-button" onClick={() => simulateTyping("run skills")}>
               <img src="/folder.svg" alt="Skills" />
-              <span>Skills</span>
+              <p>Skills</p>
             </div>
           </div>
         </div>

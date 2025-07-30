@@ -31,8 +31,7 @@
 
 /* Consistent widget styling - ALL widgets use same background and border */
 .widget {
-  background-color: var(--hud-surface) !important;
-  border: 1px solid var(--hud-pink) !important;
+  border: 1px solid var(--hud-white) !important;
   overflow: auto;
 }
 
@@ -110,14 +109,13 @@
   align-items: center;
   cursor: pointer;
   font-size: 0.6rem;
-  color: var(--hud-gray);
+  color: var(--hud-white);
   transition: transform 0.1s ease, color 0.2s ease;
 }
 
 .terminal-button:hover {
   transform: scale(1.05);
   color: var(--hud-white);
-  text-shadow: 0 0 4px var(--hud-soft-pink);
 }
 
 .terminal-button img {
@@ -128,8 +126,9 @@
   filter: brightness(0) saturate(100%) invert(67%) sepia(13%) saturate(7%) hue-rotate(314deg) brightness(90%) contrast(86%);
 }
 
-.terminal-button:hover img {
-  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(104%) contrast(104%);
+.terminal-button img {
+  filter: brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(1437%) hue-rotate(297deg) brightness(108%) contrast(90%);
+  transition: filter 0.2s ease;
 }
 
 /* Responsive considerations for smaller desktop screens */

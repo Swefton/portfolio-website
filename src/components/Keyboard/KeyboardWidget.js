@@ -3,7 +3,7 @@
 
 import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import Keyboard from 'react-simple-keyboard';
-// import 'react-simple-keyboard/build/css/index.css';
+import { COLORS } from '@/styles/colors';
 import './keyboard.css';
 
 const KeyboardWidget = forwardRef((props, ref) => {
@@ -13,6 +13,7 @@ const KeyboardWidget = forwardRef((props, ref) => {
   const keyboardOptions = {
     layoutName,
     physicalKeyboardHighlight: true,
+    physicalKeyboardHighlightBgColor: COLORS.ACCENT_PINK,
     theme: "simple-keyboard hg-theme-default hg-layout-default",
     syncInstanceInputs: true,
     mergeDisplay: true,

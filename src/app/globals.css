@@ -66,6 +66,10 @@ html, body {
   margin: 0;
 }
 
+span {
+  color: var(--hud-pink);
+}
+
 /* Global text glow effect for headers */
 .hud-glow {
   text-shadow: 0 0 4px var(--hud-soft-pink);
