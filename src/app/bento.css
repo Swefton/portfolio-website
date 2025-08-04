@@ -50,6 +50,12 @@
   grid-row: 4 / span 1;
 }
 
+.bento-tile.keyboard {
+  min-height: 200px;
+  height: auto;
+  max-height: 300px;
+}
+
 /* Right side - Dynamic mixed layout */
 .widget-1 {
   grid-column: 5 / span 3;
