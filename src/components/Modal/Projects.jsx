@@ -54,7 +54,7 @@ const ProjectsViewer = ({ open, onClose }) => {
                     label: "Alexandria",
                     content: (
                         <div>
-                            <h1>Journalingo</h1>
+                            <h1>Alexandria</h1>
                         </div>
                     )
                 },
