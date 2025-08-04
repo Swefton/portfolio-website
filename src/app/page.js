@@ -9,6 +9,7 @@ import AboutMe from "@/components/About/AboutWidget";
 import MatrixRainWidget from "@/components/Matrix/MatrixWidget";
 import ConwayWidget from "@/components/Conway/ConwayWidget";
 import ProjectsViewer from "@/components/Modal/Projects";
+import ExperiencesViewer from "@/components/Modal/Experiences";
 
 import "./bento.css";
 
@@ -73,7 +74,7 @@ export default function Home() {
           setActivePopup("projects");
       }
       if (command === "run experience") {
-          setActivePopup("experience");
+          setActivePopup("experiences");
       }
       if (command === "run skills") {
           setActivePopup("skills");
@@ -206,6 +207,10 @@ export default function Home() {
 
         <ProjectsViewer
           open={activePopup === "projects"}
+          onClose={() => setActivePopup(null)}
+        />
+        <ExperiencesViewer
+          open={activePopup === "experiences"}
           onClose={() => setActivePopup(null)}
         />
       </main>
