@@ -10,6 +10,7 @@ import MatrixRainWidget from "@/components/Matrix/MatrixWidget";
 import ConwayWidget from "@/components/Conway/ConwayWidget";
 import ProjectsViewer from "@/components/Modal/Projects";
 import ExperiencesViewer from "@/components/Modal/Experiences";
+import SkillsViewer from "@/components/Modal/Skill";
 
 import "./bento.css";
 import OrientationLock from "@/components/Orientation/orientation";
@@ -213,6 +214,10 @@ export default function Home() {
         />
         <ExperiencesViewer
           open={activePopup === "experiences"}
+          onClose={() => setActivePopup(null)}
+        />
+        <SkillsViewer
+          open={activePopup === "skills"}
           onClose={() => setActivePopup(null)}
         />
       </main>
