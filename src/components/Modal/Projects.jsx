@@ -14,30 +14,28 @@ const ProjectsViewer = ({ open, onClose }) => {
                         <div className={styles.projectHeader}>
                             <h1 className={styles.projectTitle}>OpenFiche</h1>
                             <p className={styles.projectDescription}>
-                            A post-AI academic browser and search engine that filters out low-quality AI-generated content, highlighting trustworthy, human-written sources.
+                                A post-AI academic browser and search engine that filters out low-quality AI-generated content, highlighting trustworthy, human-written sources.
                             </p>
                         </div>
                         <p>
-                            Born out of frustration with the current AI-dominated search landscape serving AI slop, OpenFiche reimagines web search for academic and research-heavy use cases. Drawing inspiration from microfiche machines, OpenFiche surfaces reliable, high-quality content from curated sources like NPR, CNN, and Wikipedia. By combining a webgraph-based PageRank algorithm with keyword relevance scoring (via NLTK), the system returns search results that are both authoritative and contextually relevant.
+                            My team noticed search results getting worse and found <a href="https://downloads.webis.de/publications/papers/bevendorff_2024a.pdf" target="_blank"><span>studies</span></a> showing AI is messing with SEO tags. OpenFiche is a search engine for academic research that focuses on reliable sources like <span>NPR</span>, <span>CNN</span>, and <span>Wikipedia</span>. It uses a webgraph-based <span>PageRank</span> with keyword relevance scoring (via <span>NLTK</span>) to deliver results avoiding low quality AI generated results.
                         </p>
                         <p>
-                            On the front-end, we built a minimalist browser with React and Flask, hosted on Vercel at <a href="https://reada.wiki" target="_blank">reada.wiki</a>. The custom OpenFiche browser is a lightweight Chromium abstraction built with QT, featuring a git-style history graph, distraction-free reader mode, and intuitive tab management. These tools aim to streamline research workflows and reduce cognitive overhead.
+                            The search engine was built with <span>React</span> and is live at <a href="https://reada.wiki" target="_blank"><span>reada.wiki</span></a>. The custom OpenFiche browser is a lightweight Chromium wrapper made with <span>Python</span> and <span>QT</span>, featuring a git-style history graph, distraction-free reader mode, and easy tab management to help streamline research.
                         </p>
                         <p>
-                            We scraped over 320,000 pages using custom crawling infrastructure and managed to scale PageRank computation on consumer hardware, even after facing IP bans and complex metadata inconsistencies. This project taught us the real-world limits of scraping at scale, and how crucial metadata standards are when building academic tooling.
+                            We scraped over <span>320,000 pages</span> using custom crawlers and managed to run PageRank on consumer hardware, even with IP bans and messy metadata. This project showed us the real challenges of scraping at scale and why good metadata matters.
                         </p>
                         <p>
-                            This project was our submission for Spartahack X at which we won an award for "Specialized Mastery". Our web browser's git style history viewer was a very well liked feature and so I ported it to chromium browsers as an extension.
+                            We submitted this project to <span>Spartahack X</span> and won the <span>"Specialized Mastery"</span> award. The git-style history viewer was a well-loved feature, so I later ported it as a Chromium extension.
                         </p>
                         <div className={styles.projectTags}>
-                            <span className={styles.projectTag}>React</span>
-                            <span className={styles.projectTag}>Flask</span>
+                            <span className={styles.projectTag}>Algorithm Engineering</span>
+                            <span className={styles.projectTag}>NLP</span>
                             <span className={styles.projectTag}>Python</span>
-                            <span className={styles.projectTag}>Web Crawler</span>
-                            <span className={styles.projectTag}>PageRank</span>
-                            <span className={styles.projectTag}>NLTK</span>
+                            <span className={styles.projectTag}>Flask</span>
+                            <span className={styles.projectTag}>React</span>
                             <span className={styles.projectTag}>QT</span>
-                            <span className={styles.projectTag}>Chromium</span>
                         </div>
                         </div>
                     )
@@ -47,34 +45,40 @@ const ProjectsViewer = ({ open, onClose }) => {
                     content: (
                         <div className={styles.projectContent}>
                         <div className={styles.projectHeader}>
-                            <h1 className={styles.projectTitle}>Journalingo</h1>
+                            <h1 className={styles.projectTitle}>
+                            <span>Journalingo</span>
+                            </h1>
                             <p className={styles.projectDescription}>
-                            A video-based emotional journaling app that analyzes facial expressions to provide insights and feedback on emotional well-being.
+                            A video-based emotional journaling app that analyzes facial expressions to provide insights on emotional well-being.
                             </p>
                         </div>
                         <p>
-                            Journalingo was built around the idea that self reflection has biases and can create echo chambers. With Journalingo, users record short video entries that are analyzed using a combination of OpenAI's GPT-4, Whisper, and Hugging Face APIs. The system interprets emotional tone, facial expressions, and spoken content to deliver a tailored emotional breakdown to reveal emotions that the user wasn't ready to admit.
+                            Journalingo addresses the biases of self-reflection by letting users record short videos. Using custom <span>computer vision</span> techniques and <span>NLP</span>, our model and algorithm analyzes facial expressions, emotional tone, and speech to reveal hidden emotions.
                         </p>
                         <p>
-                            Users receive a personalized PDF report summarizing their emotional patterns, mood shifts, and recommendations for improved mental clarity. Our aim was to make the act of journaling more interactive, less text-heavy, and ultimately more accessible to people who find video expression more natural.
+                            Users get a personalized <span>PDF report</span> summarizing emotional patterns, mood shifts, and recommendations for mental clarity.
                         </p>
                         <p>
-                            Since we were handling sensitive data, we architected a secure system that keeps user data safe with secure authentication. Our analysis model was also computationally expensive and so we used Google Cloud Platform and cloud functions to analyze videos on the cloud for a smooth user experience.
+                            Since we handled <span>sensitive data</span>, we designed a secure system with strong authentication. Due to the heavy analysis workload, video processing runs on a powerful server on <span>Google Cloud</span> for smooth performance.
                         </p>
                         <p>
-                            Journalingo was our submission for Uncommon Hacks 2024 (University of Chicago Hackathon) where we won an award for Best Use of Auth0.
+                            It was hard to test our model's accuracy for an abstract concept like this, but our model could expertly distinguish <span>faked emotions</span> from actors, separating real sadness from scripted sadness.
+                        </p>
+                        <p>
+                            Journalingo was our submission for <span>Uncommon Hacks 2024</span> (University of Chicago Hackathon), where we won <span>Best Use of Auth0</span>.
                         </p>
                         <h2>Demo</h2>
-                        <p>Our live demo was taken down because running the cloud functions without credits from the event is expensive and also because of how sensitive video journal entries can be, our project was meant to be a fun proof of concept for the event. However, this is an example analysis that we ran.</p>
+                        <p>
+                            The live demo was taken down due to <span>cloud costs</span> and <span>data sensitivity</span>, but here is an example analysis we ran.
+                        </p>
                         <div className={styles.projectTags}>
+                            <span className={styles.projectTag}>Facial Recognition</span>
+                            <span className={styles.projectTag}>Computer Vision</span>
+                            <span className={styles.projectTag}>NLP</span>
+                            <span className={styles.projectTag}>Sentiment Analysis</span>
                             <span className={styles.projectTag}>Flask</span>
-                            <span className={styles.projectTag}>GPT-4</span>
-                            <span className={styles.projectTag}>Whisper</span>
-                            <span className={styles.projectTag}>Hugging Face</span>
                             <span className={styles.projectTag}>Google Cloud</span>
                             <span className={styles.projectTag}>MongoDB</span>
-                            <span className={styles.projectTag}>Bootstrap</span>
-                            <span className={styles.projectTag}>Facial Recognition</span>
                         </div>
                         </div>
                     )
@@ -86,30 +90,24 @@ const ProjectsViewer = ({ open, onClose }) => {
                         <div className={styles.projectHeader}>
                             <h1 className={styles.projectTitle}>Alexandria</h1>
                             <p className={styles.projectDescription}>
-                            Local AI-powered documentation search tool that lives in your terminal - indexing your dependencies and answering dev questions instantly, with zero network calls.
+                            Local AI-powered documentation search tool that lives in your terminal — indexing dependencies and answering dev questions instantly, with zero network calls.
                             </p>
                         </div>
                         <p>
-                            Alexandria was inspired by the growing frustration developers face when constantly switching between browser tabs and struggling with unfamiliar libraries. Instead of relying on general-purpose AI assistants or documentation sites, Alexandria brings the intelligence directly to the terminal. It scans your codebase for dependencies, indexes documentation for all of these dependencies, and enables fast, offline question-answering based on your actual stack.
+                            Developers spend a lot of time digging through docs, and even when using LLMs, issues arise because of recent <span>library refactors</span> or AI hallucinations on niche APIs. Alexandria solves this by <span>indexing documentation</span> for all your project’s libraries, providing <span>context-aware info</span> to improve LLM answers.
                         </p>
                         <p>
-                            The tool automatically detects dependencies across ecosystems—Python, Node.js, Rust, Go, Java, and more—by parsing standard files like <code>requirements.txt</code>, <code>package.json</code>, <code>go.mod</code>, and <code>Cargo.toml</code>. It builds persistent vector embeddings of relevant documentation using FAISS, then responds to user queries through a local Ollama-hosted AI model—meaning no API keys, no telemetry, no data leaks.
+                            It detects dependencies across languages by analyzing common files, then extracts and chunks relevant docs using <span>web scraping</span> and stores embeddings with <span>FAISS</span>. Queries are handled locally via an <span>Ollama-hosted model</span> — no API keys, no data leaks.
                         </p>
                         <p>
-                            Alexandria supports fast and accurate documentation retrieval even on modest hardware. It filters out noise from <code>venv/</code> and <code>node_modules/</code>, stores embeddings for future reuse, and offers a sleek command-line interface built with Rich. Key commands include <code>alexandria scan</code> and <code>alexandria chat</code>, enabling natural language queries like “How do I use FastAPI middleware?” with instant, relevant output.
-                        </p>
-                        <p>
-                            Challenges included multi-language support, indexing only meaningful libraries, and tuning FAISS for speed without sacrificing answer quality. We also debated UI form factors before committing to a CLI-first design inspired by man pages and minimalism. Alexandria ultimately proved faster and more reliable than mainstream LLM tools, especially when context-aware documentation is critical.
+                            Alexandria delivers <span>fast, accurate search</span> on modest hardware. It caches embeddings, filters noise, and offers a clean CLI built with <span>Rich</span>. Commands like <code>alexandria scan</code> and <code>alexandria chat</code> let you ask natural language questions and get instant, relevant answers.
                         </p>
                         <div className={styles.projectTags}>
                             <span className={styles.projectTag}>Python</span>
-                            <span className={styles.projectTag}>CLI</span>
                             <span className={styles.projectTag}>FAISS</span>
-                            <span className={styles.projectTag}>Ollama</span>
-                            <span className={styles.projectTag}>Rich</span>
-                            <span className={styles.projectTag}>Offline AI</span>
-                            <span className={styles.projectTag}>Dependency Parsing</span>
                             <span className={styles.projectTag}>Vector Search</span>
+                            <span className={styles.projectTag}>Web Scraping</span>
+                            <span className={styles.projectTag}>Chunking</span>
                         </div>
                         </div>
                     )
@@ -121,27 +119,24 @@ const ProjectsViewer = ({ open, onClose }) => {
                     <div className={styles.projectHeader}>
                         <h1 className={styles.projectTitle}>Callsort</h1>
                         <p className={styles.projectDescription}>
-                        A cross-platform desktop app for one-click sorting of Library of Congress call number data in Excel/CSV—parsed, validated, and ordered precisely to support cataloging workflows.
+                        A cross-platform desktop app for one-click sorting of Library of Congress call numbers in Excel/CSV - parsing, validating, and ordering data precisely to support cataloging workflows.
                         </p>
                     </div>
                     <p>
-                        Developed to address a recurring frustration at the MSU library: Excel and other spreadsheet tools cannot reliably sort LC call numbers, particularly when data contains inconsistencies or formatting quirks. Callsort solves this gap by parsing full call number syntax (class letters, numbers, Cutter, suffixes), validating formats, and sorting items into correct LC order—even across messy, real-world datasets.
+                        Callsort was created to solve a common pain point at the MSU library: standard spreadsheet tools <span>can't sort LC call numbers</span>, especially when the data is messy or inconsistently formatted. Callsort parses the <span>full call number syntax</span>, validates it, and sorts items in proper LC order - even on imperfect real-world data.
                     </p>
                     <p>
-                        Built using a robust Rust core for blazing fast and accurate parsing, paired with a Vue.js frontend bundled with Tauri for native GUI support across Windows, macOS, and Linux.
+                        The core is built in <span>Rust</span> for <span>fast sorting of over a million items insantly</span>, while the <span>Vue.js frontend</span> bundled with <span>Tauri</span> provides a native experience on Windows, macOS, and Linux.
                     </p>
                     <p>
-                        We're especially proud that Callsort delivers an immediate, tangible win: library staff and researchers can now sort tens of thousands of items in proper LC order in seconds. The tool is licensed under MIT and publicly hosted on GitHub, fostering community visibility and potential contributions.
+                        The result is a practical tool that lets library staff and researchers browse our collection in order of their Callnumber. It's <span>open-source</span> under the MIT license and available on GitHub, encouraging community collaboration.
                     </p>
                     <div className={styles.projectTags}>
                         <span className={styles.projectTag}>Rust</span>
-                        <span className={styles.projectTag}>Tauri</span>
                         <span className={styles.projectTag}>Vue.js</span>
-                        <span className={styles.projectTag}>Cross-Platform</span>
-                        <span className={styles.projectTag}>LC Call Numbers</span>
-                        <span className={styles.projectTag}>Excel/CSV</span>
-                        <span className={styles.projectTag}>Parsing & Sorting</span>
-                        <span className={styles.projectTag}>MIT License</span>
+                        <span className={styles.projectTag}>Tauri</span>
+                        <span className={styles.projectTag}>Software Development</span>
+                        <span className={styles.projectTag}>Algorithm Engineering</span>
                     </div>
                     </div>
                 )
@@ -157,21 +152,19 @@ const ProjectsViewer = ({ open, onClose }) => {
                         </p>
                     </div>
                     <p>
-                        As AI tools grew in popularity, we noticed a drop in peer-to-peer communication in entry-level CS courses. Wolverine Code Companion was built to reintroduce collaborative learning - embedding course material directly into a shared model that evolves through student queries, notes, and examples.
+                        As AI tools grew popular, we noticed a drop in peer communication in entry-level CS courses. Wolverine Code Companion reintroduces collaborative learning by <span>embedding course material into a shared, evolving model</span> built from student queries, notes, and examples.
                     </p>
                     <p>
-                        The extension integrates LLaMA 3 with real syllabi and assignments from University of Michigan CS courses. This gives students precise, context-aware support - whether they're debugging an assignment or reviewing concepts like recursion in the scope of their curriculum.
+                        The extension integrates <span>LLaMA 3</span> with real syllabi and assignments from University of Michigan CS courses, providing <span>context-aware, curriculum-aligned support</span> for debugging and concept review like recursion within students' actual coursework.
                     </p>
                     <p>
-                        At a time when most vectorization methods were closed-source, we developed a custom chunking and embedding algorithm in-house. Our approach outperformed GPT-3 in quoting exact pages and references from course content, enabling highly specific, document-grounded responses.
+                        When most vectorization methods were closed-source, we developed a <span>custom chunking and embedding pipeline</span> with in-house transformers and tokenization optimizations. Our approach outperformed GPT-3 on <span>document retrieval and precise citation</span>, enabling highly specific, <span>grounded LLM responses</span>.
                     </p>
                     <div className={styles.projectTags}>
-                        <span className={styles.projectTag}>Visual Studio</span>
-                        <span className={styles.projectTag}>LLM Integration</span>
-                        <span className={styles.projectTag}>EdTech</span>
-                        <span className={styles.projectTag}>Course-Aware AI</span>
-                        <span className={styles.projectTag}>University of Michigan</span>
-                        <span className={styles.projectTag}>Curriculum Alignment</span>
+                        <span className={styles.projectTag}>LLM Engineering</span>
+                        <span className={styles.projectTag}>Transformers</span>
+                        <span className={styles.projectTag}>Vector Embeddings</span>
+                        <span className={styles.projectTag}>Tokenization</span>
                     </div>
                     </div>
                 )
