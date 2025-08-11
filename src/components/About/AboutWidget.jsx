@@ -10,22 +10,30 @@ const AboutMe = () => {
       if (!containerRef.current) return;
       
       const { width, height } = containerRef.current.getBoundingClientRect();
+      const area = width * height;
       
-      // Determine size class based on container dimensions
-      if (width < 200 || height < 100) {
+      // More conservative size detection to prevent overflow
+      // Factor in both dimensions and total area
+      if (width < 160 || height < 70 || area < 12000) {
         setSizeClass('tiny');
-      } else if (width < 300 || height < 150) {
+      } else if (width < 220 || height < 100 || area < 22000) {
         setSizeClass('small');
-      } else if (width < 400 || height < 200) {
+      } else if (width < 300 || height < 140 || area < 40000) {
         setSizeClass('medium');
       } else {
         setSizeClass('large');
       }
     };
 
+    // Initial size check
     updateSize();
     
-    const resizeObserver = new ResizeObserver(updateSize);
+    // Use ResizeObserver for dynamic updates
+    const resizeObserver = new ResizeObserver(() => {
+      // Debounce to prevent too frequent updates
+      setTimeout(updateSize, 50);
+    });
+    
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
@@ -47,7 +55,7 @@ const AboutMe = () => {
           <>
             <h1 className={styles.name}>Hi, I'm Amrit</h1>
             <p className={styles.description}>
-              CS Senior at Michigan State University
+              Senior CS at Michigan State University
             </p>
           </>
         );
@@ -56,7 +64,7 @@ const AboutMe = () => {
           <>
             <h1 className={styles.name}>Hi, I'm Amrit</h1>
             <p className={styles.description}>
-              Senior CS Major at MSU with Data Science minor. 
+              Senior CS at MSU with Data Science minor. 
               I work with AI, automation, and web tech.
             </p>
           </>
