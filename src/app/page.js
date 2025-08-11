@@ -12,6 +12,7 @@ import ProjectsViewer from "@/components/Modal/Projects";
 import ExperiencesViewer from "@/components/Modal/Experiences";
 
 import "./bento.css";
+import OrientationLock from "@/components/Orientation/orientation";
 
 // Global Animation Context
 const AnimationContext = createContext();
@@ -147,6 +148,7 @@ export default function Home() {
   const moves = ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "h3", "b5", "Bb3", "d6"];
 
   return (
+    <OrientationLock>
     <AnimationProvider>
       <main className="bento-grid">
         {/* Left side - Terminal focus area */}
@@ -215,5 +217,6 @@ export default function Home() {
         />
       </main>
     </AnimationProvider>
+    </OrientationLock>
   );
 }
