@@ -3,46 +3,78 @@ import { COLORS } from '@/styles/colors';
 import styles from './Conway.module.css';
 
 const ConwayWidget = () => {
+  // ALL HOOKS MUST BE DECLARED UNCONDITIONALLY AT THE TOP
   const [grid, setGrid] = useState([]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(750);
   const [generation, setGeneration] = useState(0);
+  const [sizeMode, setSizeMode] = useState('full');
   const canvasRef = useRef();
   const containerRef = useRef();
-  const [dimensions, setDimensions] = useState({ rows: 30, cols: 30 });
+  
+  // Keep grid dimensions fixed to preserve state, only change visual cell size
+  const [dimensions] = useState({ rows: 30, cols: 30 });
   const [cellSize, setCellSize] = useState(8);
 
-  // Calculate optimal cell size based on container dimensions
-  const calculateCellSize = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return 8;
-    
-    const containerRect = container.getBoundingClientRect();
-    const availableWidth = containerRect.width - 40;
-    const availableHeight = containerRect.height - 120;
-    
-    const maxCellWidth = Math.floor(availableWidth / dimensions.cols);
-    const maxCellHeight = Math.floor(availableHeight / dimensions.rows);
-    
-    const optimalSize = Math.min(maxCellWidth, maxCellHeight);
-    return Math.max(8, Math.min(optimalSize, 25));
-  }, [dimensions]);
-
-  // Update cell size when container or dimensions change
+  // Responsive size detection - ALWAYS runs
   useEffect(() => {
-    const updateCellSize = () => {
-      const newCellSize = calculateCellSize();
-      setCellSize(newCellSize);
+    const updateSizeMode = () => {
+      if (!containerRef.current) return;
+      
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      
+      if (width < 150 || height < 120) {
+        setSizeMode('hidden');
+      } else if (width < 200 || height < 160) {
+        setSizeMode('minimal');
+      } else if (width < 280 || height < 220) {
+        setSizeMode('compact');
+      } else {
+        setSizeMode('full');
+      }
     };
 
-    updateCellSize();
+    updateSizeMode();
     
-    const resizeObserver = new ResizeObserver(updateCellSize);
+    const resizeObserver = new ResizeObserver(updateSizeMode);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
     
     return () => resizeObserver.disconnect();
+  }, []);
+
+  // Calculate optimal cell size based on container dimensions (keeping grid size fixed)
+  const calculateCellSize = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return 8;
+    
+    const containerRect = container.getBoundingClientRect();
+    
+    // Reserve space for header and controls based on size mode
+    let reservedHeight = 0;
+    if (sizeMode === 'full') {
+      reservedHeight = 120; // header + controls
+    } else if (sizeMode === 'compact') {
+      reservedHeight = 80; // minimal header + controls
+    } else if (sizeMode === 'minimal') {
+      reservedHeight = 40; // just header
+    }
+    
+    const availableWidth = containerRect.width - 40;
+    const availableHeight = containerRect.height - reservedHeight;
+    
+    const maxCellWidth = Math.floor(availableWidth / dimensions.cols);
+    const maxCellHeight = Math.floor(availableHeight / dimensions.rows);
+    
+    const optimalSize = Math.min(maxCellWidth, maxCellHeight);
+    return Math.max(3, Math.min(optimalSize, 15)); // Min 3px, max 15px cells
+  }, [dimensions, sizeMode]);
+
+  // Update cell size when container or size mode changes
+  useEffect(() => {
+    const newCellSize = calculateCellSize();
+    setCellSize(newCellSize);
   }, [calculateCellSize]);
 
   const createEmptyGrid = useCallback(() => {
@@ -94,7 +126,7 @@ const ConwayWidget = () => {
     setGeneration(prev => prev + 1);
   }, [countNeighbors]);
 
-  // Canvas rendering function with conservative HUD colors
+  // Canvas rendering function
   const drawGrid = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || grid.length === 0) return;
@@ -116,16 +148,18 @@ const ConwayWidget = () => {
         if (grid[i] && grid[i][j] === 1) {
           ctx.fillStyle = COLORS.ACCENT_SOFT_PINK;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
-        } else {
-          // Dead cell - subtle grid color
+        } else if (cellSize > 4) {
+          // Only show grid lines if cells are big enough
           ctx.fillStyle = COLORS.GRID_LINES;
           ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
         }
         
-        // Grid lines using neutral gray instead of pink
-        ctx.strokeStyle = COLORS.GRID_LINES;
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(x, y, cellSize, cellSize);
+        // Grid lines using neutral gray (only if cells are large enough)
+        if (cellSize > 6) {
+          ctx.strokeStyle = COLORS.GRID_LINES;
+          ctx.lineWidth = 0.5;
+          ctx.strokeRect(x, y, cellSize, cellSize);
+        }
       }
     }
   }, [grid, dimensions, cellSize]);
@@ -133,7 +167,7 @@ const ConwayWidget = () => {
   // Handle canvas clicks
   const handleCanvasClick = useCallback((event) => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || cellSize < 4) return; // Disable clicking for very small cells
     
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -159,7 +193,7 @@ const ConwayWidget = () => {
     drawGrid();
   }, [drawGrid]);
 
-  // Game loop;
+  // Game loop
   useEffect(() => {
     if (!isPlaying || grid.length === 0) return;
     
@@ -178,7 +212,7 @@ const ConwayWidget = () => {
     canvas.width = dimensions.cols * cellSize;
     canvas.height = dimensions.rows * cellSize;
     
-    if (dimensions.rows > 0 && dimensions.cols > 0) {
+    if (dimensions.rows > 0 && dimensions.cols > 0 && grid.length === 0) {
       const newGrid = createEmptyGrid();
       for (let i = 0; i < dimensions.rows; i++) {
         for (let j = 0; j < dimensions.cols; j++) {
@@ -188,53 +222,87 @@ const ConwayWidget = () => {
       setGrid(newGrid);
       setGeneration(0);
     }
-  }, [dimensions, createEmptyGrid, cellSize]);
+  }, [dimensions, createEmptyGrid, cellSize, grid.length]);
 
+  const randomizeGrid = useCallback(() => {
+    setGeneration(0);
+    const newGrid = createEmptyGrid();
+    for (let i = 0; i < dimensions.rows; i++) {
+      for (let j = 0; j < dimensions.cols; j++) {
+        newGrid[i][j] = Math.random() > 0.7 ? 1 : 0;
+      }
+    }
+    setGrid(newGrid);
+  }, [createEmptyGrid, dimensions]);
+
+  // CRITICAL: Always render the same JSX structure, use conditional styling instead
   return (
     <div 
       ref={containerRef}
-      className={styles.container}
+      className={`${styles.container} ${styles[sizeMode]}`}
     >
-      {/* Header */}
-      <div className={styles.header}>
-        <span>Conway's Life</span>
-        <h4>Gen: {generation}</h4>
+      {/* Hidden message - conditionally visible via CSS, not conditionally rendered */}
+      <div 
+        className={styles.hiddenMessage}
+        style={{ display: sizeMode === 'hidden' ? 'flex' : 'none' }}
+      >
+        Conway's Game hidden - container too small
       </div>
 
-      {/* Canvas Grid */}
-      <div className={styles.canvasContainer}>
-        <canvas
-          ref={canvasRef}
-          onClick={handleCanvasClick}
-          className={styles.canvas}
-        />
-      </div>
+      {/* Main content - hidden when size mode is 'hidden' */}
+      <div style={{ display: sizeMode === 'hidden' ? 'none' : 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* Header - simplified for small containers */}
+        <div 
+          className={sizeMode === 'minimal' ? styles.minimalHeader : styles.header}
+          style={{ display: sizeMode === 'minimal' ? 'block' : 'flex' }}
+        >
+          {sizeMode === 'minimal' ? (
+            `Conway's Life - Gen: ${generation}`
+          ) : (
+            <>
+              <span>Conway's Life</span>
+              <span>Gen: {generation}</span>
+            </>
+          )}
+        </div>
 
-      {/* Controls */}
-      <div className={styles.controls}>
-        <div className={styles.buttonRow}>
-          <button 
-            onClick={() => {
-              setGeneration(0);
-              const newGrid = createEmptyGrid();
-              for (let i = 0; i < dimensions.rows; i++) {
-                for (let j = 0; j < dimensions.cols; j++) {
-                  newGrid[i][j] = Math.random() > 0.7 ? 1 : 0;
-                }
-              }
-              setGrid(newGrid);
-            }}
-            className={styles.button}
-          >
-            Random
-          </button>
-          
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)}
-            className={styles.button}
-          >
-            {isPlaying ? 'Pause' : 'Play'}
-          </button>
+        {/* Canvas Grid */}
+        <div className={styles.canvasContainer}>
+          <canvas
+            ref={canvasRef}
+            onClick={handleCanvasClick}
+            className={styles.canvas}
+            style={{ cursor: cellSize >= 4 ? 'pointer' : 'default' }}
+          />
+        </div>
+
+        {/* Controls - adaptive based on size */}
+        <div className={styles.controls}>
+          <div className={styles.buttonRow}>
+            <button onClick={randomizeGrid} className={styles.button}>
+              {sizeMode === 'full' ? 'Random' : 'New'}
+            </button>
+            
+            <button 
+              onClick={() => setIsPlaying(!isPlaying)}
+              className={styles.button}
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </button>
+
+            {/* Clear button - hidden via CSS instead of conditional rendering */}
+            <button 
+              onClick={() => {
+                setGrid(createEmptyGrid());
+                setGeneration(0);
+                setIsPlaying(false);
+              }}
+              className={styles.button}
+              style={{ display: sizeMode === 'full' ? 'block' : 'none' }}
+            >
+              Clear
+            </button>
+          </div>
         </div>
       </div>
     </div>

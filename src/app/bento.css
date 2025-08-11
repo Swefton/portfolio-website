@@ -1,4 +1,4 @@
-/* Bento Grid Styles - Consistent widget theming */
+/* Responsive Bento Grid - Mobile Landscape Support */
 .container {
   display: flex;
   height: 100%;
@@ -127,4 +127,250 @@
 
 .terminal-button:hover {
   transform: scale(1.05);
+}
+
+/* Tablet Landscape: 768px - 1023px */
+@media (max-width: 1023px) and (min-width: 768px) and (orientation: landscape) {
+  .bento-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr 0.8fr 1.2fr;
+    gap: 12px;
+    padding: 1% 1% 1% 1%;
+  }
+
+  .terminal {
+    grid-column: 1 / span 3;
+    grid-row: 1 / span 2;
+  }
+
+  .keyboard {
+    grid-column: 1 / span 3;
+    grid-row: 3 / span 1;
+  }
+
+  .widget-1 {
+    grid-column: 4 / span 3;
+    grid-row: 1 / span 1;
+    padding: 0.75rem;
+  }
+
+  .widget-2 {
+    grid-column: 4 / span 1;
+    grid-row: 2 / span 1;
+  }
+
+  .widget-3 {
+    grid-column: 5 / span 2;
+    grid-row: 2 / span 2;
+  }
+
+  .widget-4 {
+    grid-column: 4 / span 1;
+    grid-row: 3 / span 1;
+  }
+
+  /* Hide widget-5 (Matrix) on tablet for space */
+  .widget-5 {
+    display: none;
+  }
+
+  .terminal-buttons {
+    flex-wrap: wrap;
+    width: 60%;
+  }
+
+  .terminal-button {
+    font-size: 0.55rem;
+  }
+
+  .terminal-button img {
+    height: 28px;
+    width: 28px;
+  }
+}
+
+/* Mobile Landscape: 480px - 767px */
+@media (max-width: 767px) and (min-width: 480px) and (orientation: landscape) {
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    padding: 0.75% 0.75% 0.75% 0.75%;
+  }
+
+  .terminal {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 1;
+  }
+
+  .keyboard {
+    grid-column: 1 / span 2;
+    grid-row: 2 / span 1;
+  }
+
+  .widget-1 {
+    grid-column: 3 / span 2;
+    grid-row: 1 / span 1;
+    padding: 0.5rem;
+  }
+
+  .widget-2 {
+    grid-column: 3 / span 1;
+    grid-row: 2 / span 1;
+  }
+
+  .widget-4 {
+    grid-column: 4 / span 1;
+    grid-row: 2 / span 1;
+  }
+
+  /* Hide chess and matrix widgets on mobile for essential functionality */
+  .widget-3,
+  .widget-5 {
+    display: none;
+  }
+
+  .bento-tile.keyboard {
+    min-height: 150px;
+    max-height: 200px;
+  }
+
+  .terminal-buttons {
+    width: 80%;
+    gap: 0.25rem;
+  }
+
+  .terminal-button {
+    font-size: 0.5rem;
+  }
+
+  .terminal-button img {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+/* Very Small Mobile Landscape: < 480px */
+@media (max-width: 479px) and (orientation: landscape) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    padding: 0.5% 0.5% 0.5% 0.5%;
+  }
+
+  .terminal {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 1;
+  }
+
+  .keyboard {
+    grid-column: 1 / span 2;
+    grid-row: 2 / span 1;
+  }
+
+  .widget-1 {
+    grid-column: 3 / span 1;
+    grid-row: 1 / span 2;
+    padding: 0.25rem;
+  }
+
+  /* Hide all non-essential widgets for tiny screens */
+  .widget-2,
+  .widget-3,
+  .widget-4,
+  .widget-5 {
+    display: none;
+  }
+
+  .bento-tile.keyboard {
+    min-height: 120px;
+    max-height: 160px;
+  }
+
+  .terminal-buttons {
+    width: 100%;
+    gap: 0.125rem;
+    flex-wrap: wrap;
+  }
+
+  .terminal-button {
+    font-size: 0.45rem;
+    flex-direction: row;
+    gap: 0.25rem;
+  }
+
+  .terminal-button img {
+    height: 20px;
+    width: 20px;
+  }
+
+  .terminal-button p {
+    margin: 0;
+  }
+}
+
+/* Very Short Landscape screens */
+@media (max-height: 400px) and (orientation: landscape) {
+  .bento-grid {
+    grid-template-rows: 1fr;
+    gap: 6px;
+  }
+
+  .terminal {
+    grid-row: 1 / span 1;
+  }
+
+  /* Hide keyboard and show only essential widgets */
+  .keyboard {
+    display: none;
+  }
+
+  .widget-1 {
+    grid-row: 1 / span 1;
+  }
+
+  .widget-2 {
+    grid-row: 1 / span 1;
+  }
+
+  .widget-4 {
+    grid-row: 1 / span 1;
+  }
+
+  /* Hide decorative widgets for very short screens */
+  .widget-3,
+  .widget-5 {
+    display: none;
+  }
+}
+
+/* Ultra-wide but short screens */
+@media (min-width: 800px) and (max-height: 350px) and (orientation: landscape) {
+  .bento-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr;
+  }
+
+  .terminal {
+    grid-column: 1 / span 2;
+  }
+
+  .widget-1 {
+    grid-column: 3 / span 2;
+  }
+
+  .widget-2 {
+    grid-column: 5 / span 1;
+  }
+
+  .widget-4 {
+    grid-column: 6 / span 1;
+  }
+
+  .keyboard,
+  .widget-3,
+  .widget-5 {
+    display: none;
+  }
 }
