@@ -1,8 +1,7 @@
-/* keyboard.css - HUD Theme */
+/* keyboard.css - HUD Theme - Full Container Usage */
 .hg-theme-default {
   background-color: var(--hud-bg);
   box-sizing: border-box;
-  font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
   overflow: hidden;
   padding: 2%;
   touch-action: manipulation;
@@ -35,10 +34,20 @@
   flex-grow: 1;
 }
 
+/* KEY FIX: Make sure the rows container takes full height */
+.hg-theme-default .hg-rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+}
+
 .hg-theme-default .hg-row {
   display: flex;
   flex: 1;
   min-height: 0;
+  width: 100%;
 }
 
 .hg-theme-default .hg-row:not(:last-child) {
@@ -57,6 +66,7 @@
 .hg-theme-default .hg-row .hg-button-container {
   display: flex;
   flex: 1;
+  height: 100%;
 }
 
 /* Main button styling - neutral HUD colors */
@@ -130,4 +140,14 @@
   border-color: var(--hud-pink);
   color: var(--hud-white);
   box-shadow: 0 0 6px var(--hud-soft-pink);
+}
+
+/* Additional fixes to ensure full container usage */
+.hg-theme-default .hg-button-container {
+  height: 100% !important;
+}
+
+/* Ensure all rows have equal height distribution */
+.hg-theme-default .hg-row {
+  height: calc((100% - 4%) / 5);
 }
