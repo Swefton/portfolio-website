@@ -32,11 +32,18 @@ export const COLORS = {
   TERMINAL_PROMPT: '#FFB8D2',
   TERMINAL_INPUT: '#FFFFFF',
   
-  // Chess widget colors
-  CHESS_LIGHT_SQUARE: 'rgba(255,184,210,0.1)', // Very subtle soft pink
-  CHESS_DARK_SQUARE: '#1A1C1F',
-  CHESS_BORDER: '#F36CA6',
-  CHESS_TEXT: '#FFFFFF',
+  // Chess widget specific colors
+  CHESS_BG: '#0E0F10',                    // Same as BG_PRIMARY
+  CHESS_SURFACE: '#1A1C1F',               // Same as BG_SECONDARY  
+  CHESS_LIGHT_SQUARE: 'rgba(255,255,255,0.05)', // Very subtle light squares
+  CHESS_DARK_SQUARE: '#1A1C1F',           // Same as surface
+  CHESS_BORDER: '#FFFFFF',                // White borders for contrast
+  CHESS_TEXT_PRIMARY: '#FFFFFF',          // White text
+  CHESS_TEXT_SECONDARY: '#AAAAAA',        // Gray text
+  CHESS_ACCENT: '#F36CA6',                // Pink accent for active moves
+  CHESS_ACCENT_SOFT: '#FFB8D2',           // Soft pink for glows
+  CHESS_HOVER: 'rgba(255,255,255,0.1)',  // Hover effects
+  CHESS_ACTIVE_BG: 'rgba(255,20,147,0.2)', // Active move background
   
   // Conway's Game of Life
   CONWAY_ALIVE: '#F36CA6',     // Pink for alive cells
@@ -84,6 +91,19 @@ export const CSS_VARS = {
   '--hud-gray': COLORS.TEXT_SECONDARY,
   '--hud-grid': COLORS.GRID_LINES,
   '--hud-overlay': COLORS.OVERLAY,
+
+  // Chess widget variables
+  '--chess-bg': COLORS.CHESS_BG,
+  '--chess-surface': COLORS.CHESS_SURFACE,
+  '--chess-light-square': COLORS.CHESS_LIGHT_SQUARE,
+  '--chess-dark-square': COLORS.CHESS_DARK_SQUARE,
+  '--chess-border': COLORS.CHESS_BORDER,
+  '--chess-text-primary': COLORS.CHESS_TEXT_PRIMARY,
+  '--chess-text-secondary': COLORS.CHESS_TEXT_SECONDARY,
+  '--chess-accent': COLORS.CHESS_ACCENT,
+  '--chess-accent-soft': COLORS.CHESS_ACCENT_SOFT,
+  '--chess-hover': COLORS.CHESS_HOVER,
+  '--chess-active-bg': COLORS.CHESS_ACTIVE_BG,
 
   // Legacy mappings (keeping for backward compatibility during transition)
   '--color-bg-primary': COLORS.BG_PRIMARY,

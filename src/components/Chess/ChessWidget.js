@@ -25,9 +25,9 @@ const generateBoardGrid = (board) => {
 };
 
 const AsciiChessBoard = ({ moves, interval = 1000 }) => {
-    // ALL HOOKS MUST BE DECLARED UNCONDITIONALLY AT THE TOP
     const containerRef = useRef();
     const [sizeMode, setSizeMode] = useState('full');
+    const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
     const [chess] = useState(new Chess());
     const [boardGrid, setBoardGrid] = useState(() => generateBoardGrid(chess.board()));
     const [currentMove, setCurrentMove] = useState(0);
@@ -37,22 +37,50 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
     
     const { tick } = useAnimationTick();
 
-    // Responsive size detection - ALWAYS runs
+    // Enhanced responsive size detection with better calculations
     useEffect(() => {
         const updateSizeMode = () => {
             if (!containerRef.current) return;
             
             const { width, height } = containerRef.current.getBoundingClientRect();
             
-            // Progressive feature removal based on container size
-            if (width < 200 || height < 150) {
-                setSizeMode('hidden'); // Hide entirely for tiny containers
-            } else if (width < 250 || height < 200) {
-                setSizeMode('minimal'); // Board only, no controls
-            } else if (width < 350 || height < 300) {
-                setSizeMode('compact'); // Board + basic controls
+            // Account for container padding and borders
+            const containerPadding = 16; // 0.5rem * 2 sides
+            const boardPadding = 16; // Board wrapper padding
+            const availableWidth = width - containerPadding - boardPadding;
+            const availableHeight = height - containerPadding;
+            
+            const controlsHeight = 40;
+            const textHeight = 50;
+            const movesHeight = 120;
+            
+            if (width < 140 || height < 140) {
+                setSizeMode('hidden');
+                setBoardSize({ squareSize: 16, showLabels: false });
+            } else if (availableWidth < 160 || availableHeight < 160) {
+                setSizeMode('minimal');
+                // Calculate square size that fits in available space
+                const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
+                setBoardSize({ 
+                    squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
+                    showLabels: false 
+                });
+            } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight) {
+                setSizeMode('compact');
+                // Calculate optimal size for compact mode
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10); // 8 squares + 2 for labels
+                setBoardSize({ 
+                    squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
+                    showLabels: true 
+                });
             } else {
-                setSizeMode('full'); // Full layout
+                setSizeMode('full');
+                // Calculate size leaving room for moves list
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
+                setBoardSize({ 
+                    squareSize: Math.max(24, Math.min(36, maxSquareSize)), 
+                    showLabels: true 
+                });
             }
         };
 
@@ -66,7 +94,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
         return () => resizeObserver.disconnect();
     }, []);
 
-    // Initialize game history - ALWAYS runs
+    // Initialize game history
     useEffect(() => {
         const initialChess = new Chess();
         setGameHistory([{ 
@@ -102,7 +130,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
         setCurrentMove(moveIndex + 1);
     }, [moves]);
 
-    // Animation logic - ALWAYS runs
+    // Animation logic
     useEffect(() => {
         if (!isPlaying || currentMove >= moves.length) return;
         
@@ -127,39 +155,60 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
         lastMoveTimeRef.current = 0;
     }, []);
 
-    // Responsive board rendering - using useMemo to avoid conditional hooks
+    // Dynamic board rendering with calculated sizes
     const renderedBoard = useMemo(() => {
-        const squareClass = sizeMode === 'minimal' ? styles.tinySquare : styles.square;
+        const { squareSize, showLabels } = boardSize;
+        const labelSize = showLabels ? 20 : 0;
         
         return (
-            <div className={styles.boardWrapper}>
-                {/* Column headers - hidden via CSS for minimal mode */}
-                <div 
-                    className={styles.columnHeaders}
-                    style={{ display: sizeMode === 'minimal' ? 'none' : 'flex' }}
-                >
-                    <div className={styles.rankSpacer}></div>
-                    {'abcdefgh'.split('').map(file => (
-                        <div key={file} className={styles.fileHeader}>{file}</div>
-                    ))}
-                </div>
+            <div 
+                className={styles.boardWrapper}
+                style={{
+                    padding: sizeMode === 'minimal' ? '4px' : '8px',
+                }}
+            >
+                {/* Column headers */}
+                {showLabels && (
+                    <div className={styles.columnHeaders}>
+                        <div style={{ width: `${labelSize}px` }}></div>
+                        {'abcdefgh'.split('').map(file => (
+                            <div 
+                                key={file} 
+                                className={styles.fileHeader}
+                                style={{ width: `${squareSize}px`, fontSize: `${Math.max(10, squareSize * 0.35)}px` }}
+                            >
+                                {file}
+                            </div>
+                        ))}
+                    </div>
+                )}
                 
                 {boardGrid.map((row, rowIndex) => (
                     <div key={rowIndex} className={styles.row}>
-                        {/* Rank numbers - hidden via CSS for minimal mode */}
-                        <div 
-                            className={styles.rank}
-                            style={{ display: sizeMode === 'minimal' ? 'none' : 'flex' }}
-                        >
-                            {row.rank}
-                        </div>
+                        {/* Rank numbers */}
+                        {showLabels && (
+                            <div 
+                                className={styles.rank}
+                                style={{ 
+                                    width: `${labelSize}px`, 
+                                    fontSize: `${Math.max(10, squareSize * 0.35)}px` 
+                                }}
+                            >
+                                {row.rank}
+                            </div>
+                        )}
                         
                         {row.squares.map((piece, colIndex) => {
                             const isLight = (rowIndex + colIndex) % 2 === 0;
                             return (
                                 <div
                                     key={colIndex}
-                                    className={`${squareClass} ${isLight ? styles.lightSquare : styles.darkSquare}`}
+                                    className={`${styles.square} ${isLight ? styles.lightSquare : styles.darkSquare}`}
+                                    style={{
+                                        width: `${squareSize}px`,
+                                        height: `${squareSize}px`,
+                                        fontSize: `${Math.max(10, squareSize * 0.6)}px`
+                                    }}
                                 >
                                     {piece === '·' ? '' : piece}
                                 </div>
@@ -169,79 +218,102 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                 ))}
             </div>
         );
-    }, [boardGrid, sizeMode]);
+    }, [boardGrid, sizeMode, boardSize]);
 
-    // CRITICAL: Always render the same JSX structure, use conditional styling instead
     return (
         <div ref={containerRef} className={`${styles.container} ${styles[sizeMode]}`}>
-            {/* Hidden message - conditionally visible via CSS */}
-            <div 
-                className={styles.hiddenMessage}
-                style={{ display: sizeMode === 'hidden' ? 'flex' : 'none' }}
-            >
-                Chess widget hidden - container too small
-            </div>
-
-            {/* Main content - hidden when size mode is 'hidden' */}
-            <div style={{ display: sizeMode === 'hidden' ? 'none' : 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
-                {/* Carousel text - hidden for minimal mode */}
-                <div 
-                    className={styles.carousel}
-                    style={{ display: sizeMode === 'minimal' ? 'none' : 'block' }}
-                >
-                    <p>In my free time I like playing Chess. This was the best game I've played.</p>
+            {/* Hidden message */}
+            {sizeMode === 'hidden' && (
+                <div className={styles.hiddenMessage}>
+                    Chess widget hidden - container too small
                 </div>
-                
-                {renderedBoard}
+            )}
 
-                {/* Controls - shown for compact and full modes */}
-                <div 
-                    className={styles.controls}
-                    style={{ display: (sizeMode === 'compact' || sizeMode === 'full') ? 'flex' : 'none' }}
-                >
-                    <button onClick={resetGame} className={styles.button}>Reset</button>
-                    <button onClick={togglePlayPause} className={styles.button}>
-                        {isPlaying ? 'Pause' : 'Play'}
-                    </button>
-                </div>
-
-                {/* Full mode content - shown only for full mode */}
-                <div style={{ display: sizeMode === 'full' ? 'flex' : 'none', flexDirection: 'column', flex: 1, gap: '1rem' }}>
-                    <div className={styles.movesList}>
-                        <div className={styles.movesHeader}>Moves ({currentMove}/{moves.length}):</div>
-                        <div className={styles.movesGrid}>
-                            <button 
-                                onClick={() => {
-                                    setCurrentMove(0);
-                                    const initialChess = new Chess();
-                                    setBoardGrid(generateBoardGrid(initialChess.board()));
-                                }} 
-                                className={currentMove === 0 ? styles.activeMoveButton : styles.moveButton}
-                            >
-                                Start
-                            </button>
-                            {moves.map((move, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => {
-                                        if (gameHistory[index + 1]) {
-                                            setBoardGrid(gameHistory[index + 1].board);
-                                            setCurrentMove(index + 1);
-                                        }
-                                    }}
-                                    className={currentMove === index + 1 ? styles.activeMoveButton : styles.moveButton}
-                                >
-                                    {Math.floor(index / 2) + 1}.{index % 2 === 0 ? '' : '..'} {move}
-                                </button>
-                            ))}
+            {/* Main content */}
+            {sizeMode !== 'hidden' && (
+                <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: sizeMode === 'minimal' ? '0.25rem' : '1rem', 
+                    height: '100%',
+                    alignItems: 'center',
+                    justifyContent: sizeMode === 'minimal' ? 'center' : 'flex-start'
+                }}>
+                    {/* Carousel text - hidden for minimal mode */}
+                    {sizeMode !== 'minimal' && (
+                        <div className={styles.carousel}>
+                            <p>In my free time I like playing Chess. This was the best game I've played.</p>
                         </div>
-                    </div>
+                    )}
+                    
+                    {renderedBoard}
 
-                    <div className={styles.currentMoveInfo}>
-                        {currentMove === 0 ? 'Starting position' : `Move ${currentMove}: ${moves[currentMove - 1]}`}
-                    </div>
+                    {/* Controls - shown for compact and full modes */}
+                    {(sizeMode === 'compact' || sizeMode === 'full') && (
+                        <div className={styles.controls}>
+                            <button onClick={resetGame} className={styles.button}>Reset</button>
+                            <button onClick={togglePlayPause} className={styles.button}>
+                                {isPlaying ? 'Pause' : 'Play'}
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Full mode content - TUI-style moves list */}
+                    {sizeMode === 'full' && (
+                        <>
+                            <div className={styles.movesList}>
+                                <div className={styles.movesHeader}>
+                                    Game History ({currentMove}/{moves.length})
+                                </div>
+                                
+                                {/* Starting position */}
+                                <div 
+                                    className={`${styles.moveEntry} ${currentMove === 0 ? styles.activeMoveEntry : ''}`}
+                                    onClick={() => {
+                                        setCurrentMove(0);
+                                        const initialChess = new Chess();
+                                        setBoardGrid(generateBoardGrid(initialChess.board()));
+                                    }}
+                                >
+                                    <span className={styles.moveNumber}>--</span>
+                                    <span className={styles.moveText}>Initial Position</span>
+                                </div>
+
+                                {/* Move entries */}
+                                {moves.map((move, index) => {
+                                    const moveNum = Math.floor(index / 2) + 1;
+                                    const isWhite = index % 2 === 0;
+                                    
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={`${styles.moveEntry} ${currentMove === index + 1 ? styles.activeMoveEntry : ''}`}
+                                            onClick={() => {
+                                                if (gameHistory[index + 1]) {
+                                                    setBoardGrid(gameHistory[index + 1].board);
+                                                    setCurrentMove(index + 1);
+                                                }
+                                            }}
+                                        >
+                                            <span className={styles.moveNumber}>
+                                                {isWhite ? `${moveNum}.` : `${moveNum}..`}
+                                            </span>
+                                            <span className={styles.moveText}>{move}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className={styles.currentMoveInfo}>
+                                {currentMove === 0 
+                                    ? '> Ready to start game' 
+                                    : `> ${moves[currentMove - 1]} - Move ${currentMove} played`
+                                }
+                            </div>
+                        </>
+                    )}
                 </div>
-            </div>
+            )}
         </div>
     );
 };
