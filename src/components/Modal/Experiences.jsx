@@ -44,7 +44,7 @@ const ExperiencesViewer = ({ open, onClose }) => {
                   <span>Student Library Assistant</span>
                 </h1>
                 <h2 className={styles.experienceCompany}>
-                  Digital Multimedia Center <span>MSU Library</span>
+                  Digital Multimedia Center MSU Library
                 </h2>
                 <p className={styles.experienceTime}>
                   Jan 2023 - <span>Present</span>

@@ -39,11 +39,13 @@ const TerminalWidget = forwardRef((props, ref) => {
     let output;
     if (trimmed === "run github") {
         output = "Opening GitHub...";
-        window.open("https://github.com", "_blank");
-    } else if (trimmed === "clear") {
-        setTerminalLineData([]);
-        setCurrentInput("");
-        return;
+        window.open("https://github.com/Swefton", "_blank");
+    } else if (trimmed === "run devpost") {
+      output = "Opening Devpost...";
+      window.open("https://devpost.com/Swefton", "_blank");
+    } else if (trimmed === "run linkedin") {
+      output = "Opening LinkedIn...";
+      window.open("https://www.linkedin.com/in/amrit-m-srivastava/", "_blank")
     } else if (
         trimmed === "run projects" ||
         trimmed === "run experience" ||
@@ -53,6 +55,10 @@ const TerminalWidget = forwardRef((props, ref) => {
         if (props.onCommand) {
             props.onCommand(trimmed);
         }
+    } else if (trimmed === "clear") {
+        setTerminalLineData([]);
+        setCurrentInput("");
+        return;
     } else {
         output = `Unrecognized command: ${trimmed}`;
     }
