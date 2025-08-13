@@ -99,6 +99,15 @@
   font-family: inherit;
 }
 
+.button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain; /* Keeps proportions */
+  display: block;
+  margin: 0 auto; /* Centers in button */
+}
+
+
 .button:hover {
   background: rgba(255,255,255,0.1);
   border-color: var(--hud-white);
