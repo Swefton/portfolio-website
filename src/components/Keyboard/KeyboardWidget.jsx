@@ -1,17 +1,15 @@
 // KeyboardWidget.jsx
 "use client";
 
-import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useRef, forwardRef, useImperativeHandle } from 'react';
 import Keyboard from 'react-simple-keyboard';
 import { COLORS } from '@/styles/colors';
 import './keyboard.css';
 
 const KeyboardWidget = forwardRef((props, ref) => {
   const keyboardRef = useRef();
-  const [layoutName, setLayoutName] = useState("default");
 
   const keyboardOptions = {
-    layoutName,
     physicalKeyboardHighlight: true,
     physicalKeyboardHighlightBgColor: COLORS.ACCENT_PINK,
     theme: "simple-keyboard hg-theme-default hg-layout-default",
