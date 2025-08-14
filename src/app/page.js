@@ -146,7 +146,7 @@ export default function Home() {
     }
   };
 
-  const moves = ["e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Ba4", "Nf6", "h3", "b5", "Bb3", "d6"];
+  const moves = ["e4", "c6", "b3", "d5", "Bb2", "dxe4", "Bc4", "Nf6", "f3", "exf3", "Nxf3", "e6", "Nc3", "Bc5", "Qe2", "O-O", "O-O-O", "Bb6", "h4", "Nbd7", "h5", "h6", "Nh4", "Nd5", "g4", "Nf4", "Qe4", "Qg5", "Nf3", "Qxg4", "Rhf1", "Nf6", "Qe5", "N6xh5", "Ne4", "Qf5", "Qc3", "Qxe4", "Rh1", "Bc7", "Bd3", "Nxd3+", "cxd3", "Qxf3", "Rhg1", "f6", "Rdf1", "Qd5", "Rh1", "Bb6", "Rxh5", "Qxh5", "Rg1", "e5", "d4", "Bxd4", "Qg3", "g5", "Bxd4", "exd4", "Qd6", "Bf5", "Qxd4", "Rad8", "Qc4+", "Kh7", "Qb4", "Qe2", "Qxb7+", "Kh8", "Rh1", "Qxd2#"];
 
   return (
     <OrientationLock>
