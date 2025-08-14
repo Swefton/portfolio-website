@@ -407,7 +407,6 @@
 @media screen and (min-width: 1920px) {
   .bento-grid {
     grid-template-columns: repeat(10, 1fr);
-    padding: 1% 5%;
   }
 
   .terminal {
@@ -427,44 +426,14 @@
   }
 
   .widget-3 {
-    grid-column: 5 / span 2;
+    grid-column: 5 / span 3;
   }
 
   .widget-4 {
-    grid-column: 7 / span 3;
+    grid-column: 8 / span 3;
   }
 
   .widget-5 {
-    grid-column: 7 / span 3;
+    grid-column: 8 / span 3;
   }
 }
-
-/* Very short screens (regardless of orientation) - Emergency fallback */
-/* @media screen and (max-height: 350px) {
-  .bento-grid {
-    grid-template-rows: 1fr;
-    gap: 4px;
-  }
-
-  .terminal {
-    grid-row: 1 / span 1;
-  }
-
-  .keyboard,
-  .widget-3,
-  .widget-5 {
-    display: none;
-  }
-
-  .widget-1 {
-    grid-row: 1 / span 1;
-  }
-
-  .widget-2 {
-    grid-row: 1 / span 1;
-  }
-
-  .widget-4 {
-    display: none;
-  }
-} */
