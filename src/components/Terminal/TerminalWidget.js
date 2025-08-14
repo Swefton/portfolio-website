@@ -46,6 +46,9 @@ const TerminalWidget = forwardRef((props, ref) => {
     } else if (trimmed === "run linkedin") {
       output = "Opening LinkedIn...";
       window.open("https://www.linkedin.com/in/amrit-m-srivastava/", "_blank")
+    } else if (trimmed === "run resume") {
+      output = "Opening resume...";
+      window.open("/Amrit%20Resume.pdf", "_blank");
     } else if (
         trimmed === "run projects" ||
         trimmed === "run experience" ||

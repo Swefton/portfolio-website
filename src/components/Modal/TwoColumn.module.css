@@ -85,6 +85,12 @@
     scrollbar-width: thin;
     scrollbar-color: var(--hud-gray) var(--hud-surface);
 }
+
+.content img {
+    width: 80%;
+    height: auto;
+}
+
 .content::-webkit-scrollbar {
     width: 6px;
 }
@@ -232,9 +238,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--hud-grid);
+    margin-bottom: 1rem;
 }
 
 .projectTag {
@@ -271,9 +275,6 @@
 }
 
 .projectContent img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
     border: 1px solid var(--hud-grid);
     border-radius: 4px;
     margin: 1rem auto;
@@ -298,5 +299,365 @@
     .projectTag {
         font-size: 0.6875rem;
         padding: 0.3125rem 0.625rem;
+    }
+}
+
+/* OpenFiche Carousel Styling */
+.openFicheCarousel {
+    position: relative;
+    margin: 2rem 0;
+    max-width: 100%;
+}
+
+.carouselContainer {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border: 1px solid var(--hud-grid);
+    border-radius: 8px;
+    background: var(--hud-bg);
+}
+
+.carouselTrack {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.carouselSlide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.carouselSlide img {
+    width: 80%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.carouselControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(26, 28, 31, 0.8);
+    border: 1px solid var(--hud-grid);
+    border-top: none;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.carouselButton {
+    background: transparent;
+    border: 1px solid var(--hud-pink);
+    color: var(--hud-white);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.carouselButton:hover {
+    background: rgba(243, 108, 166, 0.2);
+    border-color: var(--hud-soft-pink);
+}
+
+.carouselButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.carouselButton:disabled:hover {
+    background: transparent;
+}
+
+.carouselIndicators {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.carouselDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hud-gray);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carouselDot.active {
+    background: var(--hud-pink);
+    transform: scale(1.2);
+}
+
+.carouselDot:hover {
+    background: var(--hud-soft-pink);
+}
+
+.carouselCaption {
+    text-align: center;
+    color: var(--hud-white);
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    background: var(--hud-bg);
+    border: 1px solid var(--hud-grid);
+    border-top: none;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-top: -1px; /* Overlap with controls border */
+}
+
+/* Remove hover effects from other demo elements */
+.demoImage {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border: 1px solid var(--hud-grid);
+    border-radius: 8px;
+    margin: 1rem auto;
+    display: block;
+}
+
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border: 1px solid var(--hud-grid);
+    border-radius: 8px;
+    margin: 1rem auto;
+    max-width: 600px;
+}
+
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 7px; /* Slightly smaller to account for parent border */
+}
+
+/* Remove hover effects from project content images */
+.projectContent img:not(.demoImage):not(.carouselSlide img) {
+    border: 1px solid var(--hud-grid);
+    border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .carouselContainer {
+        height: 300px;
+    }
+    
+    .carouselSlide img {
+        width: 90%; /* Slightly wider on mobile */
+    }
+    
+    .carouselControls {
+        padding: 0.75rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .carouselButton {
+        padding: 0.375rem 0.875rem;
+        font-size: 0.8125rem;
+    }
+    
+    .carouselIndicators {
+        order: -1;
+    }
+    
+    .carouselDot {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .carouselCaption {
+        font-size: 0.8125rem;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .carouselContainer {
+        height: 250px;
+    }
+    
+    .carouselSlide img {
+        width: 95%; 
+    }
+    
+    .carouselControls {
+        padding: 0.5rem;
+    }
+    
+    .carouselButton {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .carouselCaption {
+        font-size: 0.75rem;
+    }
+}
+
+/* Journalingo-specific demo styling */
+.journalingoDemoContainer {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    align-items: flex-start;
+}
+
+.journalingoDemoLeft,
+.journalingoDemoRight {
+    flex: 1;
+}
+
+.journalingoDemoLeft h3,
+.journalingoDemoRight h3 {
+    color: var(--hud-soft-pink);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+.pdfPreview {
+    border: 1px solid var(--hud-grid);
+    border-radius: 8px;
+    background: var(--hud-bg);
+    padding: 2rem;
+    text-align: center;
+    min-height: 315px; /* Match video height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.pdfPreviewContent h4 {
+    color: var(--hud-soft-pink);
+    margin: 0;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.pdfPreviewContent p {
+    color: var(--hud-white);
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    max-width: 300px;
+}
+
+.pdfViewButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--hud-soft-pink);
+    text-decoration: none;
+    border: 1px solid var(--hud-pink);
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    background: rgba(243, 108, 166, 0.1);
+}
+
+.pdfViewButton:hover {
+    background: rgba(255, 184, 210, 0.2);
+    border-color: var(--hud-soft-pink);
+    color: var(--hud-white);
+}
+
+.demoExplanation {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(26, 28, 31, 0.5);
+    border: 1px solid var(--hud-grid);
+    border-radius: 4px;
+}
+
+.demoExplanation p {
+    color: var(--hud-white);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .journalingoDemoContainer {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .pdfPreview {
+        min-height: auto;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .journalingoDemoContainer {
+        gap: 1rem;
+    }
+    
+    .pdfPreview {
+        padding: 1.25rem;
+    }
+    
+    .pdfViewButton {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.8125rem;
+    }
+    
+    .pdfPreviewContent p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pdfPreview {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .pdfViewButton {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .pdfPreviewContent h4 {
+        font-size: 1rem;
+    }
+    
+    .pdfPreviewContent p {
+        font-size: 0.8rem;
     }
 }

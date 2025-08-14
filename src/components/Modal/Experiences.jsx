@@ -15,7 +15,7 @@ const ExperiencesViewer = ({ open, onClose }) => {
               <div className={styles.experienceMetadata}>
                 <h1 className={styles.experienceTitle}>Resident Assistant</h1>
                 <h2 className={styles.experienceCompany}>REHS MSU</h2>
-                <p className={styles.experienceTime}>Aug 2024 - Present</p>
+                <p className={styles.experienceTime}>Aug 2024 - <span>Present</span></p>
               </div>
               <p>
                 As a <span>Resident Assistant</span>, I worked to <span>build an inclusive community</span> and foster student success academically and personally. This meant <span>supporting students' academic goals</span>, <span>responding to emergencies</span>, and <span>actively engaging with the community</span> through events and connection-building initiatives as well as generally guiding students to appropriate resources.
@@ -32,6 +32,7 @@ const ExperiencesViewer = ({ open, onClose }) => {
               <p>
                 Being an RA was my <span>favorite extracurricular experience</span> at university. It taught me how to lead a floor, manage conflict, nurture talent, and work effectively with a team.
               </p>
+              <img src="/pictures/RA/team.png" alt="Team with Sparty mascot at hackathon" />
             </div>
           )
         },

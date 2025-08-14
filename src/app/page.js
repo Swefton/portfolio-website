@@ -180,6 +180,10 @@ export default function Home() {
               <img src="/folder.svg" alt="Skills" />
               <p>Skills</p>
             </div>
+            <div className="terminal-button" onClick={() => simulateTyping("run resume")}>
+              <img src="/folder.svg" alt="Resume" />
+              <p>Resume</p>
+            </div>
           </div>
         </div>
 
