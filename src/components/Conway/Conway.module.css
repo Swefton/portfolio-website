@@ -1,0 +1,202 @@
+/* Conway's Game of Life - HUD Theme - Responsive */
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
+  font-size: 0.75rem;
+  color: var(--hud-white);
+  overflow: hidden;
+  background-color: var(--hud-bg);
+}
+
+.hiddenMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--hud-gray);
+  font-size: 0.7rem;
+  text-align: center;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--hud-white);
+  background-color: var(--hud-bg);
+  flex-shrink: 0;
+}
+
+.minimalHeader {
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--hud-white);
+  background-color: var(--hud-bg);
+  flex-shrink: 0;
+}
+
+.canvasContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: var(--hud-bg);
+  min-height: 0;
+}
+
+.canvas {
+  border: 1px solid var(--hud-white);
+  transition: box-shadow 0.2s ease;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.canvas:hover {
+  box-shadow: 0 0 8px rgba(255,255,255,0.3);
+}
+
+.controls {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--hud-white);
+  background-color: var(--hud-bg);
+  flex-shrink: 0;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  background: transparent;
+  border: 1px solid var(--hud-gray);
+  color: var(--hud-white);
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain; /* Keeps proportions */
+  display: block;
+  margin: 0 auto; /* Centers in button */
+}
+
+
+.button:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--hud-white);
+  transform: scale(1.02);
+}
+
+.button:active {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Responsive size modes */
+.minimal {
+  font-size: 0.7rem;
+}
+
+.minimal .canvasContainer {
+  padding: 0.5rem;
+}
+
+.minimal .controls {
+  padding: 0.5rem;
+}
+
+.minimal .button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.65rem;
+}
+
+.compact {
+  font-size: 0.7rem;
+}
+
+.compact .canvasContainer {
+  padding: 0.75rem;
+}
+
+.compact .controls {
+  padding: 0.5rem;
+}
+
+.compact .button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.7rem;
+}
+
+.compact .header {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+/* Handle very small containers */
+@media (max-width: 200px) {
+  .canvasContainer {
+    padding: 0.25rem !important;
+  }
+  
+  .controls {
+    padding: 0.25rem !important;
+  }
+  
+  .button {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.6rem !important;
+  }
+  
+  .buttonRow {
+    gap: 0.25rem;
+  }
+}
+
+@media (max-height: 160px) {
+  .header, .minimalHeader {
+    padding: 0.25rem !important;
+    font-size: 0.65rem !important;
+  }
+  
+  .canvasContainer {
+    padding: 0.25rem !important;
+  }
+  
+  .controls {
+    padding: 0.25rem !important;
+  }
+}
+
+/* Very tiny containers */
+@media (max-width: 150px), (max-height: 120px) {
+  .container {
+    justify-content: center;
+    align-items: center;
+  }
+}

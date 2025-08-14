@@ -1,0 +1,153 @@
+/* keyboard.css - HUD Theme - Full Container Usage */
+.hg-theme-default {
+  background-color: var(--hud-bg);
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 2%;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.hg-theme-default span {
+  color: var(--hud-white) !important;
+}
+
+.hg-theme-default .hg-button span,
+.hg-theme-default .hg-button span svg {
+  pointer-events: none;
+}
+
+.hg-theme-default button.hg-button {
+  border-width: 0;
+  font-size: inherit;
+  outline: 0;
+}
+
+.hg-theme-default .hg-button {
+  display: inline-block;
+  flex-grow: 1;
+}
+
+/* KEY FIX: Make sure the rows container takes full height */
+.hg-theme-default .hg-rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+}
+
+.hg-theme-default .hg-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.hg-theme-default .hg-row:not(:last-child) {
+  margin-bottom: 1%;
+}
+
+.hg-theme-default .hg-row .hg-button-container,
+.hg-theme-default .hg-row .hg-button:not(:last-child) {
+  margin-right: 1%;
+}
+
+.hg-theme-default .hg-row > div:last-child {
+  margin-right: 0;
+}
+
+.hg-theme-default .hg-row .hg-button-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+/* Main button styling - neutral HUD colors */
+.hg-theme-default .hg-button {
+  align-items: center;
+  background: var(--hud-surface);
+  border: 1px solid var(--hud-gray);
+  border-radius: 0.2em;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  padding: 0.3em 0.5em;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-size: 1em;
+  min-height: 0;
+  min-width: 0;
+  color: var(--hud-white);
+  font-weight: 500;
+  transition: all 0.1s ease;
+}
+
+/* Hover state - subtle white highlight */
+.hg-theme-default .hg-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--hud-white);
+}
+
+/* Active/pressed state - ONLY place pink is used for important feedback */
+.hg-theme-default .hg-button.hg-activeButton {
+  background: var(--hud-pink);
+  border-color: var(--hud-pink);
+  color: var(--hud-white);
+  box-shadow: 0 0 4px var(--hud-soft-pink);
+}
+
+/* Selected state - also uses pink for important state indication */
+.hg-theme-default .hg-button.hg-selectedButton {
+  background: rgba(243, 108, 166, 0.3);
+  border-color: var(--hud-pink);
+  color: var(--hud-white);
+}
+
+.hg-theme-default .hg-row:last-child {
+  justify-content: center;
+}
+
+/* Space bar styling */
+.hg-button.hg-functionBtn.hg-button-space {
+  flex: 0 0 50%;
+}
+
+/* Make sure the keyboard container fills its parent */
+.react-simple-keyboard {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(100% + 0.5vw);
+}
+
+/* For very small containers, make font even smaller */
+.bento-tile.keyboard .react-simple-keyboard {
+  font-size: clamp(0.7rem, 2vw, 1rem);
+}
+
+/* Physical keyboard highlight when typing */
+.hg-theme-default .hg-button.hg-highlighted {
+  background: var(--hud-pink);
+  border-color: var(--hud-pink);
+  color: var(--hud-white);
+  box-shadow: 0 0 6px var(--hud-soft-pink);
+}
+
+/* Additional fixes to ensure full container usage */
+.hg-theme-default .hg-button-container {
+  height: 100% !important;
+}
+
+/* Ensure all rows have equal height distribution */
+.hg-theme-default .hg-row {
+  height: calc((100% - 4%) / 5);
+}

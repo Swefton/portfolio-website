@@ -1,0 +1,110 @@
+/* HUD Theme - Global Styles */
+:root {
+  /* Base HUD colors */
+  --hud-bg: #0E0F10;
+  --hud-surface: #1A1C1F;
+  --hud-pink: #F36CA6;
+  --hud-soft-pink: #FFB8D2;
+  --hud-white: #FFFFFF;
+  --hud-gray: #AAAAAA;
+  --hud-grid: rgba(255,255,255,0.08);
+  --hud-overlay: rgba(14,15,16,0.85);
+
+  /* Legacy mappings for backward compatibility */
+  --color-bg-primary: var(--hud-bg);
+  --color-bg-secondary: var(--hud-surface);
+  --color-bg-tertiary: var(--hud-surface);
+  --color-bg-quaternary: var(--hud-bg);
+  
+  --color-text-primary: var(--hud-white);
+  --color-text-secondary: var(--hud-gray);
+  --color-text-tertiary: var(--hud-white);
+  --color-text-muted: var(--hud-gray);
+  --color-text-muted-secondary: var(--hud-gray);
+  --color-text-disabled: var(--hud-gray);
+  --color-text-on-accent: var(--hud-white);
+  
+  --color-border-primary: var(--hud-pink);
+  --color-border-secondary: var(--hud-soft-pink);
+  --color-border-tertiary: var(--hud-grid);
+  --color-border-canvas: var(--hud-pink);
+  
+  --color-accent-grey: var(--hud-surface);
+  --color-accent-aqua: var(--hud-pink);
+  --color-accent-red: var(--hud-pink);
+  
+  --color-overlay: var(--hud-overlay);
+  --color-shadow: var(--hud-soft-pink);
+  
+  --color-bg-button: transparent;
+  --color-bg-button-secondary: transparent;
+  --color-bg-button-disabled: var(--hud-surface);
+  
+  --color-bg-light-square: rgba(255,184,210,0.1);
+  --color-bg-dark-square: var(--hud-surface);
+  
+  --color-matrix-trail: rgba(14,15,16,0.7);
+  --color-canvas-clear: rgba(0,0,0,0);
+  --color-label-bg: rgba(243,108,166,0.8);
+  
+  --color-lime-green-bright: var(--hud-pink);
+  --color-white: var(--hud-white);
+}
+
+html {
+  background-color: var(--hud-bg);
+  font-family: 'Inter', 'DM Sans', 'Rubik', sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+span {
+  color: var(--hud-pink);
+}
+
+/* Global text glow effect for headers */
+.hud-glow {
+  text-shadow: 0 0 4px var(--hud-soft-pink);
+}
+
+/* Standard button styling for consistency */
+.hud-button {
+  background: transparent;
+  border: 1px solid var(--hud-pink);
+  color: var(--hud-white);
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud-button:hover {
+  background: rgba(255,184,210,0.1);
+  box-shadow: 0 0 4px var(--hud-soft-pink);
+  transform: scale(1.02);
+}
+
+.hud-button:active {
+  background: rgba(243,108,166,0.2);
+}
+
+.hud-button:disabled {
+  background: transparent;
+  border-color: var(--hud-gray);
+  color: var(--hud-gray);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

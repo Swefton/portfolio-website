@@ -1,0 +1,15 @@
+.cursor {
+  display: inline-block !important;
+  width: 0.6em !important; 
+  height: 1em !important;  
+  vertical-align: baseline !important; 
+}
+
+.react-terminal-line {
+  text-wrap-mode: wrap !important; 
+}
+
+.react-terminal-wrapper {
+  background-color: var(--hug-bg) !important;
+  border-bottom: 1px solid var(--hud-white) !important;
+}
