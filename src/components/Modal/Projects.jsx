@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import TwoColumnSelector from "@/components/Modal/TwoColumnSelector";
-import styles from './TwoColumn.module.css';
+import styles from './TwoColumn.module.css'
+import projectsstyles from './Projects.module.css'
 
 const ProjectsViewer = ({ open, onClose }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -14,19 +15,25 @@ const ProjectsViewer = ({ open, onClose }) => {
                 {
                     label: "OpenFiche",
                     content: (
-                        <div className={styles.projectContent}>
-                            <div className={styles.projectHeader}>
-                                <h1 className={styles.projectTitle}>OpenFiche</h1>
-                                <p className={styles.projectDescription}>
+                        <div className={projectsstyles.projectContent}>
+                            <div className={projectsstyles.projectHeader}>
+                            <h1 className={projectsstyles.projectTitle}>
+                                OpenFiche
+                            </h1>
+                            <a href="https://github.com/your-repo-url" target="_blank" rel="noopener noreferrer">
+                                <img src="/github.svg" alt="GitHub" style={{ width: "20px", height: "20px" }} />
+                            </a>
+
+                                <p className={projectsstyles.projectDescription}>
                                     A post-AI academic browser and search engine that filters out low-quality AI-generated content, highlighting trustworthy, human-written sources.
                                 </p>
-                                <div className={styles.projectTags}>
-                                    <span className={styles.projectTag}>Algorithm Engineering</span>
-                                    <span className={styles.projectTag}>NLP</span>
-                                    <span className={styles.projectTag}>Python</span>
-                                    <span className={styles.projectTag}>Flask</span>
-                                    <span className={styles.projectTag}>React</span>
-                                    <span className={styles.projectTag}>QT</span>
+                                <div className={projectsstyles.projectTags}>
+                                    <span className={projectsstyles.projectTag}>Algorithm Engineering</span>
+                                    <span className={projectsstyles.projectTag}>NLP</span>
+                                    <span className={projectsstyles.projectTag}>Python</span>
+                                    <span className={projectsstyles.projectTag}>Flask</span>
+                                    <span className={projectsstyles.projectTag}>React</span>
+                                    <span className={projectsstyles.projectTag}>QT</span>
                                 </div>
                                 <a href="https://github.com/Swefton/OpenFiche" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
@@ -55,25 +62,25 @@ const ProjectsViewer = ({ open, onClose }) => {
                                 We submitted this project to <span>Spartahack X</span> and won the <span>"Specialized Mastery"</span> award. The git-style history viewer was a well-loved feature, so I later ported it as a Chromium extension.
                             </p>
 
-                            <div className={styles.openFicheCarousel}>
-                                <div className={styles.carouselContainer}>
+                            <div className={projectsstyles.openFicheCarousel}>
+                                <div className={projectsstyles.carouselContainer}>
                                     <div
-                                        className={styles.carouselTrack}
+                                        className={projectsstyles.carouselTrack}
                                         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                                     >
-                                        <div className={styles.carouselSlide}>
+                                        <div className={projectsstyles.carouselSlide}>
                                             <img
                                                 src="/pictures/openfiche/us%20with%20sparty.jpg"
                                                 alt="Team with Sparty mascot at hackathon"
                                             />
                                         </div>
-                                        <div className={styles.carouselSlide}>
+                                        <div className={projectsstyles.carouselSlide}>
                                             <img
                                                 src="/pictures/openfiche/walking.jpg"
                                                 alt="Team walking at hackathon venue"
                                             />
                                         </div>
-                                        <div className={styles.carouselSlide}>
+                                        <div className={projectsstyles.carouselSlide}>
                                             <img
                                                 src="/pictures/openfiche/winning.jpeg"
                                                 alt="Team celebrating victory at Spartahack X"
@@ -81,25 +88,25 @@ const ProjectsViewer = ({ open, onClose }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={styles.carouselControls}>
+                                <div className={projectsstyles.carouselControls}>
                                     <button
-                                        className={styles.carouselButton}
+                                        className={projectsstyles.carouselButton}
                                         onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}
                                         disabled={currentSlide === 0}
                                     >
                                         Previous
                                     </button>
-                                    <div className={styles.carouselIndicators}>
+                                    <div className={projectsstyles.carouselIndicators}>
                                         {[0, 1, 2].map((index) => (
                                             <div
                                                 key={index}
-                                                className={`${styles.carouselDot} ${currentSlide === index ? styles.active : ''}`}
+                                                className={`${projectsstyles.carouselDot} ${currentSlide === index ? projectsstyles.active : ''}`}
                                                 onClick={() => setCurrentSlide(index)}
                                             />
                                         ))}
                                     </div>
                                     <button
-                                        className={styles.carouselButton}
+                                        className={projectsstyles.carouselButton}
                                         onClick={() => setCurrentSlide(Math.min(2, currentSlide + 1))}
                                         disabled={currentSlide === 2}
                                     >
@@ -113,22 +120,22 @@ const ProjectsViewer = ({ open, onClose }) => {
                 {
                     label: "Journalingo",
                     content: (
-                        <div className={styles.projectContent}>
-                            <div className={styles.projectHeader}>
-                                <h1 className={styles.projectTitle}>
+                        <div className={projectsstyles.projectContent}>
+                            <div className={projectsstyles.projectHeader}>
+                                <h1 className={projectsstyles.projectTitle}>
                                     <span>Journalingo</span>
                                 </h1>
-                                <p className={styles.projectDescription}>
+                                <p className={projectsstyles.projectDescription}>
                                     A video-based emotional journaling app that analyzes facial expressions to provide insights on emotional well-being.
                                 </p>
-                                <div className={styles.projectTags}>
-                                    <span className={styles.projectTag}>Facial Recognition</span>
-                                    <span className={styles.projectTag}>Computer Vision</span>
-                                    <span className={styles.projectTag}>NLP</span>
-                                    <span className={styles.projectTag}>Sentiment Analysis</span>
-                                    <span className={styles.projectTag}>Flask</span>
-                                    <span className={styles.projectTag}>Google Cloud</span>
-                                    <span className={styles.projectTag}>MongoDB</span>
+                                <div className={projectsstyles.projectTags}>
+                                    <span className={projectsstyles.projectTag}>Facial Recognition</span>
+                                    <span className={projectsstyles.projectTag}>Computer Vision</span>
+                                    <span className={projectsstyles.projectTag}>NLP</span>
+                                    <span className={projectsstyles.projectTag}>Sentiment Analysis</span>
+                                    <span className={projectsstyles.projectTag}>Flask</span>
+                                    <span className={projectsstyles.projectTag}>Google Cloud</span>
+                                    <span className={projectsstyles.projectTag}>MongoDB</span>
                                 </div>
                                 <a href="https://github.com/Swefton/Impact-AVS" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
@@ -153,19 +160,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                                 The live demo was taken down due to <span>cloud costs</span> and <span>data sensitivity</span>, but here's an example of our analysis in action:
                             </p>
 
-                            <div className={styles.demoItem}>
-                                <h3>Dashboard Preview</h3>
-                                <img
-                                    src="/pictures/journalingo/dashboard.png"
-                                    alt="Journalingo Dashboard"
-                                    className={styles.demoImage}
-                                />
-                            </div>
+                            <h3>Dashboard Preview</h3>
+                            <img
+                                src="/pictures/journalingo/dashboard.png"
+                                alt="Journalingo Dashboard"
+                                className={projectsstyles.demoImage}
+                            />
 
-                            <div className={styles.journalingoDemoContainer}>
-                                <div className={styles.journalingoDemoLeft}>
+                            <div className={projectsstyles.journalingoDemoContainer}>
+                                <div className={projectsstyles.journalingoDemoLeft}>
                                     <h3>Video Analysis Demo</h3>
-                                    <div className={styles.videoWrapper}>
+                                    <div className={projectsstyles.videoWrapper}>
                                         <iframe
                                             width="560"
                                             height="315"
@@ -177,11 +182,11 @@ const ProjectsViewer = ({ open, onClose }) => {
                                         ></iframe>
                                     </div>
                                 </div>
-                                <div className={styles.journalingoDemoRight}>
+                                <div className={projectsstyles.journalingoDemoRight}>
                                     <h3>Generated Analysis Report</h3>
-                                    <div className={styles.pdfPreview}>
-                                        <div className={styles.pdfPreviewContent}>
-                                            <h4>📄 Emotional Analysis Report</h4>
+                                    <div className={projectsstyles.pdfPreview}>
+                                        <div className={projectsstyles.pdfPreviewContent}>
+                                            <h3>Emotional Analysis Report</h3>
                                             <p>
                                                 This comprehensive report contains the detailed emotional analysis generated from the video demonstration, including mood patterns, authenticity scores, and personalized recommendations.
                                             </p>
@@ -190,15 +195,15 @@ const ProjectsViewer = ({ open, onClose }) => {
                                             href="/Laurie Report.pdf"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className={styles.pdfViewButton}
+                                            className={projectsstyles.pdfViewButton}
                                         >
-                                            📄 View PDF
+                                            View PDF
                                         </a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className={styles.demoExplanation}>
+                            <div className={projectsstyles.demoExplanation}>
                                 <p>
                                     The video shows our demo participant, and the PDF contains the comprehensive emotional analysis that Journalingo generated from this exact video session.
                                 </p>
@@ -209,18 +214,18 @@ const ProjectsViewer = ({ open, onClose }) => {
                 {
                     label: "Alexandria",
                     content: (
-                        <div className={styles.projectContent}>
-                            <div className={styles.projectHeader}>
-                                <h1 className={styles.projectTitle}>Alexandria</h1>
-                                <p className={styles.projectDescription}>
+                        <div className={projectsstyles.projectContent}>
+                            <div className={projectsstyles.projectHeader}>
+                                <h1 className={projectsstyles.projectTitle}>Alexandria</h1>
+                                <p className={projectsstyles.projectDescription}>
                                     Local AI-powered documentation search tool that lives in your terminal — indexing dependencies and answering dev questions instantly, with zero network calls.
                                 </p>
-                                <div className={styles.projectTags}>
-                                    <span className={styles.projectTag}>Python</span>
-                                    <span className={styles.projectTag}>FAISS</span>
-                                    <span className={styles.projectTag}>Vector Search</span>
-                                    <span className={styles.projectTag}>Web Scraping</span>
-                                    <span className={styles.projectTag}>Chunking</span>
+                                <div className={projectsstyles.projectTags}>
+                                    <span className={projectsstyles.projectTag}>Python</span>
+                                    <span className={projectsstyles.projectTag}>FAISS</span>
+                                    <span className={projectsstyles.projectTag}>Vector Search</span>
+                                    <span className={projectsstyles.projectTag}>Web Scraping</span>
+                                    <span className={projectsstyles.projectTag}>Chunking</span>
                                 </div>
                                 <a href="https://github.com/Swefton/hackillinois25" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
@@ -249,18 +254,18 @@ const ProjectsViewer = ({ open, onClose }) => {
                 {
                     label: "Callsort",
                     content: (
-                        <div className={styles.projectContent}>
-                            <div className={styles.projectHeader}>
-                                <h1 className={styles.projectTitle}>Callsort</h1>
-                                <p className={styles.projectDescription}>
+                        <div className={projectsstyles.projectContent}>
+                            <div className={projectsstyles.projectHeader}>
+                                <h1 className={projectsstyles.projectTitle}>Callsort</h1>
+                                <p className={projectsstyles.projectDescription}>
                                     A cross-platform desktop app for one-click sorting of Library of Congress call numbers in Excel/CSV - parsing, validating, and ordering data precisely to support cataloging workflows.
                                 </p>
-                                <div className={styles.projectTags}>
-                                    <span className={styles.projectTag}>Rust</span>
-                                    <span className={styles.projectTag}>Vue.js</span>
-                                    <span className={styles.projectTag}>Tauri</span>
-                                    <span className={styles.projectTag}>Software Development</span>
-                                    <span className={styles.projectTag}>Algorithm Engineering</span>
+                                <div className={projectsstyles.projectTags}>
+                                    <span className={projectsstyles.projectTag}>Rust</span>
+                                    <span className={projectsstyles.projectTag}>Vue.js</span>
+                                    <span className={projectsstyles.projectTag}>Tauri</span>
+                                    <span className={projectsstyles.projectTag}>Software Development</span>
+                                    <span className={projectsstyles.projectTag}>Algorithm Engineering</span>
                                 </div>
                                 <a href="https://github.com/Digital-Multimedia-Center/Callsort" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
@@ -280,17 +285,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                 {
                     label: "Wolverine Code Companion",
                     content: (
-                        <div className={styles.projectContent}>
-                            <div className={styles.projectHeader}>
-                                <h1 className={styles.projectTitle}>Wolverine Code Companion</h1>
-                                <p className={styles.projectDescription}>
+                        <div className={projectsstyles.projectContent}>
+                            <div className={projectsstyles.projectHeader}>
+                                <h1 className={projectsstyles.projectTitle}>Wolverine Code Companion</h1>
+                                <p className={projectsstyles.projectDescription}>
                                     A Visual Studio extension powered by a locally embedded LLM, tailored to support specific university courses.
                                 </p>
-                                <div className={styles.projectTags}>
-                                    <span className={styles.projectTag}>LLM Engineering</span>
-                                    <span className={styles.projectTag}>Transformers</span>
-                                    <span className={styles.projectTag}>Vector Embeddings</span>
-                                    <span className={styles.projectTag}>Tokenization</span>
+                                <div className={projectsstyles.projectTags}>
+                                    <span className={projectsstyles.projectTag}>LLM Engineering</span>
+                                    <span className={projectsstyles.projectTag}>Transformers</span>
+                                    <span className={projectsstyles.projectTag}>Vector Embeddings</span>
+                                    <span className={projectsstyles.projectTag}>Tokenization</span>
                                 </div>
                                 <a href="https://github.com/Sidd-satish12/Wolverine-Code-Companion" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>

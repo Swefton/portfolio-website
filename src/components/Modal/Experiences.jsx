@@ -1,5 +1,6 @@
 import TwoColumnSelector from "@/components/Modal/TwoColumnSelector";
 import styles from './TwoColumn.module.css';
+import experiencesstyle from './Experiences.module.css'
 
 const ExperiencesViewer = ({ open, onClose }) => {
   return (
@@ -11,11 +12,11 @@ const ExperiencesViewer = ({ open, onClose }) => {
           // https://liveon.msu.edu/ResidentAssistantPositionDescription
           label: "RA @ REHS MSU",
           content: (
-            <div className={`${styles.experienceContent} content`}>
-              <div className={styles.experienceMetadata}>
-                <h1 className={styles.experienceTitle}>Resident Assistant</h1>
-                <h2 className={styles.experienceCompany}>REHS MSU</h2>
-                <p className={styles.experienceTime}>Aug 2024 - <span>Present</span></p>
+            <div className={`${experiencesstyle.experienceContent} content`}>
+              <div className={experiencesstyle.experienceMetadata}>
+                <h1 className={experiencesstyle.experienceTitle}>Resident Assistant</h1>
+                <h2 className={experiencesstyle.experienceCompany}>REHS MSU</h2>
+                <p className={experiencesstyle.experienceTime}>Aug 2024 - <span>Present</span></p>
               </div>
               <p>
                 As a <span>Resident Assistant</span>, I worked to <span>build an inclusive community</span> and foster student success academically and personally. This meant <span>supporting students' academic goals</span>, <span>responding to emergencies</span>, and <span>actively engaging with the community</span> through events and connection-building initiatives as well as generally guiding students to appropriate resources.
@@ -32,22 +33,22 @@ const ExperiencesViewer = ({ open, onClose }) => {
               <p>
                 Being an RA was my <span>favorite extracurricular experience</span> at university. It taught me how to lead a floor, manage conflict, nurture talent, and work effectively with a team.
               </p>
-              <img src="/pictures/RA/team.png" alt="Team with Sparty mascot at hackathon" />
+              <img src="/pictures/RA/team.png" className={`${styles.display}`} alt="Team with Sparty mascot at hackathon" />
             </div>
           )
         },
         {
           label: "Student Library Assistant @ DMC MSU",
           content: (
-            <div className={`${styles.experienceContent} content`}>
-              <div className={styles.experienceMetadata}>
-                <h1 className={styles.experienceTitle}>
+            <div className={`${experiencesstyle.experienceContent} content`}>
+              <div className={experiencesstyle.experienceMetadata}>
+                <h1 className={experiencesstyle.experienceTitle}>
                   <span>Student Library Assistant</span>
                 </h1>
-                <h2 className={styles.experienceCompany}>
+                <h2 className={experiencesstyle.experienceCompany}>
                   Digital Multimedia Center MSU Library
                 </h2>
-                <p className={styles.experienceTime}>
+                <p className={experiencesstyle.experienceTime}>
                   Jan 2023 - <span>Present</span>
                 </p>
               </div>
@@ -68,15 +69,15 @@ const ExperiencesViewer = ({ open, onClose }) => {
         {
           label: "Data Science Intern @ iSON",
           content: (
-            <div className={`${styles.experienceContent} content`}>
-              <div className={styles.experienceMetadata}>
-                <h1 className={styles.experienceTitle}>
+            <div className={`${experiencesstyle.experienceContent} content`}>
+              <div className={experiencesstyle.experienceMetadata}>
+                <h1 className={experiencesstyle.experienceTitle}>
                   <span>Data Science Intern</span>
                 </h1>
-                <h2 className={styles.experienceCompany}>
+                <h2 className={experiencesstyle.experienceCompany}>
                   iSON Xperiences Ltd.
                 </h2>
-                <p className={styles.experienceTime}>
+                <p className={experiencesstyle.experienceTime}>
                   Jul 2023 - <span>Aug 2023</span>
                 </p>
               </div>
