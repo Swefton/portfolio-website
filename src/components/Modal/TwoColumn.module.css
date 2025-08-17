@@ -134,8 +134,7 @@
     text-shadow: none;
 }
 
-.content img, 
-.content iframe {
+.content img {
     border: 1px solid var(--hud-grid);
     box-shadow: none;
     display: block;
@@ -143,4 +142,21 @@
     align-self: center;
     width: 80%;
     height: auto;
+}
+
+
+.content iframe {
+    border: 1px solid var(--hud-grid);
+    box-shadow: none;
+    display: block;
+    margin: 1rem auto;
+    align-self: center;
+
+    /* Force the width and height */
+    width: 80% !important;
+    height: auto !important;
+}
+
+.content iframe {
+    aspect-ratio: 16 / 9;
 }

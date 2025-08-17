@@ -74,17 +74,16 @@
 /* OpenFiche Carousel Styling */
 .openFicheCarousel {
     position: relative;
-    margin: 2rem 0;
-    max-width: 100%;
+    margin: 2rem auto;
+    max-width: 75%;
 }
 
 .carouselContainer {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 45vh;
     overflow: hidden;
     border: 1px solid var(--hud-grid);
-    border-radius: 8px;
     background: var(--hud-bg);
 }
 
@@ -108,7 +107,7 @@
     height: auto;
     max-height: 100%;
     object-fit: contain;
-    border-radius: 4px;
+    border: none;
 }
 
 .carouselControls {
@@ -119,8 +118,6 @@
     background: rgba(26, 28, 31, 0.8);
     border: 1px solid var(--hud-grid);
     border-top: none;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
 }
 
 .carouselButton {
