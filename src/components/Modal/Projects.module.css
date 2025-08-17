@@ -9,6 +9,12 @@
     border-bottom: 1px solid var(--hud-grid);
 }
 
+.projectHeaderTop {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
 .projectTitle {
     color: var(--hud-pink);
     font-size: 1.75rem;
@@ -16,6 +22,20 @@
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+}
+
+.iconLink {
+  border-bottom: none !important;
+  text-decoration: none !important;
+}
+
+.projectContent .githubIcon {
+  height: 2.25rem;
+  margin: 0;
+  margin-bottom: 1rem;
+  width: auto;
+  border: none;
+  box-shadow: none;
 }
 
 .projectDescription {

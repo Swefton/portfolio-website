@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import TwoColumnSelector from "@/components/Modal/TwoColumnSelector";
-import styles from './TwoColumn.module.css'
 import projectsstyles from './Projects.module.css'
 
 const ProjectsViewer = ({ open, onClose }) => {
@@ -17,12 +16,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                     content: (
                         <div className={projectsstyles.projectContent}>
                             <div className={projectsstyles.projectHeader}>
-                            <h1 className={projectsstyles.projectTitle}>
-                                OpenFiche
-                            </h1>
-                            <a href="https://github.com/your-repo-url" target="_blank" rel="noopener noreferrer">
-                                <img src="/github.svg" alt="GitHub" style={{ width: "20px", height: "20px" }} />
-                            </a>
+                                <div className={projectsstyles.projectHeaderTop}>
+                                    <h1 className={projectsstyles.projectTitle}>OpenFiche</h1>
+                                    <a
+                                    href="https://github.com/Swefton/OpenFiche"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={projectsstyles.iconLink}
+                                    >
+                                        <img src="/github.svg" alt="GitHub" className={projectsstyles.githubIcon} />
+                                    </a> 
+                                </div>
 
                                 <p className={projectsstyles.projectDescription}>
                                     A post-AI academic browser and search engine that filters out low-quality AI-generated content, highlighting trustworthy, human-written sources.
@@ -35,7 +39,6 @@ const ProjectsViewer = ({ open, onClose }) => {
                                     <span className={projectsstyles.projectTag}>React</span>
                                     <span className={projectsstyles.projectTag}>QT</span>
                                 </div>
-                                <a href="https://github.com/Swefton/OpenFiche" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
                             <p>
                                 My team noticed search results getting worse and found{" "}
@@ -122,9 +125,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                     content: (
                         <div className={projectsstyles.projectContent}>
                             <div className={projectsstyles.projectHeader}>
-                                <h1 className={projectsstyles.projectTitle}>
-                                    <span>Journalingo</span>
-                                </h1>
+                                <div className={projectsstyles.projectHeaderTop}>
+                                    <h1 className={projectsstyles.projectTitle}>Journalingo</h1>
+                                    <a
+                                    href="https://github.com/Swefton/Impact-AVS"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={projectsstyles.iconLink}
+                                    >
+                                        <img src="/github.svg" alt="GitHub" className={projectsstyles.githubIcon} />
+                                    </a> 
+                                </div>
                                 <p className={projectsstyles.projectDescription}>
                                     A video-based emotional journaling app that analyzes facial expressions to provide insights on emotional well-being.
                                 </p>
@@ -137,7 +148,6 @@ const ProjectsViewer = ({ open, onClose }) => {
                                     <span className={projectsstyles.projectTag}>Google Cloud</span>
                                     <span className={projectsstyles.projectTag}>MongoDB</span>
                                 </div>
-                                <a href="https://github.com/Swefton/Impact-AVS" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
                             <p>
                                 Journalingo addresses the biases of self-reflection by letting users record short videos. Using custom <span>computer vision</span> techniques and <span>NLP</span>, our model and algorithm analyzes facial expressions, emotional tone, and speech to reveal hidden emotions.
@@ -216,7 +226,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                     content: (
                         <div className={projectsstyles.projectContent}>
                             <div className={projectsstyles.projectHeader}>
-                                <h1 className={projectsstyles.projectTitle}>Alexandria</h1>
+                                <div className={projectsstyles.projectHeaderTop}>
+                                    <h1 className={projectsstyles.projectTitle}>Alexandria</h1>
+                                    <a
+                                    href="https://github.com/Swefton/hackillinois25"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={projectsstyles.iconLink}
+                                    >
+                                        <img src="/github.svg" alt="GitHub" className={projectsstyles.githubIcon} />
+                                    </a> 
+                                </div>
                                 <p className={projectsstyles.projectDescription}>
                                     Local AI-powered documentation search tool that lives in your terminal — indexing dependencies and answering dev questions instantly, with zero network calls.
                                 </p>
@@ -227,7 +247,6 @@ const ProjectsViewer = ({ open, onClose }) => {
                                     <span className={projectsstyles.projectTag}>Web Scraping</span>
                                     <span className={projectsstyles.projectTag}>Chunking</span>
                                 </div>
-                                <a href="https://github.com/Swefton/hackillinois25" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
                             <p>
                                 Developers spend a lot of time digging through docs, and even when using LLMs, issues arise because of recent <span>library refactors</span> or AI hallucinations on niche APIs. Alexandria solves this by <span>indexing documentation</span> for all your project’s libraries, providing <span>context-aware info</span> to improve LLM answers.
@@ -256,7 +275,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                     content: (
                         <div className={projectsstyles.projectContent}>
                             <div className={projectsstyles.projectHeader}>
-                                <h1 className={projectsstyles.projectTitle}>Callsort</h1>
+                                <div className={projectsstyles.projectHeaderTop}>
+                                    <h1 className={projectsstyles.projectTitle}>Callsort</h1>
+                                    <a
+                                    href="https://github.com/Digital-Multimedia-Center/Callsort"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={projectsstyles.iconLink}
+                                    >
+                                        <img src="/github.svg" alt="GitHub" className={projectsstyles.githubIcon} />
+                                    </a> 
+                                </div>
                                 <p className={projectsstyles.projectDescription}>
                                     A cross-platform desktop app for one-click sorting of Library of Congress call numbers in Excel/CSV - parsing, validating, and ordering data precisely to support cataloging workflows.
                                 </p>
@@ -267,7 +296,6 @@ const ProjectsViewer = ({ open, onClose }) => {
                                     <span className={projectsstyles.projectTag}>Software Development</span>
                                     <span className={projectsstyles.projectTag}>Algorithm Engineering</span>
                                 </div>
-                                <a href="https://github.com/Digital-Multimedia-Center/Callsort" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
                             <p>
                                 Callsort was created to solve a common pain point at the MSU library: standard spreadsheet tools <span>can't sort LC call numbers</span>, especially when the data is messy or inconsistently formatted. Callsort parses the <span>full call number syntax</span>, validates it, and sorts items in proper LC order - even on imperfect real-world data.
@@ -287,7 +315,17 @@ const ProjectsViewer = ({ open, onClose }) => {
                     content: (
                         <div className={projectsstyles.projectContent}>
                             <div className={projectsstyles.projectHeader}>
-                                <h1 className={projectsstyles.projectTitle}>Wolverine Code Companion</h1>
+                                <div className={projectsstyles.projectHeaderTop}>
+                                    <h1 className={projectsstyles.projectTitle}>Wolverine Code Companion</h1>
+                                    <a
+                                    href="https://github.com/Sidd-satish12/Wolverine-Code-Companion"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={projectsstyles.iconLink}
+                                    >
+                                        <img src="/github.svg" alt="GitHub" className={projectsstyles.githubIcon} />
+                                    </a> 
+                                </div>
                                 <p className={projectsstyles.projectDescription}>
                                     A Visual Studio extension powered by a locally embedded LLM, tailored to support specific university courses.
                                 </p>
@@ -297,7 +335,6 @@ const ProjectsViewer = ({ open, onClose }) => {
                                     <span className={projectsstyles.projectTag}>Vector Embeddings</span>
                                     <span className={projectsstyles.projectTag}>Tokenization</span>
                                 </div>
-                                <a href="https://github.com/Sidd-satish12/Wolverine-Code-Companion" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
                             </div>
                             <p>
                                 As AI tools grew popular, we noticed a drop in peer communication in entry-level CS courses. Wolverine Code Companion reintroduces collaborative learning by <span>embedding course material into a shared, evolving model</span> built from student queries, notes, and examples.
