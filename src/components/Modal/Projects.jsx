@@ -47,7 +47,7 @@ const ProjectsViewer = ({ open, onClose }) => {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <span>studies</span>
+                                    studies
                                 </a>{" "}
                                 showing AI is messing with SEO tags. OpenFiche is a search engine for academic research that focuses on reliable sources like{" "}
                                 <span>NPR</span>, <span>CNN</span>, and <span>Wikipedia</span>. It uses a webgraph-based <span>PageRank</span> with keyword relevance scoring (via <span>NLTK</span>) to deliver results avoiding low quality AI generated results.
@@ -55,7 +55,7 @@ const ProjectsViewer = ({ open, onClose }) => {
                             <p>
                                 The search engine was built with <span>React</span> and is live at{" "}
                                 <a href="https://reada.wiki" target="_blank" rel="noopener noreferrer">
-                                    <span>reada.wiki</span>
+                                    reada.wiki
                                 </a>. The custom OpenFiche browser is a lightweight Chromium wrapper made with <span>Python</span> and <span>QT</span>, featuring a git-style history graph, distraction-free reader mode, and easy tab management to help streamline research.
                             </p>
                             <p>

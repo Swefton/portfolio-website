@@ -232,12 +232,14 @@ const ConwayWidget = () => {
          style={{ display: sizeMode === 'minimal' ? 'block' : 'flex' }}
        >
          {sizeMode === 'minimal' ? (
-           `Conway's Life - Gen: ${generation}`
+          <>
+            <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank'>Conway's Life</a>
+          </>
          ) : (
-           <>
-             <span>Conway's Life</span>
-             <span>Gen: {generation}</span>
-           </>
+          <>
+            <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank'>Conway's Life</a>
+            <span>Gen: {generation}</span>
+          </>
          )}
        </div>
 

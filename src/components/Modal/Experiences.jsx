@@ -61,7 +61,7 @@ const ExperiencesViewer = ({ open, onClose }) => {
                 several open source tools.
               </p>
               <p>
-                My work for the DMC can be found on the organization page <a>here</a>.
+                My work for the DMC can be found on the <a href="https://github.com/Digital-Multimedia-Center" target="_blank">organization page.</a>
               </p>
             </div>
           )

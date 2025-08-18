@@ -15,6 +15,11 @@
     justify-content: start;
 }
 
+.projectHeaderTop a::after {
+  display: none;
+  content: none;
+}
+
 .projectTitle {
     color: var(--hud-pink);
     font-size: 1.75rem;

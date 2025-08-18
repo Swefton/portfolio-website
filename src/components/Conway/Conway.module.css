@@ -48,6 +48,44 @@
   flex-shrink: 0;
 }
 
+.header a,
+.minimalHeader a {
+    color: var(--hud-pink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hud-white);
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.header a:hover,
+.minimalHeader a:hover {
+    color: var(--hud-white);
+    border-bottom-color: var(--hud-white);
+    text-shadow: none;
+}
+
+.header a::after,
+.minimalHeader a::after {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-left: 0.25em;
+    vertical-align: text-bottom;
+
+    -webkit-mask: url('/link.svg') no-repeat center / contain;
+            mask: url('/link.svg') no-repeat center / contain;
+
+    background-color: var(--hud-pink);
+    transition: background-color 0.2s ease;
+}
+
+.header a:hover::after,
+.minimalHeader a:hover::after {
+    background-color: var(--hud-white);
+}
+
+
 .canvasContainer {
   flex: 1;
   display: flex;
