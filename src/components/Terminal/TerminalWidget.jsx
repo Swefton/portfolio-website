@@ -7,7 +7,7 @@ import "./Terminal.css";
 
 const TerminalWidget = forwardRef((props, ref) => {
   const [terminalLineData, setTerminalLineData] = useState([
-    <TerminalOutput key={0}>Welcome to Amrit OS, type 'help' for help. Or use buttons below for navigation.</TerminalOutput>,
+    <TerminalOutput key={0}>Welcome to <span>Amrit OS</span>, type <span>'help'</span> for help. Or <span>use buttons below</span> for navigation.</TerminalOutput>,
   ]);
   const [currentInput, setCurrentInput] = useState("");
 

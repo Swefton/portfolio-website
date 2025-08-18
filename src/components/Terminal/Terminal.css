@@ -6,10 +6,31 @@
 }
 
 .react-terminal-line {
+  color: var(--hud-white) !important;
   text-wrap-mode: wrap !important; 
 }
 
 .react-terminal-wrapper {
   background-color: var(--hug-bg) !important;
   border-bottom: 1px solid var(--hud-white) !important;
+}
+
+.react-terminal {
+    scrollbar-width: thin;
+    scrollbar-color: var(--hud-white) var(--hud-bg);
+}
+
+.react-terminal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.react-terminal::-webkit-scrollbar-track {
+    background: var(--hud-bg);
+    border-radius: 4px;
+}
+
+.react-terminal::-webkit-scrollbar-thumb {
+    background-color: var(--hud-white);
+    border-radius: 5px;
+    border: 2px solid var(--hud-bg);
 }
