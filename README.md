@@ -1,42 +1,25 @@
-# Portfolio V2
-> Terminal Website
+# Portfolio
 
-Terminal / Hollywood computer inspired website
+A personal portfolio website that was designed to show not only my technical expertise, but also my personality. I love computers and programming and so I used a TUI (terminal UI) aesthetic with retro features / monospaced font to make it feel like using a separate computer. 
 
+Built with Next.js and vanilla JS and CSS, no fancy tailwind, or typescript or anything.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+---
 
-## Getting Started
+## Inspiration
 
-First, run the development server:
+| Source                                                                                 | Idea Adopted                                                    |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [https://wallenart.dev/](https://wallenart.dev/)                                       | Clickable skills that reveal meaningful context and explanation |
+| [Encom Boardroom Project](https://www.robscanlon.com/encom-boardroom/)                 | “Startup” boot animation and command-button hybrid UI           |
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
+## Credits
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Asset              | Source                                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| Globe texture      | [https://shadedrelief.com](https://shadedrelief.com)                                                 |
+| SVG Icons          | [https://www.svgrepo.com](https://www.svgrepo.com)                                                   |
+| Terminal Component | [https://github.com/bony2023/react-terminal](https://github.com/bony2023/react-terminal)             |
+| Keyboard Component | [https://hodgef.com/simple-keyboard/documentation](https://hodgef.com/simple-keyboard/documentation) |
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
