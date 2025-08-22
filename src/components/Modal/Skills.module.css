@@ -1,0 +1,42 @@
+.skillContent {
+  padding: 1rem;
+  line-height: 1.6;
+  color: var(--hud-white);
+}
+
+.skillContent h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--hud-pink);
+}
+
+.skillContent h2 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--hud-soft-pink);
+}
+
+.skillContent p {
+  margin-bottom: 1rem;
+}
+
+.skillContent ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.skillContent li {
+  margin-bottom: 0.5rem;
+}
+
+.skillContent a {
+  color: var(--hud-pink);
+  text-decoration: underline;
+}
+
+.skillContent iframe {
+  margin-top: 1rem;
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
