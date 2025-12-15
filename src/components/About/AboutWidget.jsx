@@ -112,23 +112,33 @@ const AboutMe = () => {
             <p className={styles.description}>
               I'm a{' '}
               <span className={styles.highlight}>
-                Senior Computer Science Major
+                Senior Computer Science major
               </span>{' '}
               at{' '}
               <span className={styles.highlight}>
                 Michigan State University
               </span>{' '}
               with a minor in{' '}
-              <span className={styles.highlight}>Data Science</span>. I like
-              working with <span className={styles.highlight}>AI</span>,{' '}
-              <span className={styles.highlight}>Process Automation</span>, and{' '}
-              <span className={styles.highlight}>Web Technologies</span> to
-              make software that makes computers work for humans and not the
-              other way around. I'm a{' '}
-              <span className={styles.highlight}>Linux enthusiast</span> and on
-              the side I like contributing to{' '}
-              <span className={styles.highlight}>open source tools</span> that
-              I use on a day to day basis.
+              <span className={styles.highlight}>
+                Data Science
+              </span>. I’m passionate about{' '}
+              <span className={styles.highlight}>
+                automation
+              </span>{' '}
+              and building systems that reduce human effort by making computers work for humans, not the other way around by using{' '}
+              <span className={styles.highlight}>
+                machine learning
+              </span>{' '}
+              (computer vision and NLP),{' '}
+              <span className={styles.highlight}>
+                software development
+              </span>,{' '}
+              <span className={styles.highlight}>
+                algorithmic engineering
+              </span>, and{' '}
+              <span className={styles.highlight}>
+                web technologies.
+              </span>
             </p>
           </>
         );
