@@ -13,7 +13,7 @@
   "dependencies": {
     "chess.js": "^1.4.0",
     "globe.gl": "^2.42.0",
-    "next": "15.3.5",
+    "next": "15.3.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-globe.gl": "^2.34.0",
