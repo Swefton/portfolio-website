@@ -242,6 +242,8 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                     {/* Carousel text - hidden for minimal mode */}
                     {sizeMode !== 'minimal' && (
                         <div className={styles.carousel}>
+                            {/* https://github.com/joshwalters/open-chess-font */}
+                            <p>K L P O</p>
                             <p>In my free time I like playing Chess. This was the best game I've played.</p>
                         </div>
                     )}
