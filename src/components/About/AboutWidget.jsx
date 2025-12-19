@@ -109,6 +109,7 @@ const AboutMe = () => {
             <h1 className={styles.name}>
               Hi, I'm <span className={styles.highlight}>Amrit</span>.
             </h1>
+
             <p className={styles.description}>
               I'm a{' '}
               <span className={styles.highlight}>
@@ -125,20 +126,21 @@ const AboutMe = () => {
               <span className={styles.highlight}>
                 automation
               </span>{' '}
-              and building systems that reduce human effort by making computers work for humans, not the other way around by using{' '}
+              and designing systems that reduce human effort—using{' '}
               <span className={styles.highlight}>
                 machine learning
               </span>{' '}
               (computer vision and NLP),{' '}
               <span className={styles.highlight}>
-                software development
+                algorithmic engineering
               </span>,{' '}
               <span className={styles.highlight}>
-                algorithmic engineering
+                software development
               </span>, and{' '}
               <span className={styles.highlight}>
-                web technologies.
-              </span>
+                web technologies
+              </span>{' '}
+              to make computers work for people, not the other way around.
             </p>
           </>
         );
