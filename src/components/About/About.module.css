@@ -10,7 +10,6 @@
     box-sizing: border-box;
     overflow: hidden;
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-    
     /* Ensure content never overflows */
     min-height: 0;
 }
@@ -27,9 +26,6 @@
 .description {
     margin: 0;
     line-height: 1.2;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
 }
 
 .highlight {
@@ -37,11 +33,11 @@
 }
 
 .name {
-  font-size: clamp(0.8rem, 4vh, 2rem);
+    font-size: clamp(0.8rem, 4vh, 2rem);
 }
 
 .description {
-  font-size: clamp(0.6rem, 1.5vh, 1.25rem);
+    font-size: clamp(0.6rem, 1.5vh, 1.25rem);
 }
 
 .medium {
@@ -99,13 +95,13 @@
         padding: 0.2rem;
         justify-content: flex-start;
     }
-    
+
     .name {
         font-size: clamp(0.6rem, 8vh, 0.8rem) !important;
         margin-bottom: 0.1rem;
         line-height: 1;
     }
-    
+
     .description {
         font-size: clamp(0.45rem, 6vh, 0.6rem) !important;
         line-height: 1.1;
@@ -123,7 +119,7 @@
     .description {
         display: none;
     }
-    
+
     .name {
         font-size: clamp(0.5rem, 10vh, 0.7rem) !important;
         text-align: center;
@@ -136,7 +132,7 @@
     .container.large .name {
         font-size: clamp(0.8rem, 3vh, 1.2rem);
     }
-    
+
     .container.large .description {
         font-size: clamp(0.55rem, 2vh, 0.7rem);
         line-height: 1.2;
