@@ -243,15 +243,6 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                     {sizeMode !== 'minimal' && (
                         <div className={styles.carousel}>
                             {/* https://github.com/joshwalters/open-chess-font */}
-                            <p>t M v W l V m T</p>
-                            <p>O o O o O o O o</p>
-                            <p>z x z x z x z x</p>
-                            <p>x z x z x z x z</p>
-                            <p>z x z x z x z x</p>
-                            <p>x z x z x z x z</p>
-                            <p>P p P p P p P p</p>
-                            <p>r N b Q k B n R</p>
-
                         </div>
                     )}
                     
