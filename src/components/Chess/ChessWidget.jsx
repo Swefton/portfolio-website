@@ -29,6 +29,8 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
     const [sizeMode, setSizeMode] = useState('full');
     const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
     const [chess] = useState(new Chess());
+    const playBoard = useRef(new Chess());
+    const viewBoard = useRef(new Chess());
     const [boardGrid, setBoardGrid] = useState(() => generateBoardGrid(chess.board()));
     const [currentMove, setCurrentMove] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
@@ -94,15 +96,15 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
         return () => resizeObserver.disconnect();
     }, []);
 
-    // Initialize game history
+    // Initialize boards with API call
     useEffect(() => {
-        const initialChess = new Chess();
-        setGameHistory([{ 
-            board: generateBoardGrid(initialChess.board()), 
-            fen: initialChess.fen(), 
-            move: null, 
-            moveNumber: 0 
-        }]);
+        fetch("https://api.chess.com/pub/player/sweftonxd/games/live/180/0")
+            .then(r => r.json())
+            .then(data => {
+                const pgn = data.games[data.games.length - 1].pgn;
+                playBoard.current.loadPgn(pgn);
+                console.log(playBoard.current.ascii());
+            })
     }, []);
 
     const makeMove = useCallback((moveIndex) => {
