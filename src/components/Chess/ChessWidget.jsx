@@ -6,29 +6,29 @@ import { useAnimationTick } from '../../app/page';
 import styles from './ChessWidget.module.css';
 
 const pieceUnicode = {
-    p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚',
-    P: '♙', R: '♖', N: '♘', B: '♗', Q: '♕', K: '♔',
-    '.': '·'
+  p: 'P', r: 'R', n: 'N', b: 'B', q: 'Q', k: 'K',
+  P: 'O', R: 'T', N: 'M', B: 'V', Q: 'W', K: 'L',
+  '.' : '·'
 };
 
 const generateBoardGrid = (board) => {
-    const grid = [];
-    for (let i = 7; i >= 0; i--) {
-        const row = [];
-        for (let j = 0; j < 8; j++) {
-            const piece = board[i][j];
-            row.push(piece ? pieceUnicode[piece.color === 'w' ? piece.type.toUpperCase() : piece.type] : pieceUnicode['.']);
-        }
-        grid.push({ rank: i + 1, squares: row });
+  const grid = [];
+  for (let i = 7; i >= 0; i--) {
+    const row = [];
+    for (let j = 0; j < 8; j++) {
+      const piece = board[i][j] ? board[i][j].type : '.';
+      row.push(pieceUnicode[piece]);
     }
-    return grid;
+    grid.push({ rank: i + 1, squares: row });
+  }
+  return grid;
 };
 
 const AsciiChessBoard = () => {
     const containerRef = useRef();
     const [sizeMode, setSizeMode] = useState('full');
     const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
-    const [boardGrid, setBoardGrid] = useState();
+    const [boardGrid, setBoardGrid] = useState([]);
     const lastMoveTimeRef = useRef(0);
 
     const playBoard = useRef(new Chess());
@@ -47,6 +47,7 @@ const AsciiChessBoard = () => {
                 const pgn = data.games[data.games.length - 1].pgn;
                 playBoard.current.loadPgn(pgn);
                 setGameHistory(playBoard.current.history());
+                setBoardGrid(generateBoardGrid(viewBoard.current.board()));
             })
     }, []);
     
@@ -68,6 +69,71 @@ const AsciiChessBoard = () => {
         setIsPlaying(true);
     }, []);
 
+    // TODO : adapt render board code
+    const renderedBoard = useMemo(() => {
+        const { squareSize, showLabels } = boardSize;
+        const labelSize = showLabels ? 20 : 0;
+        
+        return (
+            <div 
+                className={styles.boardWrapper}
+                style={{
+                    padding: sizeMode === 'minimal' ? '4px' : '8px',
+                }}
+            >
+                {/* Column headers */}
+                {showLabels && (
+                    <div className={styles.columnHeaders}>
+                        <div style={{ width: `${labelSize}px` }}></div>
+                        {'abcdefgh'.split('').map(file => (
+                            <div 
+                                key={file} 
+                                className={styles.fileHeader}
+                                style={{ width: `${squareSize}px`, fontSize: `${Math.max(10, squareSize * 0.35)}px` }}
+                            >
+                                {file}
+                            </div>
+                        ))}
+                    </div>
+                )}
+                
+                {boardGrid.map((row, rowIndex) => (
+                    <div key={rowIndex} className={styles.row}>
+                        {/* Rank numbers */}
+                        {showLabels && (
+                            <div 
+                                className={styles.rank}
+                                style={{ 
+                                    width: `${labelSize}px`, 
+                                    fontSize: `${Math.max(10, squareSize * 0.35)}px` 
+                                }}
+                            >
+                                {row.rank}
+                            </div>
+                        )}
+                        
+                        {row.squares.map((piece, colIndex) => {
+                            const isLight = (rowIndex + colIndex) % 2 === 0;
+                            return (
+                                <div
+                                    key={colIndex}
+                                    className={`${styles.square} ${isLight ? styles.lightSquare : styles.darkSquare}`}
+                                    style={{
+                                        width: `${squareSize}px`,
+                                        height: `${squareSize}px`,
+                                        fontSize: `${Math.max(10, squareSize * 0.6)}px`
+                                    }}
+                                >
+                                    {piece === '·' ? '' : piece}
+                                </div>
+                            );
+                        })}
+                    </div>
+                ))}
+            </div>
+        );
+    }, [boardGrid, sizeMode, boardSize]);
+
     return (
         <div ref={containerRef} style={{ color: "white" }}>
 
@@ -87,10 +153,7 @@ const AsciiChessBoard = () => {
                 Make move
             </button>
 
-            <pre>
-                {viewBoard.current.ascii()}
-            </pre>
-
+            {renderedBoard}
         </div>
     );
 };
