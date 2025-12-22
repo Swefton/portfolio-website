@@ -6,8 +6,8 @@ import { useAnimationTick } from '../../app/page';
 import styles from './ChessWidget.module.css';
 
 const pieceUnicode = {
-  p: 'P', r: 'R', n: 'N', b: 'B', q: 'Q', k: 'K',
-  P: 'O', R: 'T', N: 'M', B: 'V', Q: 'W', K: 'L',
+  P: 'P', R: 'R', N: 'N', B: 'B', Q: 'Q', K: 'K',
+  p: 'O', r: 'T', n: 'M', b: 'V', q: 'W', k: 'L',
   '.' : '·'
 };
 
@@ -16,8 +16,13 @@ const generateBoardGrid = (board) => {
   for (let i = 7; i >= 0; i--) {
     const row = [];
     for (let j = 0; j < 8; j++) {
-      const piece = board[i][j] ? board[i][j].type : '.';
-      row.push(pieceUnicode[piece]);
+      const square = board[i][j];
+      if (square) {
+        const key = square.color === 'w' ? square.type.toUpperCase() : square.type.toLowerCase();
+        row.push(pieceUnicode[key]);
+      } else {
+        row.push(pieceUnicode['.']);
+      }
     }
     grid.push({ rank: i + 1, squares: row });
   }
@@ -152,6 +157,12 @@ const AsciiChessBoard = () => {
             <button onClick={makeMove}>
                 Make move
             </button>
+
+            <pre>
+                {Object.entries(playBoard.current.getHeaders()).map(([key, value]) => (
+                    <div key={key}>{key}: {value}</div>
+                ))}
+            </pre>
 
             {renderedBoard}
         </div>

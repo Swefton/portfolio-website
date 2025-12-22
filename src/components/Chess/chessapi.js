@@ -11,11 +11,16 @@ const pieceUnicode = {
 
 const generateBoardGrid = (board) => {
   const grid = [];
-  for (let i = 7; i >= 0; i--) {
+  for (let i = 7; i >= 0; i--) { // ranks from 8 to 1
     const row = [];
     for (let j = 0; j < 8; j++) {
-      const piece = board[i][j] ? board[i][j].type : '.';
-      row.push(pieceUnicode[piece]);
+      const square = board[i][j];
+      if (square) {
+        const key = square.color === 'w' ? square.type.toUpperCase() : square.type.toLowerCase();
+        row.push(pieceUnicode[key]);
+      } else {
+        row.push(pieceUnicode['.']);
+      }
     }
     grid.push({ rank: i + 1, squares: row });
   }
@@ -32,15 +37,15 @@ async function fetchGame() {
     const data = await response.json();
     const pgn = data.games[data.games.length - 1].pgn;
 
-    const chess = Chess();
-    chess.loadPgn(pgn);
-
+    const chess = new Chess();
+    // console.log(chess.board());
     console.log(generateBoardGrid(chess.board()));
+    chess.loadPgn(pgn);
 
     const moves = chess.history();
     let moveIndex = 0;
 
-    let playboard = Chess();
+    let playboard = new Chess();
 
     function stepForward() {
       if (moveIndex >= moves.length) return;
@@ -51,11 +56,12 @@ async function fetchGame() {
       console.log(playboard.ascii());
     }
 
-    console.log(chess.getHeaders());
+    // console.log(chess.getHeaders());
 
     for (let i = 0; i < 10; ++i) {
       // stepForward();
     }
+
 
   } catch (error) {
     console.error("Error fetching API:", error);
