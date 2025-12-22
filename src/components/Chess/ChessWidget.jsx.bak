@@ -110,17 +110,17 @@ const AsciiChessBoard = () => {
     }, []);
 
     // Animation logic
-    // useEffect(() => {
-    //     if (!isPlaying || currentMove >= moves.length) return;
-    //
-    //     const now = performance.now();
-    //     if (now - lastMoveTimeRef.current < interval) {
-    //         return;
-    //     }
-    //
-    //     lastMoveTimeRef.current = now;
-    //     makeMove(currentMove);
-    // }, [tick, isPlaying, currentMove, moves.length, interval, makeMove]);
+    useEffect(() => {
+        if (!isPlaying || currentMove >= moves.length) return;
+
+        const now = performance.now();
+        if (now - lastMoveTimeRef.current < interval) {
+            return;
+        }
+
+        lastMoveTimeRef.current = now;
+        makeMove(currentMove);
+    }, [tick, isPlaying, currentMove, moves.length, interval, makeMove]);
 
     const togglePlayPause = useCallback(() => {
         setIsPlaying(prev => !prev);

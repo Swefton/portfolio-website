@@ -49,8 +49,50 @@ const AsciiChessBoard = () => {
                 setGameHistory(playBoard.current.history());
             })
     }, []);
+    
+    // Set if board is currently animating the game or not
+    const togglePlayPause = useCallback(() => {
+        setIsPlaying(prev => !prev);
+    }, []);
 
+    function makeMove() {
+        if (currentMove >= gameHistory.length) return;
 
+        viewBoard.current.move(gameHistory[currentMove]);
+        setCurrentMove(prev => prev + 1);
+        setBoardGrid(generateBoardGrid(viewBoard.current.board()));
+    }
+
+    const resetGame = useCallback(() => {
+        setCurrentMove(0);
+        setIsPlaying(true);
+    }, []);
+
+    return (
+        <div ref={containerRef} style={{ color: "white" }}>
+
+            <div>
+                <strong>Current move index:</strong> {currentMove}
+            </div>
+
+            <div>
+                <strong>Total moves:</strong> {gameHistory.length}
+            </div>
+
+            <div>
+                <strong>Is playing:</strong> {String(isPlaying)}
+            </div>
+
+            <button onClick={makeMove}>
+                Make move
+            </button>
+
+            <pre>
+                {viewBoard.current.ascii()}
+            </pre>
+
+        </div>
+    );
 };
 
 export default AsciiChessBoard;
