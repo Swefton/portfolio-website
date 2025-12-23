@@ -24,18 +24,16 @@ const generateBoardGrid = (board) => {
     return grid;
 };
 
-const AsciiChessBoard = () => {
+const AsciiChessBoard = ({ moves, interval = 1000 }) => {
     const containerRef = useRef();
     const [sizeMode, setSizeMode] = useState('full');
     const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
-    const [boardGrid, setBoardGrid] = useState();
-    const lastMoveTimeRef = useRef(0);
-
-    const playBoard = useRef(new Chess());
-    const viewBoard = useRef(new Chess());
+    const [chess] = useState(new Chess());
+    const [boardGrid, setBoardGrid] = useState(() => generateBoardGrid(chess.board()));
     const [currentMove, setCurrentMove] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [gameHistory, setGameHistory] = useState([]);
+    const lastMoveTimeRef = useRef(0);
     
     const { tick } = useAnimationTick();
 
@@ -96,28 +94,51 @@ const AsciiChessBoard = () => {
         return () => resizeObserver.disconnect();
     }, []);
 
-    // Initialize boards with API call
+    // Initialize game history
     useEffect(() => {
-        fetch("https://api.chess.com/pub/player/sweftonxd/games/live/180/0")
-            .then(r => r.json())
-            .then(data => {
-                const pgn = data.games[data.games.length - 1].pgn;
-                playBoard.current.loadPgn(pgn);
-                console.log(playBoard.current.ascii());
-                setGameHistory(playBoard.current.history());
-                console.log(gameHistory);
-            })
+        const initialChess = new Chess();
+        setGameHistory([{ 
+            board: generateBoardGrid(initialChess.board()), 
+            fen: initialChess.fen(), 
+            move: null, 
+            moveNumber: 0 
+        }]);
     }, []);
+
+    const makeMove = useCallback((moveIndex) => {
+        if (moveIndex >= moves.length) return;
+
+        const newChess = new Chess();
+        for (let i = 0; i <= moveIndex; i++) {
+            newChess.move(moves[i]);
+        }
+
+        const newBoardState = {
+            board: generateBoardGrid(newChess.board()),
+            fen: newChess.fen(),
+            move: moves[moveIndex],
+            moveNumber: moveIndex + 1
+        };
+
+        setGameHistory(prev => {
+            const newHistory = [...prev];
+            newHistory[moveIndex + 1] = newBoardState;
+            return newHistory;
+        });
+
+        setBoardGrid(newBoardState.board);
+        setCurrentMove(moveIndex + 1);
+    }, [moves]);
 
     // Animation logic
     useEffect(() => {
         if (!isPlaying || currentMove >= moves.length) return;
-
+        
         const now = performance.now();
         if (now - lastMoveTimeRef.current < interval) {
             return;
         }
-
+        
         lastMoveTimeRef.current = now;
         makeMove(currentMove);
     }, [tick, isPlaying, currentMove, moves.length, interval, makeMove]);
@@ -221,7 +242,7 @@ const AsciiChessBoard = () => {
                     {/* Carousel text - hidden for minimal mode */}
                     {sizeMode !== 'minimal' && (
                         <div className={styles.carousel}>
-                            {/* https://github.com/joshwalters/open-chess-font */}
+                            <p>In my free time I like playing Chess. This was the best game I've played.</p>
                         </div>
                     )}
                     

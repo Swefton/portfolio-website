@@ -15,12 +15,12 @@ const generateBoardGrid = (board, whiteView = true) => {
   const grid = [];
 
   const rankRange = whiteView
-    ? [...Array(8).keys()].reverse()   // 7 → 0
-    : [...Array(8).keys()];            // 0 → 7
+    ? [...Array(8).keys()].reverse()
+    : [...Array(8).keys()];
 
   const fileRange = whiteView
-    ? [...Array(8).keys()]              // 0 → 7
-    : [...Array(8).keys()].reverse();   // 7 → 0
+    ? [...Array(8).keys()]
+    : [...Array(8).keys()].reverse();
 
   for (const i of rankRange) {
     const row = [];
@@ -70,9 +70,70 @@ const AsciiChessBoard = () => {
             });
     }, []);
 
+    useEffect(() => {
+        const updateSizeMode = () => {
+            if (!containerRef.current) return;
+            
+            const { width, height } = containerRef.current.getBoundingClientRect();
+            
+            // Account for container padding and borders
+            const containerPadding = 16; // 0.5rem * 2 sides
+            const boardPadding = 16; // Board wrapper padding
+            const availableWidth = width - containerPadding - boardPadding;
+            const availableHeight = height - containerPadding;
+            
+            const controlsHeight = 40;
+            const textHeight = 50;
+            const movesHeight = 120;
+            
+            if (width < 140 || height < 140) {
+                setSizeMode('hidden');
+                setBoardSize({ squareSize: 16, showLabels: false });
+            } else if (availableWidth < 160 || availableHeight < 160) {
+                setSizeMode('minimal');
+                // Calculate square size that fits in available space
+                const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
+                setBoardSize({ 
+                    squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
+                    showLabels: false 
+                });
+            } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight) {
+                setSizeMode('compact');
+                // Calculate optimal size for compact mode
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10); // 8 squares + 2 for labels
+                setBoardSize({ 
+                    squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
+                    showLabels: true 
+                });
+            } else {
+                setSizeMode('full');
+                // Calculate size leaving room for moves list
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
+                setBoardSize({ 
+                    squareSize: Math.max(24, Math.min(36, maxSquareSize)), 
+                    showLabels: true 
+                });
+            }
+        };
+
+        updateSizeMode();
+        
+        const resizeObserver = new ResizeObserver(updateSizeMode);
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
+        }
+        
+        return () => resizeObserver.disconnect();
+    }, []);
+
     // Set if board is currently animating the game or not
     const togglePlayPause = useCallback(() => {
         setIsPlaying(prev => !prev);
+    }, []);
+
+    const resetGame = useCallback(() => {
+        setCurrentMove(0);
+        setIsPlaying(true);
     }, []);
 
     function makeMove() {
@@ -82,11 +143,6 @@ const AsciiChessBoard = () => {
         setCurrentMove(prev => prev + 1);
         setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
     }
-
-    const resetGame = useCallback(() => {
-        setCurrentMove(0);
-        setIsPlaying(true);
-    }, []);
 
     // TODO : adapt render board code
     const renderedBoard = useMemo(() => {
@@ -174,10 +230,17 @@ const AsciiChessBoard = () => {
             </button>
 
             <pre>
-                {Object.entries(playBoard.current.getHeaders()).map(([key, value]) => (
-                    <div key={key}>{key}: {value}</div>
-                ))}
+                <p>{playBoard.current.getHeaders()['White']}</p>
+                <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
+                <p>{playBoard.current.getHeaders()['Black']}</p>
+                <p>{playBoard.current.getHeaders()['BlackElo']}</p>
             </pre>
+
+            {/* <pre> */}
+            {/*     {Object.entries(playBoard.current.getHeaders()).map(([key, value]) => ( */}
+            {/*         <div key={key}>{key}: {value}</div> */}
+            {/*     ))} */}
+            {/* </pre> */}
 
             {renderedBoard}
         </div>
