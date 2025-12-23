@@ -11,14 +11,25 @@ const pieceUnicode = {
   '.' : '·'
 };
 
-const generateBoardGrid = (board) => {
+const generateBoardGrid = (board, whiteView = true) => {
   const grid = [];
-  for (let i = 7; i >= 0; i--) {
+
+  const rankRange = whiteView
+    ? [...Array(8).keys()].reverse()   // 7 → 0
+    : [...Array(8).keys()];            // 0 → 7
+
+  const fileRange = whiteView
+    ? [...Array(8).keys()]              // 0 → 7
+    : [...Array(8).keys()].reverse();   // 7 → 0
+
+  for (const i of rankRange) {
     const row = [];
-    for (let j = 0; j < 8; j++) {
+    for (const j of fileRange) {
       const square = board[i][j];
       if (square) {
-        const key = square.color === 'w' ? square.type.toUpperCase() : square.type.toLowerCase();
+        const key = square.color === 'w'
+          ? square.type.toUpperCase()
+          : square.type.toLowerCase();
         row.push(pieceUnicode[key]);
       } else {
         row.push(pieceUnicode['.']);
@@ -38,6 +49,7 @@ const AsciiChessBoard = () => {
 
     const playBoard = useRef(new Chess());
     const viewBoard = useRef(new Chess());
+    const [isWhiteView, setIsWhiteView] = useState(true);
     const [currentMove, setCurrentMove] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [gameHistory, setGameHistory] = useState([]);
@@ -51,11 +63,13 @@ const AsciiChessBoard = () => {
             .then(data => {
                 const pgn = data.games[data.games.length - 1].pgn;
                 playBoard.current.loadPgn(pgn);
+                const headers = playBoard.current.getHeaders();
+                setIsWhiteView(headers.White?.toLowerCase() === 'sweftonxd');
                 setGameHistory(playBoard.current.history());
-                setBoardGrid(generateBoardGrid(viewBoard.current.board()));
-            })
+                setBoardGrid(generateBoardGrid(viewBoard.current.board(), headers.White?.toLowerCase() === 'sweftonxd'));
+            });
     }, []);
-    
+
     // Set if board is currently animating the game or not
     const togglePlayPause = useCallback(() => {
         setIsPlaying(prev => !prev);
@@ -66,7 +80,7 @@ const AsciiChessBoard = () => {
 
         viewBoard.current.move(gameHistory[currentMove]);
         setCurrentMove(prev => prev + 1);
-        setBoardGrid(generateBoardGrid(viewBoard.current.board()));
+        setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
     }
 
     const resetGame = useCallback(() => {
@@ -78,6 +92,7 @@ const AsciiChessBoard = () => {
     const renderedBoard = useMemo(() => {
         const { squareSize, showLabels } = boardSize;
         const labelSize = showLabels ? 20 : 0;
+        const files = isWhiteView ? 'abcdefgh' : 'hgfedcba';
         
         return (
             <div 
@@ -90,7 +105,7 @@ const AsciiChessBoard = () => {
                 {showLabels && (
                     <div className={styles.columnHeaders}>
                         <div style={{ width: `${labelSize}px` }}></div>
-                        {'abcdefgh'.split('').map(file => (
+                        {files.split('').map(file => (
                             <div 
                                 key={file} 
                                 className={styles.fileHeader}
@@ -140,7 +155,7 @@ const AsciiChessBoard = () => {
     }, [boardGrid, sizeMode, boardSize]);
 
     return (
-        <div ref={containerRef} style={{ color: "white" }}>
+        <div ref={containerRef} style={{ color: "white", width: "100%", height: "100%" }}>
 
             <div>
                 <strong>Current move index:</strong> {currentMove}
