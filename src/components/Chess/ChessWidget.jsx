@@ -229,20 +229,38 @@ const AsciiChessBoard = () => {
                 Make move
             </button>
 
-            <pre>
-                <p>{playBoard.current.getHeaders()['White']}</p>
-                <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
-                <p>{playBoard.current.getHeaders()['Black']}</p>
-                <p>{playBoard.current.getHeaders()['BlackElo']}</p>
-            </pre>
-
-            {/* <pre> */}
-            {/*     {Object.entries(playBoard.current.getHeaders()).map(([key, value]) => ( */}
-            {/*         <div key={key}>{key}: {value}</div> */}
-            {/*     ))} */}
-            {/* </pre> */}
+            {
+                !isWhiteView ? (
+                    <>
+                        <p>{playBoard.current.getHeaders()['White']}</p>
+                        <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
+                    </>
+                ) :
+                    (
+                        <>
+                            <p>{playBoard.current.getHeaders()['Black']}</p>
+                            <p>{playBoard.current.getHeaders()['BlackElo']}</p>
+                        </>
+                    )
+            }
 
             {renderedBoard}
+            
+            {
+                isWhiteView ? (
+                    <>
+                        <p>{playBoard.current.getHeaders()['White']}</p>
+                        <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
+                    </>
+                ) :
+                    (
+                        <>
+                            <p>{playBoard.current.getHeaders()['Black']}</p>
+                            <p>{playBoard.current.getHeaders()['BlackElo']}</p>
+                        </>
+                    )
+            }
+
         </div>
     );
 };
