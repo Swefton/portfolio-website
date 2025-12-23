@@ -35,11 +35,32 @@ async function fetchGame() {
     }
 
     const data = await response.json();
+    const myUsername = "sweftonxd"
+    const myLast15 = data.games
+    .filter(game => game.rated === true)
+    .slice(-15)
+    .map(game => {
+      if (game.white.username.toLowerCase() === myUsername) {
+        return {
+          rating: game.white.rating,
+          end_time: game.end_time
+        };
+      }
+      if (game.black.username.toLowerCase() === myUsername) {
+        return {
+          rating: game.black.rating,
+          end_time: game.end_time
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+  
+    console.log(myLast15);
+
     const pgn = data.games[data.games.length - 1].pgn;
 
     const chess = new Chess();
-    // console.log(chess.board());
-    console.log(generateBoardGrid(chess.board()));
     chess.loadPgn(pgn);
 
     const moves = chess.history();
