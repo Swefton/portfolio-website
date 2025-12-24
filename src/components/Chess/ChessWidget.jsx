@@ -11,12 +11,10 @@ const pieceUnicode = {
   '.' : '·'
 };
 
-const LineGraph = ({ data, width = 400, height = 200, padding = 20 }) => {
-    if (!data.length) return null;
-
+const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
     const points = data
         .map(d => ({
-            x: d.end_time * 1000,
+            x: d.end_time,
             y: d.rating
         }));
 
@@ -26,13 +24,24 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 20 }) => {
     const maxY = Math.max(...points.map(p => p.y));
 
     const scaleX = x =>
-        padding +
-        ((x - minX) / (maxX - minX || 1)) * (width - padding * 2);
+        padding + ((x - minX) / (maxX - minX || 1)) * (width - padding * 2);
 
     const scaleY = y =>
-        height -
-        padding -
-        ((y - minY) / (maxY - minY || 1)) * (height - padding * 2);
+        height - padding - (0.1 + ((y - minY) * 0.8) / (maxY - minY || 1)) * (height - padding * 2);
+
+    // Generate X-axis ticks (months)
+    const xTicks = [];
+    const startDate = new Date(minX*1000);
+    const endDate = new Date(maxX*1000);
+
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+        xTicks.push({
+            timestamp: scaleX(currentDate/1000),
+            label: currentDate.toLocaleString('default', { month: 'short' })
+        });
+        currentDate.setMonth(currentDate.getMonth() + 2);
+    }
 
     const polylinePoints = points
         .map(p => `${scaleX(p.x)},${scaleY(p.y)}`)
@@ -40,12 +49,37 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 20 }) => {
 
     return (
         <svg width={width} height={height}>
+            <line x1={0+padding} y1={height-padding} x2={width} y2={height-padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
+            <line x1={0+padding} y1={height-padding} x2={0+padding} y2={0+padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
+
             <polyline
                 points={polylinePoints}
                 fill="none"
                 stroke="white"
                 strokeWidth="2"
             />
+
+            {xTicks.map(tick => (
+                <g key={tick.timestamp}>
+                    <line
+                        x1={tick.timestamp}
+                        y1={height-padding}
+                        x2={tick.timestamp}
+                        y2={height-padding + 8}
+                        stroke="white"
+                        strokeWidth="2"
+                    />
+                    <text
+                        x={tick.timestamp}
+                        y={height-padding + 18}
+                        fill="white"
+                        fontSize="12"
+                        textAnchor="middle"
+                    >
+                        {tick.label}
+                    </text>
+                </g>
+            ))}
         </svg>
     );
 };
@@ -331,7 +365,9 @@ const AsciiChessBoard = () => {
                     )
             }
 
-            <LineGraph data={accountHistory} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <LineGraph data={accountHistory} />
+            </div>
         </div>
     );
 };
