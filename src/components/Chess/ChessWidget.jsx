@@ -6,17 +6,17 @@ import { useAnimationTick } from '../../app/page';
 import styles from './ChessWidget.module.css';
 
 const pieceUnicode = {
-  P: 'P', R: 'R', N: 'N', B: 'B', Q: 'Q', K: 'K',
-  p: 'O', r: 'T', n: 'M', b: 'V', q: 'W', k: 'L',
-  '.' : '·'
+    P: 'P', R: 'R', N: 'N', B: 'B', Q: 'Q', K: 'K',
+    p: 'O', r: 'T', n: 'M', b: 'V', q: 'W', k: 'L',
+    '.' : '·'
 };
 
 const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
     const points = data
-        .map(d => ({
-            x: d.end_time,
-            y: d.rating
-        }));
+    .map(d => ({
+        x: d.end_time,
+        y: d.rating
+    }));
 
     const minX = Math.min(...points.map(p => p.x));
     const maxX = Math.max(...points.map(p => p.x));
@@ -29,19 +29,46 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
     const scaleY = y =>
         height - padding - (0.1 + ((y - minY) * 0.8) / (maxY - minY || 1)) * (height - padding * 2);
 
-    // Generate X-axis ticks (months)
+    // Generate X-axis ticks
     const xTicks = [];
-    const startDate = new Date(minX*1000);
-    const endDate = new Date(maxX*1000);
+    let current = new Date(minX * 1000);
+    let end = new Date(maxX * 1000);
+    const last = new Date(end.setMonth(end.getMonth()+1));
 
-    let currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
+    while (current <= last) {
         xTicks.push({
-            timestamp: scaleX(currentDate/1000),
-            label: currentDate.toLocaleString('default', { month: 'short' })
+            timestamp: scaleX(current.getTime() / 1000),
+            label: current.toLocaleString('default', { month: 'short' })
         });
-        currentDate.setMonth(currentDate.getMonth() + 2);
+
+        current.setMonth(current.getMonth() + 2);
     }
+
+    // Generate Y-axis ticks
+    const yTicks = [];
+
+    const startY = minY; // your data min
+    const endY = maxY;   // your data max
+    const step = (endY - startY) / 5; // or any interval you want
+
+    let currentY = startY;
+
+    while (currentY < endY) {
+        yTicks.push({
+            value: scaleY(currentY),
+            label: currentY.toFixed(0) // or format as needed
+        });
+        currentY += step;
+    }
+
+    // ensure last tick
+    if (yTicks[yTicks.length - 1].value < endY) {
+        yTicks.push({
+            value: scaleY(endY),
+            label: endY.toFixed(0)
+        });
+    }
+    console.log(yTicks);
 
     const polylinePoints = points
         .map(p => `${scaleX(p.x)},${scaleY(p.y)}`)
@@ -49,14 +76,14 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
 
     return (
         <svg width={width} height={height}>
-            <line x1={0+padding} y1={height-padding} x2={width} y2={height-padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
+            <line x1={0+padding} y1={height-padding} x2={scaleX(last/1000)} y2={height-padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
             <line x1={0+padding} y1={height-padding} x2={0+padding} y2={0+padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
 
             <polyline
                 points={polylinePoints}
                 fill="none"
                 stroke="white"
-                strokeWidth="2"
+                strokeWidth="1"
             />
 
             {xTicks.map(tick => (
@@ -80,37 +107,62 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
                     </text>
                 </g>
             ))}
+
+
+            {
+                yTicks.map(tick => (
+                    <g key={tick.value}>
+                        <line
+                            x1={padding*3.5/4}
+                            y1={tick.value*.95}
+                            x2={padding}
+                            y2={tick.value*.95}
+                            stroke="white"
+                            strokeWidth="2"
+                        />
+                        <text
+                            x={padding/2}
+                            y={tick.value}
+                            fill="white"
+                            fontSize="12"
+                            textAnchor="middle"
+                        >
+                            {tick.label}
+                        </text>
+                    </g>
+                ))
+            }
         </svg>
     );
 };
 
 const generateBoardGrid = (board, whiteView = true) => {
-  const grid = [];
+    const grid = [];
 
-  const rankRange = whiteView
-    ? [...Array(8).keys()].reverse()
-    : [...Array(8).keys()];
+    const rankRange = whiteView
+        ? [...Array(8).keys()].reverse()
+        : [...Array(8).keys()];
 
-  const fileRange = whiteView
-    ? [...Array(8).keys()]
-    : [...Array(8).keys()].reverse();
+    const fileRange = whiteView
+        ? [...Array(8).keys()]
+        : [...Array(8).keys()].reverse();
 
-  for (const i of rankRange) {
-    const row = [];
-    for (const j of fileRange) {
-      const square = board[i][j];
-      if (square) {
-        const key = square.color === 'w'
-          ? square.type.toUpperCase()
-          : square.type.toLowerCase();
-        row.push(pieceUnicode[key]);
-      } else {
-        row.push(pieceUnicode['.']);
-      }
+    for (const i of rankRange) {
+        const row = [];
+        for (const j of fileRange) {
+            const square = board[i][j];
+            if (square) {
+                const key = square.color === 'w'
+                    ? square.type.toUpperCase()
+                    : square.type.toLowerCase();
+                row.push(pieceUnicode[key]);
+            } else {
+                row.push(pieceUnicode['.']);
+            }
+        }
+        grid.push({ rank: i + 1, squares: row });
     }
-    grid.push({ rank: i + 1, squares: row });
-  }
-  return grid;
+    return grid;
 };
 
 const AsciiChessBoard = () => {
@@ -126,7 +178,15 @@ const AsciiChessBoard = () => {
     const [currentMove, setCurrentMove] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [moveList, setMoveList] = useState([]);
-    const [accountHistory, setAccountHistory] = useState([]);
+    const [accountHistory, setAccountHistory] = useState([
+        { rating: 980, end_time: 1 },
+        { rating: 990, end_time: 2 },
+        { rating: 1002, end_time: 3 },
+        { rating: 994, end_time: 4 },
+        { rating: 1004, end_time: 5 },
+        { rating: 1010, end_time: 6 }
+    ]);
+
 
     const { tick } = useAnimationTick();
 
@@ -177,19 +237,19 @@ const AsciiChessBoard = () => {
     useEffect(() => {
         const updateSizeMode = () => {
             if (!containerRef.current) return;
-            
+
             const { width, height } = containerRef.current.getBoundingClientRect();
-            
+
             // Account for container padding and borders
             const containerPadding = 16; // 0.5rem * 2 sides
             const boardPadding = 16; // Board wrapper padding
             const availableWidth = width - containerPadding - boardPadding;
             const availableHeight = height - containerPadding;
-            
+
             const controlsHeight = 40;
             const textHeight = 50;
             const movesHeight = 120;
-            
+
             if (width < 140 || height < 140) {
                 setSizeMode('hidden');
                 setBoardSize({ squareSize: 16, showLabels: false });
@@ -221,12 +281,12 @@ const AsciiChessBoard = () => {
         };
 
         updateSizeMode();
-        
+
         const resizeObserver = new ResizeObserver(updateSizeMode);
         if (containerRef.current) {
             resizeObserver.observe(containerRef.current);
         }
-        
+
         return () => resizeObserver.disconnect();
     }, []);
 
@@ -253,7 +313,7 @@ const AsciiChessBoard = () => {
         const { squareSize, showLabels } = boardSize;
         const labelSize = showLabels ? 20 : 0;
         const files = isWhiteView ? 'abcdefgh' : 'hgfedcba';
-        
+
         return (
             <div 
                 className={styles.boardWrapper}
@@ -276,7 +336,7 @@ const AsciiChessBoard = () => {
                         ))}
                     </div>
                 )}
-                
+
                 {boardGrid.map((row, rowIndex) => (
                     <div key={rowIndex} className={styles.row}>
                         {/* Rank numbers */}
@@ -291,7 +351,7 @@ const AsciiChessBoard = () => {
                                 {row.rank}
                             </div>
                         )}
-                        
+
                         {row.squares.map((piece, colIndex) => {
                             const isLight = (rowIndex + colIndex) % 2 === 0;
                             return (
@@ -349,7 +409,7 @@ const AsciiChessBoard = () => {
             }
 
             {renderedBoard}
-            
+
             {
                 isWhiteView ? (
                     <>
@@ -365,8 +425,11 @@ const AsciiChessBoard = () => {
                     )
             }
 
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <LineGraph data={accountHistory} />
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                <div style={{ textAlign: "center" }}>
+                    <p>Elo over last year of play</p>
+                    <LineGraph data={accountHistory} />
+                </div>
             </div>
         </div>
     );
