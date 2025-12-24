@@ -1,5 +1,6 @@
 // testApi.js
 import { Chess } from 'chess.js';
+import fs from "fs";
 
 const url = "https://api.chess.com/pub/player/sweftonxd/games/live/180/0";
 
@@ -36,27 +37,29 @@ async function fetchGame() {
 
     const data = await response.json();
     const myUsername = "sweftonxd"
+    const currentDate = (Date.now() / 1000) - (365 * 24 * 60 * 60);
+    // console.log(currentDate);
     const myLast15 = data.games
     .filter(game => game.rated === true)
-    .slice(-15)
+    .filter(game => game.end_time >= currentDate)
     .map(game => {
-      if (game.white.username.toLowerCase() === myUsername) {
-        return {
-          rating: game.white.rating,
-          end_time: game.end_time
-        };
-      }
-      if (game.black.username.toLowerCase() === myUsername) {
-        return {
-          rating: game.black.rating,
-          end_time: game.end_time
-        };
-      }
-      return null;
-    })
+        if (game.white.username.toLowerCase() === myUsername) {
+          return {
+            rating: game.white.rating,
+            end_time: game.end_time
+          };
+        }
+        if (game.black.username.toLowerCase() === myUsername) {
+          return {
+            rating: game.black.rating,
+            end_time: game.end_time
+          };
+        }
+        return null;
+      })
     .filter(Boolean);
   
-    console.log(myLast15);
+    fs.writeFileSync("temp.json", JSON.stringify(myLast15, null, 2));
 
     const pgn = data.games[data.games.length - 1].pgn;
 

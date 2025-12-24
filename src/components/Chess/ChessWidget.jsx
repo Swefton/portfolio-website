@@ -102,10 +102,10 @@ const AsciiChessBoard = () => {
             .then(r => r.json())
             .then(data => {
                 const myUsername = "sweftonxd";
-
+                const currentDate = (Date.now() / 1000) - (365 * 24 * 60 * 60);
                 const previousGames = data.games
                 .filter(game => game.rated === true)
-                .slice(-10)
+                .filter(game => game.end_time >= currentDate)
                 .map(game => {
                     if (game.white.username.toLowerCase() === myUsername) {
                         return {
