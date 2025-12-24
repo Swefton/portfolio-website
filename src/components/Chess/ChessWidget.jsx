@@ -11,6 +11,45 @@ const pieceUnicode = {
   '.' : '·'
 };
 
+const LineGraph = ({ data, width = 400, height = 200, padding = 20 }) => {
+    if (!data.length) return null;
+
+    const points = data
+        .map(d => ({
+            x: d.end_time * 1000,
+            y: d.rating
+        }));
+
+    const minX = Math.min(...points.map(p => p.x));
+    const maxX = Math.max(...points.map(p => p.x));
+    const minY = Math.min(...points.map(p => p.y));
+    const maxY = Math.max(...points.map(p => p.y));
+
+    const scaleX = x =>
+        padding +
+        ((x - minX) / (maxX - minX || 1)) * (width - padding * 2);
+
+    const scaleY = y =>
+        height -
+        padding -
+        ((y - minY) / (maxY - minY || 1)) * (height - padding * 2);
+
+    const polylinePoints = points
+        .map(p => `${scaleX(p.x)},${scaleY(p.y)}`)
+        .join(" ");
+
+    return (
+        <svg width={width} height={height}>
+            <polyline
+                points={polylinePoints}
+                fill="none"
+                stroke="white"
+                strokeWidth="2"
+            />
+        </svg>
+    );
+};
+
 const generateBoardGrid = (board, whiteView = true) => {
   const grid = [];
 
@@ -52,8 +91,9 @@ const AsciiChessBoard = () => {
     const [isWhiteView, setIsWhiteView] = useState(true);
     const [currentMove, setCurrentMove] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
-    const [gameHistory, setGameHistory] = useState([]);
-    
+    const [moveList, setMoveList] = useState([]);
+    const [accountHistory, setAccountHistory] = useState([]);
+
     const { tick } = useAnimationTick();
 
     // Initialize the chess boards with API call
@@ -61,12 +101,42 @@ const AsciiChessBoard = () => {
         fetch("https://api.chess.com/pub/player/sweftonxd/games/live/180/0")
             .then(r => r.json())
             .then(data => {
+                const myUsername = "sweftonxd";
+
+                const previousGames = data.games
+                .filter(game => game.rated === true)
+                .slice(-10)
+                .map(game => {
+                    if (game.white.username.toLowerCase() === myUsername) {
+                        return {
+                            rating: game.white.rating,
+                            end_time: game.end_time
+                        };
+                    }
+                    if (game.black.username.toLowerCase() === myUsername) {
+                        return {
+                            rating: game.black.rating,
+                            end_time: game.end_time
+                        };
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+
+                setAccountHistory(previousGames);
+
                 const pgn = data.games[data.games.length - 1].pgn;
                 playBoard.current.loadPgn(pgn);
                 const headers = playBoard.current.getHeaders();
-                setIsWhiteView(headers.White?.toLowerCase() === 'sweftonxd');
-                setGameHistory(playBoard.current.history());
-                setBoardGrid(generateBoardGrid(viewBoard.current.board(), headers.White?.toLowerCase() === 'sweftonxd'));
+                const isWhite = headers.White?.toLowerCase() === myUsername;
+                setIsWhiteView(isWhite);
+                setMoveList(playBoard.current.history());
+                setBoardGrid(
+                    generateBoardGrid(
+                        viewBoard.current.board(),
+                        isWhite
+                    )
+                );
             });
     }, []);
 
@@ -137,9 +207,9 @@ const AsciiChessBoard = () => {
     }, []);
 
     function makeMove() {
-        if (currentMove >= gameHistory.length) return;
+        if (currentMove >= moveList.length) return;
 
-        viewBoard.current.move(gameHistory[currentMove]);
+        viewBoard.current.move(moveList[currentMove]);
         setCurrentMove(prev => prev + 1);
         setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
     }
@@ -218,7 +288,7 @@ const AsciiChessBoard = () => {
             </div>
 
             <div>
-                <strong>Total moves:</strong> {gameHistory.length}
+                <strong>Total moves:</strong> {moveList.length}
             </div>
 
             <div>
@@ -261,6 +331,7 @@ const AsciiChessBoard = () => {
                     )
             }
 
+            <LineGraph data={accountHistory} />
         </div>
     );
 };
