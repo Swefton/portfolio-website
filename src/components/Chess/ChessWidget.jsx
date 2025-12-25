@@ -392,7 +392,6 @@ const updateSizeMode = () => {
 
     return (
         <div ref={containerRef} style={{ color: "white", width: "100%", height: "100%" }}>
-
             <div>
                 <strong>Current move index:</strong> {currentMove}
             </div>
@@ -409,12 +408,14 @@ const updateSizeMode = () => {
                 <strong>Widget Size</strong>  {sizeMode}
             </div>
 
-            <button onClick={makeMove}>
-                Make move
-            </button>
-            <button onClick={resetGame}>
-                Reset
-            </button>
+            <div className={styles.controls}>
+                <button onClick={makeMove} className={styles.button}>
+                    Make move
+                </button>
+                <button onClick={resetGame} className={styles.button}>
+                    Reset
+                </button>
+            </div>
             {
                 !isWhiteView ? (
                     <>
