@@ -241,59 +241,57 @@ const AsciiChessBoard = () => {
     }, []);
 
     useEffect(() => {
-        const updateSizeMode = () => {
-            if (!containerRef.current) return;
+const updateSizeMode = () => {
+    if (!containerRef.current) return;
 
-            const { width, height } = containerRef.current.getBoundingClientRect();
+    const { width, height } = containerRef.current.getBoundingClientRect();
 
-            // Account for container padding and borders
-            const containerPadding = 16; // 0.5rem * 2 sides
-            const boardPadding = 16; // Board wrapper padding
-            const availableWidth = width - containerPadding - boardPadding;
-            const availableHeight = height - containerPadding;
+    // Account for container padding and borders
+    const containerPadding = 16; // 0.5rem * 2 sides
+    const boardPadding = 16; // Board wrapper padding
+    const availableWidth = width - containerPadding - boardPadding;
+    const availableHeight = height - containerPadding;
 
-            const controlsHeight = 40;
-            const textHeight = 50;
-            const movesHeight = 120;
+    const controlsHeight = 40;
+    const textHeight = 50;
+    const movesHeight = 40;
+    const graphHeight = 200;
+    const playerInfoHeight = 80;
 
-            if (width < 140 || height < 140) {
-                setSizeMode('hidden');
-                setBoardSize({ squareSize: 16, showLabels: false });
-            } else if (availableWidth < 160 || availableHeight < 160) {
-                setSizeMode('minimal');
-                // Calculate square size that fits in available space
-                const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
-                setBoardSize({ 
-                    squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
-                    showLabels: false 
-                });
-            } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight) {
-                setSizeMode('compact');
-                // Calculate optimal size for compact mode
-                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10); // 8 squares + 2 for labels
-                setBoardSize({ 
-                    squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
-                    showLabels: true 
-                });
-            } else {
-                setSizeMode('full');
-                // Calculate size leaving room for moves list
-                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
-                setBoardSize({ 
-                    squareSize: Math.max(24, Math.min(36, maxSquareSize)), 
-                    showLabels: true 
-                });
-            }
+    if (width < 140 || height < 140) {
+        setSizeMode('hidden');
+        setBoardSize({ squareSize: 16, showLabels: false });
+    } else if (availableWidth < 160 || availableHeight < 160) {
+        setSizeMode('minimal');
+        const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
+        setBoardSize({ 
+            squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
+            showLabels: false 
+        });
+    } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight + graphHeight + playerInfoHeight) {
+        setSizeMode('compact');
+        // Keep the original calculation - don't subtract graph/player heights
+        const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10);
+        setBoardSize({ 
+            squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
+            showLabels: true 
+        });
+    } else {
+        setSizeMode('full');
+        // Keep the original calculation - don't subtract graph/player heights
+        const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
+        setBoardSize({ 
+            squareSize: Math.max(24, Math.min(36, maxSquareSize)), 
+            showLabels: true 
+        });
+    }
 
-            const graphWidth = Math.floor(width * 0.9);
-            const graphHeight = 200;
-
-            setGraphSize({
-                width: graphWidth,
-                height: graphHeight
-            });
-    };
-
+    const graphWidth = Math.floor(width * 0.9);
+    setGraphSize({
+        width: graphWidth,
+        height: graphHeight
+    });
+};
         updateSizeMode();
 
         const resizeObserver = new ResizeObserver(updateSizeMode);
@@ -324,7 +322,6 @@ const AsciiChessBoard = () => {
         setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
     }
 
-    // TODO : adapt render board code
     const renderedBoard = useMemo(() => {
         const { squareSize, showLabels } = boardSize;
         const labelSize = showLabels ? 20 : 0;
@@ -403,6 +400,10 @@ const AsciiChessBoard = () => {
 
             <div>
                 <strong>Is playing:</strong> {String(isPlaying)}
+            </div>
+
+            <div>
+                <strong>Widget Size</strong>  {sizeMode}
             </div>
 
             <button onClick={makeMove}>
