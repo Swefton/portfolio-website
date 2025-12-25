@@ -38,11 +38,15 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
     while (current <= last) {
         xTicks.push({
             timestamp: scaleX(current.getTime() / 1000),
-            label: current.toLocaleString('default', { month: 'short' })
+            label: current.toLocaleString('default', { month: 'short' }) + " '" + current.toLocaleString('default', { year: '2-digit' })
         });
 
         current.setMonth(current.getMonth() + 2);
     }
+    const MIN_LABEL_PX = 30; // approx "Dec '25" width
+    const maxTicks = Math.floor((width - padding * 2) / MIN_LABEL_PX) || 1;
+    const skip = Math.ceil(xTicks.length / maxTicks);
+
 
     // Generate Y-axis ticks
     const yTicks = [];
@@ -68,7 +72,6 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
             label: endY.toFixed(0)
         });
     }
-    console.log(yTicks);
 
     const polylinePoints = points
         .map(p => `${scaleX(p.x)},${scaleY(p.y)}`)
@@ -86,7 +89,9 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
                 strokeWidth="1"
             />
 
-            {xTicks.map(tick => (
+            {xTicks.map((tick, i) => {
+                if (i % skip !== 0) return null;
+                return (
                 <g key={tick.timestamp}>
                     <line
                         x1={tick.timestamp}
@@ -106,8 +111,8 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
                         {tick.label}
                     </text>
                 </g>
-            ))}
-
+                );
+            })}
 
             {
                 yTicks.map(tick => (
@@ -171,6 +176,7 @@ const AsciiChessBoard = () => {
     const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
     const [boardGrid, setBoardGrid] = useState([]);
     const lastMoveTimeRef = useRef(0);
+    const [graphSize, setGraphSize] = useState({ width: 400, height: 200 });
 
     const playBoard = useRef(new Chess());
     const viewBoard = useRef(new Chess());
@@ -278,7 +284,15 @@ const AsciiChessBoard = () => {
                     showLabels: true 
                 });
             }
-        };
+
+            const graphWidth = Math.floor(width * 0.9);
+            const graphHeight = 200;
+
+            setGraphSize({
+                width: graphWidth,
+                height: graphHeight
+            });
+    };
 
         updateSizeMode();
 
@@ -295,10 +309,12 @@ const AsciiChessBoard = () => {
         setIsPlaying(prev => !prev);
     }, []);
 
-    const resetGame = useCallback(() => {
+    function resetGame() {
         setCurrentMove(0);
         setIsPlaying(true);
-    }, []);
+        viewBoard.current.reset();
+        setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
+    }
 
     function makeMove() {
         if (currentMove >= moveList.length) return;
@@ -392,7 +408,9 @@ const AsciiChessBoard = () => {
             <button onClick={makeMove}>
                 Make move
             </button>
-
+            <button onClick={resetGame}>
+                Reset
+            </button>
             {
                 !isWhiteView ? (
                     <>
@@ -428,7 +446,10 @@ const AsciiChessBoard = () => {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                 <div style={{ textAlign: "center" }}>
                     <p>Elo over last year of play</p>
-                    <LineGraph data={accountHistory} />
+                    <LineGraph data={accountHistory} 
+                        width={graphSize.width}
+                        height={graphSize.height}
+                    />
                 </div>
             </div>
         </div>
