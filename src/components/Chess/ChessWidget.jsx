@@ -171,13 +171,6 @@ const generateBoardGrid = (board, whiteView = true) => {
 };
 
 const AsciiChessBoard = () => {
-    const containerRef = useRef();
-    const [sizeMode, setSizeMode] = useState('full');
-    const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
-    const [boardGrid, setBoardGrid] = useState([]);
-    const lastMoveTimeRef = useRef(0);
-    const [graphSize, setGraphSize] = useState({ width: 400, height: 200 });
-
     const playBoard = useRef(new Chess());
     const viewBoard = useRef(new Chess());
     const [isWhiteView, setIsWhiteView] = useState(true);
@@ -192,6 +185,16 @@ const AsciiChessBoard = () => {
         { rating: 1004, end_time: 5 },
         { rating: 1010, end_time: 6 }
     ]);
+
+    const containerRef = useRef();
+    const [sizeMode, setSizeMode] = useState('full');
+    const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
+        const [boardGrid, setBoardGrid] = useState(() => 
+        generateBoardGrid(viewBoard.current.board(), true)
+    );
+    const lastMoveTimeRef = useRef(0);
+    const [graphSize, setGraphSize] = useState({ width: 400, height: 200 });
+
 
 
     const { tick } = useAnimationTick();

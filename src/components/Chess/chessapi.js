@@ -59,11 +59,12 @@ async function fetchGame() {
       })
     .filter(Boolean);
   
-    fs.writeFileSync("temp.json", JSON.stringify(myLast15, null, 2));
+    // fs.writeFileSync("temp.json", JSON.stringify(myLast15, null, 2));
 
     const pgn = data.games[data.games.length - 1].pgn;
 
     const chess = new Chess();
+    console.log(chess.ascii());
     chess.loadPgn(pgn);
 
     const moves = chess.history();
