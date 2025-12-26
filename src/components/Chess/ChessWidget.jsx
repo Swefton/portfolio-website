@@ -299,7 +299,7 @@ const updateSizeMode = () => {
         // Keep the original calculation - don't subtract graph/player heights
         const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
         setBoardSize({ 
-            squareSize: Math.max(24, Math.min(36, maxSquareSize)), 
+            squareSize: Math.max(24, Math.min(32, maxSquareSize)), 
             showLabels: true 
         });
     }
@@ -308,7 +308,7 @@ const updateSizeMode = () => {
 
     setGraphSize({
         width: graphWidth,
-        height: 0.3 * height
+        height: 0.25 * height
     });
 };
         updateSizeMode();
@@ -407,16 +407,19 @@ const updateSizeMode = () => {
     }, [boardGrid, sizeMode, boardSize]);
 
     return (
-        <div ref={containerRef} className={styles.container}>
-            <p>In my free time I like playing chess. This is the last game I played on {new Date(accountHistory[accountHistory.length - 1].end_time*1000).toLocaleDateString(
-                "en-US",
-                {
-                    year: "numeric",
-                    month: "short",
-                    day: "2-digit",
-                }
-            )}</p>
+        <div ref={containerRef} className={`${styles.container} ${styles[sizeMode]}`}>
+            <div className={styles.blurb}>
+                <p>In my free time I like playing chess. This is the last game I played on {new Date(accountHistory[accountHistory.length - 1].end_time*1000).toLocaleDateString(
+                    "en-US",
+                    {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                    }
+                )}</p>
+            </div>
             <div className={styles.boardcontainer}>
+                <div>
                 {
                     !isWhiteView ? (
                         <>
@@ -431,23 +434,26 @@ const updateSizeMode = () => {
                             </>
                         )
                 }
+                </div>
 
                 {renderedBoard}
 
+                <div>
                 {
                     isWhiteView ? (
                         <>
-                            <p>{playBoard.current.getHeaders()['White']}</p>
+                            <p>{playBoard.current.getHeaders()['White']} (me)</p>
                             <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
                         </>
                     ) :
                         (
                             <>
-                                <p>{playBoard.current.getHeaders()['Black']}</p>
+                                <p>{playBoard.current.getHeaders()['Black']} (me)</p>
                                 <p>{playBoard.current.getHeaders()['BlackElo']}</p>
                             </>
                         )
                 }
+                </div>
             </div>
 
             <div className={styles.controls}>
@@ -459,15 +465,18 @@ const updateSizeMode = () => {
                 </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-                <div style={{ textAlign: "center" }}>
-                    <p>Elo over last year of play</p>
-                    <LineGraph data={accountHistory} 
-                        width={graphSize.width}
-                        height={graphSize.height}
-                    />
+
+            { sizeMode == "full" &&
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                    <div style={{ textAlign: "center" }}>
+                        <p>Elo over last year of play</p>
+                        <LineGraph data={accountHistory} 
+                            width={graphSize.width}
+                            height={graphSize.height}
+                        />
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     );
 };
