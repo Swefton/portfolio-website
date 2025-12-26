@@ -341,6 +341,13 @@ const updateSizeMode = () => {
         setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
     }
 
+    function moveBack() {
+        if (currentMove <= 0) return;
+        viewBoard.current.undo();
+        setCurrentMove(prev => prev - 1);
+        setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
+    }
+
     const renderedBoard = useMemo(() => {
         const { squareSize, showLabels } = boardSize;
         const labelSize = showLabels ? 20 : 0;
@@ -457,8 +464,11 @@ const updateSizeMode = () => {
             </div>
 
             <div className={styles.controls}>
+                <button onClick={moveBack} className={styles.button}>
+                    Back
+                </button>
                 <button onClick={makeMove} className={styles.button}>
-                    Make move
+                    Forward
                 </button>
                 <button onClick={resetGame} className={styles.button}>
                     Reset
