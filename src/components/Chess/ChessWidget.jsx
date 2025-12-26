@@ -11,9 +11,13 @@ const pieceUnicode = {
     '.' : '·'
 };
 
-const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
-    const points = data
-    .map(d => ({
+const LineGraph = ({ data, width = 400, height = 200 }) => {
+    // Define margins for labels and axis
+    const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+
+    const points = data.map(d => ({
         x: d.end_time,
         y: d.rating
     }));
@@ -23,53 +27,42 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
     const minY = Math.min(...points.map(p => p.y));
     const maxY = Math.max(...points.map(p => p.y));
 
+    // Scale functions that map data to chart coordinates
     const scaleX = x =>
-        padding + ((x - minX) / (maxX - minX || 1)) * (width - padding * 2);
+        margin.left + ((x - minX) / (maxX - minX || 1)) * chartWidth;
 
     const scaleY = y =>
-        height - padding - (0.1 + ((y - minY) * 0.8) / (maxY - minY || 1)) * (height - padding * 2);
+        margin.top + chartHeight - ((y - minY) / (maxY - minY || 1)) * chartHeight;
 
     // Generate X-axis ticks
     const xTicks = [];
     let current = new Date(minX * 1000);
     let end = new Date(maxX * 1000);
-    const last = new Date(end.setMonth(end.getMonth()+1));
 
-    while (current <= last) {
+    while (current <= end) {
         xTicks.push({
             timestamp: scaleX(current.getTime() / 1000),
-            label: current.toLocaleString('default', { month: 'short' }) + " '" + current.toLocaleString('default', { year: '2-digit' })
+            label: current.toLocaleString('default', { month: 'short' }) + " '" + 
+                   current.toLocaleString('default', { year: '2-digit' })
         });
-
         current.setMonth(current.getMonth() + 2);
     }
-    const MIN_LABEL_PX = 30; // approx "Dec '25" width
-    const maxTicks = Math.floor((width - padding * 2) / MIN_LABEL_PX) || 1;
+
+    const MIN_LABEL_PX = 50;
+    const maxTicks = Math.floor(chartWidth / MIN_LABEL_PX) || 1;
     const skip = Math.ceil(xTicks.length / maxTicks);
 
-
-    // Generate Y-axis ticks
+    // Generate Y-axis ticks (5 ticks total)
     const yTicks = [];
+    const numYTicks = 5;
+    const yRange = maxY - minY;
+    const yStep = yRange / (numYTicks - 1);
 
-    const startY = minY; // your data min
-    const endY = maxY;   // your data max
-    const step = (endY - startY) / 5; // or any interval you want
-
-    let currentY = startY;
-
-    while (currentY < endY) {
+    for (let i = 0; i < numYTicks; i++) {
+        const value = minY + (yStep * i);
         yTicks.push({
-            value: scaleY(currentY),
-            label: currentY.toFixed(0) // or format as needed
-        });
-        currentY += step;
-    }
-
-    // ensure last tick
-    if (yTicks[yTicks.length - 1].value < endY) {
-        yTicks.push({
-            value: scaleY(endY),
-            label: endY.toFixed(0)
+            value: value,
+            label: value.toFixed(0)
         });
     }
 
@@ -79,55 +72,53 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
 
     return (
         <svg width={width} height={height}>
-            <line x1={0+padding} y1={height-padding} x2={scaleX(last/1000)} y2={height-padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
-            <line x1={0+padding} y1={height-padding} x2={0+padding} y2={0+padding} stroke="white" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
+            {/* X-axis */}
+            <line 
+                x1={margin.left} 
+                y1={height - margin.bottom} 
+                x2={width - margin.right} 
+                y2={height - margin.bottom} 
+                stroke="white" 
+                strokeWidth="2"
+            />
+            
+            {/* Y-axis */}
+            <line 
+                x1={margin.left} 
+                y1={margin.top} 
+                x2={margin.left} 
+                y2={height - margin.bottom} 
+                stroke="white" 
+                strokeWidth="2"
+            />
 
+            {/* Data line */}
             <polyline
                 points={polylinePoints}
                 fill="none"
                 stroke="white"
-                strokeWidth="1"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
 
+            {/* X-axis ticks and labels */}
             {xTicks.map((tick, i) => {
                 if (i % skip !== 0) return null;
+                const x = tick.timestamp;
                 return (
-                <g key={tick.timestamp}>
-                    <line
-                        x1={tick.timestamp}
-                        y1={height-padding}
-                        x2={tick.timestamp}
-                        y2={height-padding + 8}
-                        stroke="white"
-                        strokeWidth="2"
-                    />
-                    <text
-                        x={tick.timestamp}
-                        y={height-padding + 18}
-                        fill="white"
-                        fontSize="12"
-                        textAnchor="middle"
-                    >
-                        {tick.label}
-                    </text>
-                </g>
-                );
-            })}
-
-            {
-                yTicks.map(tick => (
-                    <g key={tick.value}>
+                    <g key={tick.timestamp}>
                         <line
-                            x1={padding*3.5/4}
-                            y1={tick.value*.95}
-                            x2={padding}
-                            y2={tick.value*.95}
+                            x1={x}
+                            y1={height - margin.bottom}
+                            x2={x}
+                            y2={height - margin.bottom + 6}
                             stroke="white"
-                            strokeWidth="2"
+                            strokeWidth="1"
                         />
                         <text
-                            x={padding/2}
-                            y={tick.value}
+                            x={x}
+                            y={height - margin.bottom + 20}
                             fill="white"
                             fontSize="12"
                             textAnchor="middle"
@@ -135,8 +126,34 @@ const LineGraph = ({ data, width = 400, height = 200, padding = 50 }) => {
                             {tick.label}
                         </text>
                     </g>
-                ))
-            }
+                );
+            })}
+
+            {/* Y-axis ticks and labels */}
+            {yTicks.map(tick => {
+                const y = scaleY(tick.value);
+                return (
+                    <g key={tick.value}>
+                        <line
+                            x1={margin.left - 6}
+                            y1={y}
+                            x2={margin.left}
+                            y2={y}
+                            stroke="white"
+                            strokeWidth="1"
+                        />
+                        <text
+                            x={margin.left - 10}
+                            y={y + 4}
+                            fill="white"
+                            fontSize="12"
+                            textAnchor="end"
+                        >
+                            {tick.label}
+                        </text>
+                    </g>
+                );
+            })}
         </svg>
     );
 };
@@ -194,8 +211,6 @@ const AsciiChessBoard = () => {
     );
     const lastMoveTimeRef = useRef(0);
     const [graphSize, setGraphSize] = useState({ width: 400, height: 200 });
-
-
 
     const { tick } = useAnimationTick();
 
@@ -290,9 +305,10 @@ const updateSizeMode = () => {
     }
 
     const graphWidth = Math.floor(width * 0.9);
+
     setGraphSize({
         width: graphWidth,
-        height: graphHeight
+        height: 0.3 * height
     });
 };
         updateSizeMode();
@@ -391,21 +407,47 @@ const updateSizeMode = () => {
     }, [boardGrid, sizeMode, boardSize]);
 
     return (
-        <div ref={containerRef} style={{ color: "white", width: "100%", height: "100%" }}>
-            <div>
-                <strong>Current move index:</strong> {currentMove}
-            </div>
+        <div ref={containerRef} className={styles.container}>
+            <p>In my free time I like playing chess. This is the last game I played on {new Date(accountHistory[accountHistory.length - 1].end_time*1000).toLocaleDateString(
+                "en-US",
+                {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                }
+            )}</p>
+            <div className={styles.boardcontainer}>
+                {
+                    !isWhiteView ? (
+                        <>
+                            <p>{playBoard.current.getHeaders()['White']}</p>
+                            <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
+                        </>
+                    ) :
+                        (
+                            <>
+                                <p>{playBoard.current.getHeaders()['Black']}</p>
+                                <p>{playBoard.current.getHeaders()['BlackElo']}</p>
+                            </>
+                        )
+                }
 
-            <div>
-                <strong>Total moves:</strong> {moveList.length}
-            </div>
+                {renderedBoard}
 
-            <div>
-                <strong>Is playing:</strong> {String(isPlaying)}
-            </div>
-
-            <div>
-                <strong>Widget Size</strong>  {sizeMode}
+                {
+                    isWhiteView ? (
+                        <>
+                            <p>{playBoard.current.getHeaders()['White']}</p>
+                            <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
+                        </>
+                    ) :
+                        (
+                            <>
+                                <p>{playBoard.current.getHeaders()['Black']}</p>
+                                <p>{playBoard.current.getHeaders()['BlackElo']}</p>
+                            </>
+                        )
+                }
             </div>
 
             <div className={styles.controls}>
@@ -416,37 +458,6 @@ const updateSizeMode = () => {
                     Reset
                 </button>
             </div>
-            {
-                !isWhiteView ? (
-                    <>
-                        <p>{playBoard.current.getHeaders()['White']}</p>
-                        <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
-                    </>
-                ) :
-                    (
-                        <>
-                            <p>{playBoard.current.getHeaders()['Black']}</p>
-                            <p>{playBoard.current.getHeaders()['BlackElo']}</p>
-                        </>
-                    )
-            }
-
-            {renderedBoard}
-
-            {
-                isWhiteView ? (
-                    <>
-                        <p>{playBoard.current.getHeaders()['White']}</p>
-                        <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
-                    </>
-                ) :
-                    (
-                        <>
-                            <p>{playBoard.current.getHeaders()['Black']}</p>
-                            <p>{playBoard.current.getHeaders()['BlackElo']}</p>
-                        </>
-                    )
-            }
 
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                 <div style={{ textAlign: "center" }}>
