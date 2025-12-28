@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { useAnimationTick } from '../../app/page'; 
 import styles from './ChessWidget.module.css';
+import {COLORS} from '../../styles/colors.js'
 
 const pieceUnicode = {
     P: 'P', R: 'R', N: 'N', B: 'B', Q: 'Q', K: 'K',
@@ -72,6 +73,16 @@ const LineGraph = ({ data, width = 400, height = 200 }) => {
 
     return (
         <svg width={width} height={height}>
+            {/* Data line */}
+            <polyline
+                points={polylinePoints}
+                fill="none"
+                stroke={COLORS.ACCENT_PINK}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+
             {/* X-axis */}
             <line 
                 x1={margin.left} 
@@ -90,16 +101,6 @@ const LineGraph = ({ data, width = 400, height = 200 }) => {
                 y2={height - margin.bottom} 
                 stroke="white" 
                 strokeWidth="2"
-            />
-
-            {/* Data line */}
-            <polyline
-                points={polylinePoints}
-                fill="none"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
             />
 
             {/* X-axis ticks and labels */}
@@ -257,58 +258,59 @@ const AsciiChessBoard = () => {
     }, []);
 
     useEffect(() => {
-const updateSizeMode = () => {
-    if (!containerRef.current) return;
+        const updateSizeMode = () => {
+            if (!containerRef.current) return;
 
-    const { width, height } = containerRef.current.getBoundingClientRect();
+            const { width, height } = containerRef.current.getBoundingClientRect();
 
-    // Account for container padding and borders
-    const containerPadding = 16; // 0.5rem * 2 sides
-    const boardPadding = 16; // Board wrapper padding
-    const availableWidth = width - containerPadding - boardPadding;
-    const availableHeight = height - containerPadding;
+            // Account for container padding and borders
+            const containerPadding = 16; // 0.5rem * 2 sides
+            const boardPadding = 16; // Board wrapper padding
+            const availableWidth = width - containerPadding - boardPadding;
+            const availableHeight = height - containerPadding;
 
-    const controlsHeight = 40;
-    const textHeight = 50;
-    const movesHeight = 40;
-    const graphHeight = 200;
-    const playerInfoHeight = 80;
+            const controlsHeight = 40;
+            const textHeight = 50;
+            const movesHeight = 40;
+            const graphHeight = 200;
+            const playerInfoHeight = 80;
 
-    if (width < 140 || height < 140) {
-        setSizeMode('hidden');
-        setBoardSize({ squareSize: 16, showLabels: false });
-    } else if (availableWidth < 160 || availableHeight < 160) {
-        setSizeMode('minimal');
-        const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
-        setBoardSize({ 
-            squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
-            showLabels: false 
-        });
-    } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight + graphHeight + playerInfoHeight) {
-        setSizeMode('compact');
-        // Keep the original calculation - don't subtract graph/player heights
-        const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10);
-        setBoardSize({ 
-            squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
-            showLabels: true 
-        });
-    } else {
-        setSizeMode('full');
-        // Keep the original calculation - don't subtract graph/player heights
-        const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
-        setBoardSize({ 
-            squareSize: Math.max(24, Math.min(32, maxSquareSize)), 
-            showLabels: true 
-        });
-    }
+            if (width < 140 || height < 140) {
+                setSizeMode('hidden');
+                setBoardSize({ squareSize: 16, showLabels: false });
+            } else if (availableWidth < 160 || availableHeight < 160) {
+                setSizeMode('minimal');
+                const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
+                setBoardSize({ 
+                    squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
+                    showLabels: false 
+                });
+            } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight + graphHeight + playerInfoHeight) {
+                setSizeMode('compact');
+                // Keep the original calculation - don't subtract graph/player heights
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10);
+                setBoardSize({ 
+                    squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
+                    showLabels: true 
+                });
+            } else {
+                setSizeMode('full');
+                // Keep the original calculation - don't subtract graph/player heights
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
+                setBoardSize({ 
+                    squareSize: Math.max(24, Math.min(32, maxSquareSize)), 
+                    showLabels: true 
+                });
+            }
 
-    const graphWidth = Math.floor(width * 0.9);
+            const graphWidth = Math.floor(width * 0.9);
 
-    setGraphSize({
-        width: graphWidth,
-        height: 0.25 * height
-    });
-};
+            setGraphSize({
+                width: graphWidth,
+                height: 0.25 * height
+            });
+        };
+
         updateSizeMode();
 
         const resizeObserver = new ResizeObserver(updateSizeMode);
@@ -414,50 +416,48 @@ const updateSizeMode = () => {
     return (
         <div ref={containerRef} className={`${styles.container} ${styles[sizeMode]}`}>
             <div className={styles.blurb}>
-                <p>In my free time I like playing chess. This is the last game I played on {new Date(accountHistory[accountHistory.length - 1].end_time*1000).toLocaleDateString(
+                <p>In my free time I like playing <span>Chess</span>. This is the last game I played on <span>{new Date(accountHistory[accountHistory.length - 1].end_time*1000).toLocaleDateString(
                     "en-US",
                     {
                         year: "numeric",
                         month: "short",
                         day: "2-digit",
                     }
-                )}</p>
+                )}</span></p>
             </div>
             <div className={styles.boardcontainer}>
                 <div>
                 {
-                    !isWhiteView ? (
-                        <>
-                            <p>{playBoard.current.getHeaders()['White']}</p>
-                            <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
-                        </>
-                    ) :
-                        (
-                            <>
-                                <p>{playBoard.current.getHeaders()['Black']}</p>
-                                <p>{playBoard.current.getHeaders()['BlackElo']}</p>
-                            </>
-                        )
+
+                        (() => {
+                            const headers = playBoard.current.getHeaders();
+                            const side = !isWhiteView ? 'White' : 'Black';
+
+                            return (
+                                <>
+                                    <p>{headers[side]} <span>{headers[`${side}Elo`]}</span></p>
+                                </>
+                            );
+                        })()
                 }
                 </div>
 
                 {renderedBoard}
 
                 <div>
-                {
-                    isWhiteView ? (
-                        <>
-                            <p>{playBoard.current.getHeaders()['White']} (me)</p>
-                            <p>{playBoard.current.getHeaders()['WhiteElo']}</p>
-                        </>
-                    ) :
-                        (
-                            <>
-                                <p>{playBoard.current.getHeaders()['Black']} (me)</p>
-                                <p>{playBoard.current.getHeaders()['BlackElo']}</p>
-                            </>
-                        )
-                }
+                    {
+                        (() => {
+                            const headers = playBoard.current.getHeaders();
+                            const side = isWhiteView ? 'White' : 'Black';
+
+                            return (
+                                <>
+                                    <p>{headers[side]} (me) <span>{headers[`${side}Elo`]}</span></p>
+                                </>
+                            );
+                        })()
+                    }
+
                 </div>
             </div>
 
@@ -477,7 +477,7 @@ const updateSizeMode = () => {
             { sizeMode == "full" &&
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                     <div style={{ textAlign: "center" }}>
-                        <p>Elo over last year of play</p>
+                        <p>Chess <span>rating</span> over last year of play</p>
                         <LineGraph data={accountHistory} 
                             width={graphSize.width}
                             height={graphSize.height}
