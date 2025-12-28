@@ -4,162 +4,371 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Chess } from 'chess.js';
 import { useAnimationTick } from '../../app/page'; 
 import styles from './ChessWidget.module.css';
+import {COLORS} from '../../styles/colors.js'
 
 const pieceUnicode = {
-    p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚',
-    P: '♙', R: '♖', N: '♘', B: '♗', Q: '♕', K: '♔',
-    '.': '·'
+    P: 'P', R: 'R', N: 'N', B: 'B', Q: 'Q', K: 'K',
+    p: 'O', r: 'T', n: 'M', b: 'V', q: 'W', k: 'L',
+    '.' : '·'
 };
 
-const generateBoardGrid = (board) => {
-    const grid = [];
-    for (let i = 7; i >= 0; i--) {
-        const row = [];
-        for (let j = 0; j < 8; j++) {
-            const piece = board[i][j];
-            row.push(piece ? pieceUnicode[piece.color === 'w' ? piece.type.toUpperCase() : piece.type] : pieceUnicode['.']);
-        }
-        grid.push({ rank: i + 1, squares: row });
+const LineGraph = ({ data, width = 400, height = 200 }) => {
+    // Define margins for labels and axis
+    const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+
+    const points = data.map(d => ({
+        x: d.end_time,
+        y: d.rating
+    }));
+
+    const minX = Math.min(...points.map(p => p.x));
+    const maxX = Math.max(...points.map(p => p.x));
+    const minY = Math.min(...points.map(p => p.y));
+    const maxY = Math.max(...points.map(p => p.y));
+
+    // Scale functions that map data to chart coordinates
+    const scaleX = x =>
+        margin.left + ((x - minX) / (maxX - minX || 1)) * chartWidth;
+
+    const scaleY = y =>
+        margin.top + chartHeight - ((y - minY) / (maxY - minY || 1)) * chartHeight;
+
+    // Generate X-axis ticks
+    const xTicks = [];
+    let current = new Date(minX * 1000);
+    let end = new Date(maxX * 1000);
+
+    while (current <= end) {
+        xTicks.push({
+            timestamp: scaleX(current.getTime() / 1000),
+            label: current.toLocaleString('default', { month: 'short' }) + " '" + 
+                   current.toLocaleString('default', { year: '2-digit' })
+        });
+        current.setMonth(current.getMonth() + 2);
     }
-    return grid;
+
+    const MIN_LABEL_PX = 50;
+    const maxTicks = Math.floor(chartWidth / MIN_LABEL_PX) || 1;
+    const skip = Math.ceil(xTicks.length / maxTicks);
+
+    // Generate Y-axis ticks (5 ticks total)
+    const yTicks = [];
+    const numYTicks = 5;
+    const yRange = maxY - minY;
+    const yStep = yRange / (numYTicks - 1);
+
+    for (let i = 0; i < numYTicks; i++) {
+        const value = minY + (yStep * i);
+        yTicks.push({
+            value: value,
+            label: value.toFixed(0)
+        });
+    }
+
+    const polylinePoints = points
+        .map(p => `${scaleX(p.x)},${scaleY(p.y)}`)
+        .join(" ");
+
+    return (
+        <svg width={width} height={height}>
+            {/* Data line */}
+            <polyline
+                points={polylinePoints}
+                fill="none"
+                stroke={COLORS.ACCENT_PINK}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+
+            {/* X-axis */}
+            <line 
+                x1={margin.left} 
+                y1={height - margin.bottom} 
+                x2={width - margin.right} 
+                y2={height - margin.bottom} 
+                stroke="white" 
+                strokeWidth="2"
+            />
+            
+            {/* Y-axis */}
+            <line 
+                x1={margin.left} 
+                y1={margin.top} 
+                x2={margin.left} 
+                y2={height - margin.bottom} 
+                stroke="white" 
+                strokeWidth="2"
+            />
+
+            {/* X-axis ticks and labels */}
+            {xTicks.map((tick, i) => {
+                if (i % skip !== 0) return null;
+                const x = tick.timestamp;
+                return (
+                    <g key={tick.timestamp}>
+                        <line
+                            x1={x}
+                            y1={height - margin.bottom}
+                            x2={x}
+                            y2={height - margin.bottom + 6}
+                            stroke="white"
+                            strokeWidth="1"
+                        />
+                        <text
+                            x={x}
+                            y={height - margin.bottom + 20}
+                            fill="white"
+                            fontSize="12"
+                            textAnchor="middle"
+                        >
+                            {tick.label}
+                        </text>
+                    </g>
+                );
+            })}
+
+            {/* Y-axis ticks and labels */}
+            {yTicks.map(tick => {
+                const y = scaleY(tick.value);
+                return (
+                    <g key={tick.value}>
+                        <line
+                            x1={margin.left - 6}
+                            y1={y}
+                            x2={margin.left}
+                            y2={y}
+                            stroke="white"
+                            strokeWidth="1"
+                        />
+                        <text
+                            x={margin.left - 10}
+                            y={y + 4}
+                            fill="white"
+                            fontSize="12"
+                            textAnchor="end"
+                        >
+                            {tick.label}
+                        </text>
+                    </g>
+                );
+            })}
+        </svg>
+    );
 };
 
-const AsciiChessBoard = ({ moves, interval = 1000 }) => {
+const generateBoardGrid = (board, whiteView = true) => {
+    const grid = [];
+
+    const rankRange = whiteView
+        ? [...Array(8).keys()].reverse()
+        : [...Array(8).keys()];
+
+    const fileRange = whiteView
+        ? [...Array(8).keys()]
+        : [...Array(8).keys()].reverse();
+
+    for (const i of rankRange) {
+        const row = [];
+        for (const j of fileRange) {
+            const square = board[i][j];
+            if (square) {
+                const key = square.color === 'w' ? square.type.toLowerCase() : square.type.toUpperCase();
+                row.push(pieceUnicode[key]);
+            } else {
+                row.push(pieceUnicode['.']);
+            }
+        }
+        grid.push({ rank: 8-i, squares: row });
+    }
+    return grid.reverse();
+};
+
+const AsciiChessBoard = () => {
+    const playBoard = useRef(new Chess());
+    const viewBoard = useRef(new Chess());
+    const [isWhiteView, setIsWhiteView] = useState(true);
+    const [currentMove, setCurrentMove] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [moveList, setMoveList] = useState([]);
+    const [accountHistory, setAccountHistory] = useState([
+        { rating: 980, end_time: 1 },
+        { rating: 990, end_time: 2 },
+        { rating: 1002, end_time: 3 },
+        { rating: 994, end_time: 4 },
+        { rating: 1004, end_time: 5 },
+        { rating: 1010, end_time: 6 }
+    ]);
+
     const containerRef = useRef();
     const [sizeMode, setSizeMode] = useState('full');
     const [boardSize, setBoardSize] = useState({ squareSize: 32, showLabels: true });
-    const [chess] = useState(new Chess());
-    const [boardGrid, setBoardGrid] = useState(() => generateBoardGrid(chess.board()));
-    const [currentMove, setCurrentMove] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(true);
-    const [gameHistory, setGameHistory] = useState([]);
+        const [boardGrid, setBoardGrid] = useState(() => 
+        generateBoardGrid(viewBoard.current.board(), true)
+    );
     const lastMoveTimeRef = useRef(0);
-    
+    const [graphSize, setGraphSize] = useState({ width: 400, height: 200 });
+
     const { tick } = useAnimationTick();
 
-    // Enhanced responsive size detection with better calculations
+    // Initialize the chess boards with API call
+    useEffect(() => {
+        fetch("https://api.chess.com/pub/player/sweftonxd/games/live/180/0")
+            .then(r => r.json())
+            .then(data => {
+                const myUsername = "sweftonxd";
+                const currentDate = (Date.now() / 1000) - (365 * 24 * 60 * 60);
+                const previousGames = data.games
+                .filter(game => game.rated === true)
+                .filter(game => game.end_time >= currentDate)
+                .map(game => {
+                    if (game.white.username.toLowerCase() === myUsername) {
+                        return {
+                            rating: game.white.rating,
+                            end_time: game.end_time
+                        };
+                    }
+                    if (game.black.username.toLowerCase() === myUsername) {
+                        return {
+                            rating: game.black.rating,
+                            end_time: game.end_time
+                        };
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+
+                setAccountHistory(previousGames);
+
+                const pgn = data.games[data.games.length - 1].pgn;
+                playBoard.current.loadPgn(pgn);
+                const headers = playBoard.current.getHeaders();
+                const isWhite = headers.White?.toLowerCase() === myUsername;
+                setIsWhiteView(isWhite);
+                setMoveList(playBoard.current.history());
+                setBoardGrid(
+                    generateBoardGrid(
+                        viewBoard.current.board(),
+                        isWhite
+                    )
+                );
+            });
+    }, []);
+
     useEffect(() => {
         const updateSizeMode = () => {
             if (!containerRef.current) return;
-            
+
             const { width, height } = containerRef.current.getBoundingClientRect();
-            
+
             // Account for container padding and borders
             const containerPadding = 16; // 0.5rem * 2 sides
             const boardPadding = 16; // Board wrapper padding
             const availableWidth = width - containerPadding - boardPadding;
             const availableHeight = height - containerPadding;
-            
+
             const controlsHeight = 40;
             const textHeight = 50;
-            const movesHeight = 120;
-            
+            const movesHeight = 40;
+            const graphHeight = 200;
+            const playerInfoHeight = 80;
+
             if (width < 140 || height < 140) {
                 setSizeMode('hidden');
                 setBoardSize({ squareSize: 16, showLabels: false });
             } else if (availableWidth < 160 || availableHeight < 160) {
                 setSizeMode('minimal');
-                // Calculate square size that fits in available space
                 const maxSquareSize = Math.floor(Math.min(availableWidth, availableHeight - 20) / 8);
                 setBoardSize({ 
                     squareSize: Math.max(12, Math.min(20, maxSquareSize)), 
                     showLabels: false 
                 });
-            } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight) {
+            } else if (availableWidth < 240 || availableHeight < textHeight + 200 + controlsHeight + graphHeight + playerInfoHeight) {
                 setSizeMode('compact');
-                // Calculate optimal size for compact mode
-                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10); // 8 squares + 2 for labels
+                // Keep the original calculation - don't subtract graph/player heights
+                const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - 20) / 10);
                 setBoardSize({ 
                     squareSize: Math.max(20, Math.min(28, maxSquareSize)), 
                     showLabels: true 
                 });
             } else {
                 setSizeMode('full');
-                // Calculate size leaving room for moves list
+                // Keep the original calculation - don't subtract graph/player heights
                 const maxSquareSize = Math.floor(Math.min(availableWidth - 40, availableHeight - textHeight - controlsHeight - movesHeight - 40) / 10);
                 setBoardSize({ 
-                    squareSize: Math.max(24, Math.min(36, maxSquareSize)), 
+                    squareSize: Math.max(24, Math.min(32, maxSquareSize)), 
                     showLabels: true 
                 });
             }
+
+            const graphWidth = Math.floor(width * 0.9);
+
+            setGraphSize({
+                width: graphWidth,
+                height: 0.25 * height
+            });
         };
 
         updateSizeMode();
-        
+
         const resizeObserver = new ResizeObserver(updateSizeMode);
         if (containerRef.current) {
             resizeObserver.observe(containerRef.current);
         }
-        
+
         return () => resizeObserver.disconnect();
     }, []);
 
-    // Initialize game history
+    // Auto increase move
     useEffect(() => {
-        const initialChess = new Chess();
-        setGameHistory([{ 
-            board: generateBoardGrid(initialChess.board()), 
-            fen: initialChess.fen(), 
-            move: null, 
-            moveNumber: 0 
-        }]);
-    }, []);
+        if (!isPlaying) return;
+        if (currentMove >= moveList.length) return;
 
-    const makeMove = useCallback((moveIndex) => {
-        if (moveIndex >= moves.length) return;
+        const id = setTimeout(() => {
+            viewBoard.current.move(moveList[currentMove]);
+            setCurrentMove(prev => prev + 1);
+            setBoardGrid(
+                generateBoardGrid(viewBoard.current.board(), isWhiteView)
+            );
+        }, 1500);
 
-        const newChess = new Chess();
-        for (let i = 0; i <= moveIndex; i++) {
-            newChess.move(moves[i]);
-        }
+        return () => clearTimeout(id);
+    }, [isPlaying, currentMove, moveList, isWhiteView]);
 
-        const newBoardState = {
-            board: generateBoardGrid(newChess.board()),
-            fen: newChess.fen(),
-            move: moves[moveIndex],
-            moveNumber: moveIndex + 1
-        };
-
-        setGameHistory(prev => {
-            const newHistory = [...prev];
-            newHistory[moveIndex + 1] = newBoardState;
-            return newHistory;
-        });
-
-        setBoardGrid(newBoardState.board);
-        setCurrentMove(moveIndex + 1);
-    }, [moves]);
-
-    // Animation logic
-    useEffect(() => {
-        if (!isPlaying || currentMove >= moves.length) return;
-        
-        const now = performance.now();
-        if (now - lastMoveTimeRef.current < interval) {
-            return;
-        }
-        
-        lastMoveTimeRef.current = now;
-        makeMove(currentMove);
-    }, [tick, isPlaying, currentMove, moves.length, interval, makeMove]);
-
+    // Set if board is currently animating the game or not
     const togglePlayPause = useCallback(() => {
         setIsPlaying(prev => !prev);
     }, []);
 
-    const resetGame = useCallback(() => {
+    function resetGame() {
         setCurrentMove(0);
         setIsPlaying(true);
-        const initialChess = new Chess();
-        setBoardGrid(generateBoardGrid(initialChess.board()));
-        lastMoveTimeRef.current = 0;
-    }, []);
+        viewBoard.current.reset();
+        setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
+    }
 
-    // Dynamic board rendering with calculated sizes
+    function makeMove() {
+        if (currentMove >= moveList.length) return;
+
+        viewBoard.current.move(moveList[currentMove]);
+        setCurrentMove(prev => prev + 1);
+        setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
+    }
+
+    function moveBack() {
+        if (currentMove <= 0) return;
+        viewBoard.current.undo();
+        setCurrentMove(prev => prev - 1);
+        setBoardGrid(generateBoardGrid(viewBoard.current.board(), isWhiteView));
+    }
+
     const renderedBoard = useMemo(() => {
         const { squareSize, showLabels } = boardSize;
         const labelSize = showLabels ? 20 : 0;
-        
+        const files = isWhiteView ? 'abcdefgh' : 'hgfedcba';
+
         return (
             <div 
                 className={styles.boardWrapper}
@@ -171,7 +380,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                 {showLabels && (
                     <div className={styles.columnHeaders}>
                         <div style={{ width: `${labelSize}px` }}></div>
-                        {'abcdefgh'.split('').map(file => (
+                        {files.split('').map(file => (
                             <div 
                                 key={file} 
                                 className={styles.fileHeader}
@@ -182,7 +391,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                         ))}
                     </div>
                 )}
-                
+
                 {boardGrid.map((row, rowIndex) => (
                     <div key={rowIndex} className={styles.row}>
                         {/* Rank numbers */}
@@ -197,7 +406,7 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
                                 {row.rank}
                             </div>
                         )}
-                        
+
                         {row.squares.map((piece, colIndex) => {
                             const isLight = (rowIndex + colIndex) % 2 === 0;
                             return (
@@ -222,98 +431,79 @@ const AsciiChessBoard = ({ moves, interval = 1000 }) => {
 
     return (
         <div ref={containerRef} className={`${styles.container} ${styles[sizeMode]}`}>
-            {/* Hidden message */}
-            {sizeMode === 'hidden' && (
-                <div className={styles.hiddenMessage}>
-                    Chess widget hidden - container too small
+            <div className={styles.blurb}>
+                <p>In my free time I like playing <span>Chess</span>. This is the last game I played on <span>{new Date(accountHistory[accountHistory.length - 1].end_time*1000).toLocaleDateString(
+                    "en-US",
+                    {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                    }
+                )}</span></p>
+            </div>
+            <div className={styles.boardcontainer}>
+                <div>
+                {
+
+                        (() => {
+                            const headers = playBoard.current.getHeaders();
+                            const side = !isWhiteView ? 'White' : 'Black';
+
+                            return (
+                                <>
+                                    <p>{headers[side]} <span>{headers[`${side}Elo`]}</span></p>
+                                </>
+                            );
+                        })()
+                }
                 </div>
-            )}
 
-            {/* Main content */}
-            {sizeMode !== 'hidden' && (
-                <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: sizeMode === 'minimal' ? '0.25rem' : '1rem', 
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: sizeMode === 'minimal' ? 'center' : 'flex-start'
-                }}>
-                    {/* Carousel text - hidden for minimal mode */}
-                    {sizeMode !== 'minimal' && (
-                        <div className={styles.carousel}>
-                            <p>In my free time I like playing Chess. This was the best game I've played.</p>
-                        </div>
-                    )}
-                    
-                    {renderedBoard}
+                {renderedBoard}
 
-                    {/* Controls - shown for compact and full modes */}
-                    {(sizeMode === 'compact' || sizeMode === 'full') && (
-                        <div className={styles.controls}>
-                            <button onClick={resetGame} className={styles.button}>Reset</button>
-                            <button onClick={togglePlayPause} className={styles.button}>
-                                {isPlaying ? 'Pause' : 'Play'}
-                            </button>
-                        </div>
-                    )}
+                <div>
+                    {
+                        (() => {
+                            const headers = playBoard.current.getHeaders();
+                            const side = isWhiteView ? 'White' : 'Black';
 
-                    {/* Full mode content - TUI-style moves list */}
-                    {sizeMode === 'full' && (
-                        <>
-                            <div className={styles.movesList}>
-                                <div className={styles.movesHeader}>
-                                    Game History ({currentMove}/{moves.length})
-                                </div>
-                                
-                                {/* Starting position */}
-                                <div 
-                                    className={`${styles.moveEntry} ${currentMove === 0 ? styles.activeMoveEntry : ''}`}
-                                    onClick={() => {
-                                        setCurrentMove(0);
-                                        const initialChess = new Chess();
-                                        setBoardGrid(generateBoardGrid(initialChess.board()));
-                                    }}
-                                >
-                                    <span className={styles.moveNumber}>--</span>
-                                    <span className={styles.moveText}>Initial Position</span>
-                                </div>
+                            return (
+                                <>
+                                    <p>{headers[side]} (me) <span>{headers[`${side}Elo`]}</span></p>
+                                </>
+                            );
+                        })()
+                    }
 
-                                {/* Move entries */}
-                                {moves.map((move, index) => {
-                                    const moveNum = Math.floor(index / 2) + 1;
-                                    const isWhite = index % 2 === 0;
-                                    
-                                    return (
-                                        <div
-                                            key={index}
-                                            className={`${styles.moveEntry} ${currentMove === index + 1 ? styles.activeMoveEntry : ''}`}
-                                            onClick={() => {
-                                                if (gameHistory[index + 1]) {
-                                                    setBoardGrid(gameHistory[index + 1].board);
-                                                    setCurrentMove(index + 1);
-                                                }
-                                            }}
-                                        >
-                                            <span className={styles.moveNumber}>
-                                                {isWhite ? `${moveNum}.` : `${moveNum}..`}
-                                            </span>
-                                            <span className={styles.moveText}>{move}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            <div className={styles.currentMoveInfo}>
-                                {currentMove === 0 
-                                    ? '> Ready to start game' 
-                                    : `> ${moves[currentMove - 1]} - Move ${currentMove} played`
-                                }
-                            </div>
-                        </>
-                    )}
                 </div>
-            )}
+            </div>
+
+            <div className={styles.controls}>
+                <button onClick={togglePlayPause} className={styles.button}>
+                    <img src={isPlaying ? "/pause.svg" : "/play.svg"} alt={isPlaying ? "Pause" : "Play"} />
+                </button>
+                <button onClick={moveBack} className={styles.button}>
+                    Back
+                </button>
+                <button onClick={makeMove} className={styles.button}>
+                    Forward
+                </button>
+                <button onClick={resetGame} className={styles.button}>
+                    Reset
+                </button>
+            </div>
+
+
+            { sizeMode == "full" &&
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                    <div style={{ textAlign: "center" }}>
+                        <p>Chess <span>rating</span> over last year of play</p>
+                        <LineGraph data={accountHistory} 
+                            width={graphSize.width}
+                            height={graphSize.height}
+                        />
+                    </div>
+                </div>
+            }
         </div>
     );
 };
