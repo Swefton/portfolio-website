@@ -10,14 +10,25 @@ const pieceUnicode = {
   '.' : '·'
 };
 
-const generateBoardGrid = (board) => {
+const generateBoardGrid = (board, whiteView = true) => {
   const grid = [];
-  for (let i = 7; i >= 0; i--) { // ranks from 8 to 1
+
+  const rankRange = whiteView
+    ? [...Array(8).keys()].reverse()
+    : [...Array(8).keys()];
+
+  const fileRange = whiteView
+    ? [...Array(8).keys()]
+    : [...Array(8).keys()].reverse();
+
+  for (const i of rankRange) {
     const row = [];
-    for (let j = 0; j < 8; j++) {
+    for (const j of fileRange) {
       const square = board[i][j];
       if (square) {
-        const key = square.color === 'w' ? square.type.toUpperCase() : square.type.toLowerCase();
+        const key = square.color === 'w'
+          ? square.type.toUpperCase()
+          : square.type.toLowerCase();
         row.push(pieceUnicode[key]);
       } else {
         row.push(pieceUnicode['.']);
@@ -65,6 +76,7 @@ async function fetchGame() {
 
     const chess = new Chess();
     console.log(chess.ascii());
+    console.log(chess.board());
     chess.loadPgn(pgn);
 
     const moves = chess.history();
@@ -83,8 +95,8 @@ async function fetchGame() {
 
     // console.log(chess.getHeaders());
 
-    for (let i = 0; i < 10; ++i) {
-      // stepForward();
+    for (let i = 0; i < 1; ++i) {
+      stepForward();
     }
 
 

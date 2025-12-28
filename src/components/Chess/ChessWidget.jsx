@@ -174,17 +174,15 @@ const generateBoardGrid = (board, whiteView = true) => {
         for (const j of fileRange) {
             const square = board[i][j];
             if (square) {
-                const key = square.color === 'w'
-                    ? square.type.toUpperCase()
-                    : square.type.toLowerCase();
+                const key = square.color === 'w' ? square.type.toLowerCase() : square.type.toUpperCase();
                 row.push(pieceUnicode[key]);
             } else {
                 row.push(pieceUnicode['.']);
             }
         }
-        grid.push({ rank: i + 1, squares: row });
+        grid.push({ rank: 8-i, squares: row });
     }
-    return grid;
+    return grid.reverse();
 };
 
 const AsciiChessBoard = () => {
