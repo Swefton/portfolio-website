@@ -152,6 +152,14 @@
     transition: all 0.2s ease;
 }
 
+.button img {
+    width: 1em;
+    height: 1em;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
 .button:hover {
     background: var(--chess-hover);
     border-color: var(--chess-text-primary);

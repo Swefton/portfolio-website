@@ -321,6 +321,22 @@ const AsciiChessBoard = () => {
         return () => resizeObserver.disconnect();
     }, []);
 
+    // Auto increase move
+    useEffect(() => {
+        if (!isPlaying) return;
+        if (currentMove >= moveList.length) return;
+
+        const id = setTimeout(() => {
+            viewBoard.current.move(moveList[currentMove]);
+            setCurrentMove(prev => prev + 1);
+            setBoardGrid(
+                generateBoardGrid(viewBoard.current.board(), isWhiteView)
+            );
+        }, 1500);
+
+        return () => clearTimeout(id);
+    }, [isPlaying, currentMove, moveList, isWhiteView]);
+
     // Set if board is currently animating the game or not
     const togglePlayPause = useCallback(() => {
         setIsPlaying(prev => !prev);
@@ -462,6 +478,9 @@ const AsciiChessBoard = () => {
             </div>
 
             <div className={styles.controls}>
+                <button onClick={togglePlayPause} className={styles.button}>
+                    <img src={isPlaying ? "/pause.svg" : "/play.svg"} alt={isPlaying ? "Pause" : "Play"} />
+                </button>
                 <button onClick={moveBack} className={styles.button}>
                     Back
                 </button>
